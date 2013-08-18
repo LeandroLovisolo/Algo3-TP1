@@ -1,3 +1,5 @@
+.PHONY: all clean
+
 ###############################################################################
 # Flags                                                                       #
 ###############################################################################
@@ -6,7 +8,7 @@
 GTEST_DIR = lib/gtest-1.6.0
 
 # Flags del preprocesador C++.
-CPPFLAGS += -I$(GTEST_DIR) -I$(GTEST_DIR)/include
+CPPFLAGS += -I$(GTEST_DIR)/include
 
 # Flags del compilador C++.
 CXXFLAGS += -g -Wall -Wextra
@@ -36,9 +38,10 @@ all: $(BINS)
 
 clean:
 	rm -f *.o $(BINS)
+	rm -f informe.pdf tex/*.pdf tex/*.aux tex/*.log tex/*.toc
 
 gtest-all.o:
-	$(OBJ) $(GTEST_DIR)/src/gtest-all.cc
+	$(OBJ) -I$(GTEST_DIR) -c $(GTEST_DIR)/src/gtest-all.cc
 
 ###############################################################################
 # Problema 1                                                                  #
@@ -96,3 +99,12 @@ problema3_tests: $(TEST_DEPS) problema3.o problema3_tests.o
 
 problema3_tests.o: src/problema3/problema3.h src/problema3/problema3_tests.cpp
 	$(OBJ) src/problema3/problema3_tests.cpp
+
+###############################################################################
+# Informe                                                                     #
+###############################################################################
+
+informe.pdf: tex/*.tex
+	cd tex; pdflatex -interactive=nonstopmode -halt-on-error informe.tex
+	cd tex; pdflatex -interactive=nonstopmode -halt-on-error informe.tex
+	cp tex/informe.pdf .
