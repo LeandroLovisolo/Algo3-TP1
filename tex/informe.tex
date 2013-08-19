@@ -11,7 +11,7 @@
 \usepackage{verbatim}
 \usepackage{graphicx}
 \usepackage{float}
-\usepackage{algorithmic}
+\usepackage{algpseudocode}
 \usepackage[toc, page]{appendix}
 
 % Evita que el documento se estire verticalmente para ocupar el espacio vacío
@@ -19,10 +19,10 @@
 \raggedbottom
 
 % Deshabilita sangría en la primer línea de un párrafo.
-\setlength{\parindent}{0pt}
+\setlength{\parindent}{0em}
 
 % Separación entre párrafos.
-\setlength{\parskip}{5pt}
+\setlength{\parskip}{0.5em}
 
 % Asigna la traducción de la palabra 'Appendices'.
 \renewcommand{\appendixtocname}{Apéndices}
@@ -48,12 +48,20 @@
 
 %%%%%%%%%% Configuración de Algorithmic - Inicio %%%%%%%%%%
 % Entorno propio para customizar la presentación del pseudocódigo
-\newenvironment{pseudocodigo}
-    {\vspace{0.5em} \begin{algorithmic}}
-    {\end{algorithmic} \vspace{0.5em}}
+\newenvironment{pseudo}[1][]{%
+    \vspace{0.5em}%
+    \begin{algorithmic}%
+}
+{%
+    \end{algorithmic}%
+    \vspace{0.5em}%
+}
 
-% Alinear comentarios a la derecha
-\renewcommand{\algorithmiccomment}[1]{\hfill \{#1\}}
+% Conectivo 'in' para usar así: \ForAll{$foo$ \In $bar$}
+\newcommand{\In}{\textbf{in} }
+
+% Complejidades
+\newcommand{\Ode}[1]{\hfill $O(#1)$}
 %%%%%%%%%% Configuración de Algorithmic - Fin %%%%%%%%%%
 
 
@@ -101,9 +109,9 @@ Segundo Cuatrimestre de 2013
 \hline
 Apellido y Nombre & LU & E-mail\\
 \hline
-Leandro Lovisolo      		& 645/11 & leandro@leandro.me\\
-Lautaro José Petaccio 		& 443/11 & lausuper@gmail.com\\
-Lucas Rossi                 & 705/11 & lucasrossi20@gmail.com\\
+Leandro Lovisolo      & 645/11 & leandro@leandro.me\\
+Lautaro José Petaccio & 443/11 & lausuper@gmail.com\\
+Lucas Rossi           & 705/11 & lucasrossi20@gmail.com\\
 \hline
 \end{tabular}
 
@@ -142,6 +150,43 @@ Sin más, presentamos los problemas estudiados a continuación.
 
 
 \section{Problema 1: Pascual y el correo}
+
+Descripción del problema. Requerimientos de complejidad temporal. Ejemplos de instancias del problema.
+
+
+\subsection{Solución}
+
+Sea $\langle p_1, \ldots, p_n \rangle$ la secuencia que contiene los pesos de los $n$ paquetes en orden de llegada, sea $\langle c_1, \ldots, c_m \rangle$ la secuencia en orden ascendente que contiene las cargas de los camiones en un determinado momento (inicialmente vacía) y sea $L$ el límite de carga de los camiones. Para cada paquete $p_i$, cargamos el paquete en el camión menos cargado $c_1$ si la nueva carga no supera el límite $L$, o en caso contrario agregamos un nuevo camión $c_{m+1} = p_i$ a la secuencia, realizando las permutaciones necesarias para preservar el orden ascendente. Luego de haber cargado todos los paquetes, devolvemos la secuencia con la carga de cada camión.
+
+Para cumplir con los requerimientos de complejidad temporal, utilizamos una cola de prioridad min-heap en lugar de una secuencia para almacenar las cargas de cada camión.
+
+\begin{pseudo}
+    \Procedure{Pascual-y-el-correo}{$\langle p_1, \ldots, p_n \rangle, L$}
+        \State $C \leftarrow$ nuevo min-heap                    \Ode{1}
+        \ForAll{$p$ \In $\langle p_1, \ldots, p_n \rangle$}     \Ode{1}
+            \If{$C.tama\tilde{n}o = 0$}                         \Ode{1}
+                \State $C.encolar(p)$                           \Ode{log(n)}
+            \ElsIf{$C.siguiente() + p \leq L$}                  \Ode{1}
+                \State $c \leftarrow C.siguiente() + p$         \Ode{1}
+                \State $C.desencolar()$                         \Ode{log(n)}
+                \State $C.encolar(c)$                           \Ode{log(n)}
+            \Else
+                \State $C.encolar(c)$                           \Ode{log(n)}
+            \EndIf
+        \EndFor
+        \State \textbf{return} $C$
+    \EndProcedure
+\end{pseudo}
+
+
+\subsection{Complejidad}
+
+El algoritmo corre en tiempo $O(n*log(n))$, donde $n$ es la cantidad de paquetes.
+
+Demostración: para cada uno de los $n$ paquetes, se realizan 1 o 2 operaciones $O(log(n))$ sobre la cola de prioridad. Luego deducimos la complejidad total $n * O(log(n)) = O(n * log(n))$.
+
+
+\subsection{Experimentos computacionales}
 
 Pendiente.
 
