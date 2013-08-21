@@ -156,7 +156,11 @@ Descripción del problema. Requerimientos de complejidad temporal. Ejemplos de i
 
 \subsection{Solución}
 
-Sea $\langle p_1, \ldots, p_n \rangle$ la secuencia que contiene los pesos de los $n$ paquetes en orden de llegada, sea $\langle c_1, \ldots, c_m \rangle$ la secuencia en orden ascendente que contiene las cargas de los camiones en un determinado momento (inicialmente vacía) y sea $L$ el límite de carga de los camiones. Para cada paquete $p_i$, cargamos el paquete en el camión menos cargado $c_1$ si la nueva carga no supera el límite $L$, o en caso contrario agregamos un nuevo camión $c_{m+1} = p_i$ a la secuencia, realizando las permutaciones necesarias para preservar el orden ascendente. Luego de haber cargado todos los paquetes, devolvemos la secuencia con la carga de cada camión.
+Sea $\langle p_1, \ldots, p_n \rangle$ la secuencia que contiene los pesos de los $n$ paquetes en orden de llegada, sea $\langle c_1, \ldots, c_m \rangle$ la secuencia en orden ascendente que contiene las cargas de los camiones en un determinado momento (inicialmente vacía) y sea $L$ el límite de carga de los camiones.
+
+Para cada paquete $p_i$, cargamos el paquete en el camión menos cargado $c_1$ si la nueva carga no supera el límite $L$, o en caso contrario agregamos un nuevo camión $c_{m+1} = p_i$ a la secuencia, realizando las permutaciones necesarias para preservar el orden ascendente.
+
+Luego de haber cargado todos los paquetes, devolvemos la secuencia con la carga de cada camión.
 
 Para cumplir con los requerimientos de complejidad temporal, utilizamos una cola de prioridad min-heap en lugar de una secuencia para almacenar las cargas de cada camión.
 
@@ -198,7 +202,22 @@ Pendiente.
 
 \section{Problema 2: Profesores visitantes}
 
-Pendiente.
+Descripción del problema. Requerimientos de complejidad temporal. Ejemplos de instancias del problema.
+
+
+\subsection{Solución}
+
+Sea $\langle (i_1, f_1), \ldots, (i_n, f_n) \rangle$ la oferta de cursos, donde $i_i$ y $f_i$ representan las fechas de inicio y finalización del $i$-ésimo curso, respectivamente.
+
+Ordenamos los cursos por fecha de finalización en orden ascendente, de manera que $i < j$ implica $f_i \leq f_j$. Asumimos de aquí en más que la secuencia respeta este orden.
+
+Sea $S_i$ la solución del subproblema de hallar la mayor subsecuencia de $\langle (i_1, f_1), \ldots, (i_i, f_i) \rangle$ tal que los cursos no se solapan. Notemos que $S_1 = \{(i_1, f_1)\}$ y $S_n$ es la solución del problema completo.
+
+Sea $k$ un entero entre $1$ y $n$, y asumamos que conocemos las subsoluciones $S_1, \ldots, S_{k-1}$.
+
+Para hallar la subsolución $S_k$, realizamos una búsqueda binaria sobre las fechas de finalización $f_1, \ldots, f_{k-1}$ de manera de encontrar la fecha $f_j$ tal que $f_j \leq i_k \leq f_{j+1}$, donde $i_k$ es la fecha de inicio del $k$-ésimo curso. Luego $S_k = S_{j} \cap \{(i_j, f_j)\}$.
+
+Realizamos el procedimiento anterior para $S_1, \ldots, S_n$ en orden, memorizando las subsoluciones halladas en cada paso para evitar resolver los mismos subproblemas más de una vez, y finalizamos devolviendo la solución del problema completo $S_n$.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
