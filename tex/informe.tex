@@ -155,8 +155,26 @@ Sin más, presentamos los problemas estudiados a continuación.
 
 \section{Problema 1: Pascual y el correo}
 
-Descripción del problema. Requerimientos de complejidad temporal. Ejemplos de instancias del problema.
+Dada una secuencia de paquetes y un límite de peso, se nos pide calcular, la cantidad de camiones necesarios y sus pesos, para realizar el transporte de los mismos, utilizando el método del encargado de logística llamado Pascual, el cuál consiste en lo siguiente:
 
+\begin{itemize}
+\item Si un paquete excede el peso del camión cargado con menor peso, se pide un nuevo camión y se coloca el paquete.
+\item Si el paquete no supera el peso del camión cargado de menor peso, se lo coloca en el camión de menor peso.
+\end{itemize}
+
+Se nos pide resolver el problema con una cota de complejidad temporal \textbf{estrictamente mejor} que $O(n^2)$.
+
+\textbf{Ejemplo del problema y su solución:}
+\begin{itemize}
+	\item El formato de entrada es el siguiente: \\
+  límite cantidadDePaquetes paquete1 paquete 2... \#
+	\item El formato de salida es el siguiente: \\
+	cantidadDeCamiones pesoCamion1 pesoCamion2 ...
+\end{itemize}
+
+\textbf{Entrada}: 100 3 80 40 60 \#.\\
+\textbf{Salida}: 2 80 100. \\
+El camión 1 recibe el primer paquete de 80. Al intentar luego colocar el paquete de 40 en este, no le es posible debido a que el límite es 100 y lo guarda en el camión 2, al que luego, se le suma el paquete de 60, el cuál no provoca que el límite sea superado al colocarse en este.
 
 \subsection{Solución}
 
@@ -195,8 +213,16 @@ Demostración: para cada uno de los $n$ paquetes, se realizan 1 ó 2 operaciones
 
 
 \subsection{Experimentos computacionales}
+\subsubsection{Correctitud}
+Elegimos los siguientes casos para verificar la correctitud del programa:
+\begin{enumerate}
+	\item Entrada vacía, verifica el comportamiento del algoritmo ante la posibilida de no recibir ningún paquete en la entrada.
+	\item Entrada con un único paquete, verifica el primer caso, el de tener el \textbf{min-heap} vacío.
+	\item Entrada en la cual en algún camión se deba insertar más de un paquete. Esto verifica el caso del \textbf{else if} descripto en el pseudocódigo.
+	\item Entrada en la cual algún camión no pueda contener el peso del nuevo paquete y deba pedir un nuevo camión. Esto verifica el caso final (\textbf{else}), debiendo incluir un nuevo camión.
+\end{enumerate}
 
-Pendiente.
+\subsubsection{Performance}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
