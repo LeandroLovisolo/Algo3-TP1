@@ -12,6 +12,7 @@
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{algpseudocode}
+\usepackage{enumitem} % Provee macro \setlist
 \usepackage[toc, page]{appendix}
 
 % Evita que el documento se estire verticalmente para ocupar el espacio vacío
@@ -23,6 +24,9 @@
 
 % Separación entre párrafos.
 \setlength{\parskip}{0.5em}
+
+% Separación entre elementos de listas.
+\setlist{itemsep=0.5em}
 
 % Asigna la traducción de la palabra 'Appendices'.
 \renewcommand{\appendixtocname}{Apéndices}
@@ -187,7 +191,7 @@ Para cumplir con los requerimientos de complejidad temporal, utilizamos una cola
 
 El algoritmo corre en tiempo $O(n*log(n))$, donde $n$ es la cantidad de paquetes.
 
-Demostración: para cada uno de los $n$ paquetes, se realizan 1 o 2 operaciones $O(log(n))$ sobre la cola de prioridad. Luego deducimos la complejidad total $n * O(log(n)) = O(n * log(n))$.
+Demostración: para cada uno de los $n$ paquetes, se realizan 1 ó 2 operaciones $O(log(n))$ sobre la cola de prioridad. Luego deducimos la complejidad total $n * O(log(n)) = O(n * log(n))$.
 
 
 \subsection{Experimentos computacionales}
@@ -202,22 +206,97 @@ Pendiente.
 
 \section{Problema 2: Profesores visitantes}
 
-Descripción del problema. Requerimientos de complejidad temporal. Ejemplos de instancias del problema.
+Dado un conjunto de $n$ cursos con una fecha de inicio y una fecha de finalización, se nos pide hallar el subconjunto con mayor cantidad de cursos tales que ningún curso se solapa con otro.
+
+Se representa cada curso con una tupla $(i, f)$, donde $i$ y $f$ son las fechas de inicio y finalización del curso, respectivamente, tales que $i \leq f$.
+
+Formalizamos solapamiento de la siguiente manera: dos cursos $(i_1, f_1)$ y $(i_2, f_2)$ con $f_1 \leq f_2$ se solapan si y sólo si $f_1 \geq i_2$.
+
+Se nos pide resolver el problema con una cota de complejidad temporal \textbf{estrictamente mejor} que $O(n^2)$.
+
+Algunas instancias del problema y sus soluciones:
+
+\textbf{Entrada}: $\{(1, 3), (4, 4), (2, 5)\}$.\\
+\textbf{Salida}: $\{(1, 3), (4, 4)\}$.
+
+\textbf{Entrada}: $\{(1, 15), (2, 3), (3, 4), (5, 6), (7, 8), (4, 10)\}$.\\
+\textbf{Salida}: $\{(2, 3), (5, 6), (7, 8)\}$ ó $\{(3, 4), (5, 6), (7, 8)\}$; cualquiera de las dos son correctas.
+
+\textbf{Entrada}: $\{(1, 2)\}$.\\
+\textbf{Salida}: $\{(1, 2)\}$.
+
+\textbf{Entrada}: $\emptyset$.\\
+\textbf{Salida}: $\emptyset$.
 
 
 \subsection{Solución}
 
-Sea $\langle (i_1, f_1), \ldots, (i_n, f_n) \rangle$ la oferta de cursos, donde $i_i$ y $f_i$ representan las fechas de inicio y finalización del $i$-ésimo curso, respectivamente.
+Sea $C = \langle (i_1, f_1), \ldots, (i_n, f_n) \rangle$ la secuencia de los $n$ cursos ordenados por fecha de finalización en forma creciente, donde $i_j$ y $f_j$ son las fechas de inicio y finalización del $j$-ésimo curso, respectivamente, y $i_j \leq f_j$.
 
-Ordenamos los cursos por fecha de finalización en orden ascendente, de manera que $i < j$ implica $f_i \leq f_j$. Asumimos de aquí en más que la secuencia respeta este orden.
+Definimos $C_j = \langle (i_1, f_1), \ldots, (i_j, f_j) \rangle$; es decir, $C_j$ es un prefijo de $C$ compuesto de sus primeros $j$ cursos. (Notemos que $C = C_n$.)
 
-Sea $S_i$ la solución del subproblema de hallar la mayor subsecuencia de $\langle (i_1, f_1), \ldots, (i_i, f_i) \rangle$ tal que los cursos no se solapan. Notemos que $S_1 = \{(i_1, f_1)\}$ y $S_n$ es la solución del problema completo.
+Llamamos $S(C)$ a la solución a nuestro problema, definida como una subsecuencia de $C$ de tamaño máximo tal que sus cursos no se solapan.
 
-Sea $k$ un entero entre $1$ y $n$, y asumamos que conocemos las subsoluciones $S_1, \ldots, S_{k-1}$.
+Podemos definir $S(C_n)$ recursivamente en función de una solución a un problema más pequeño $S(C_j)$ (con $j < n$) de la siguiente manera:
 
-Para hallar la subsolución $S_k$, realizamos una búsqueda binaria sobre las fechas de finalización $f_1, \ldots, f_{k-1}$ de manera de encontrar la fecha $f_j$ tal que $f_j \leq i_k \leq f_{j+1}$, donde $i_k$ es la fecha de inicio del $k$-ésimo curso. Luego $S_k = S_{j} \cap \{(i_j, f_j)\}$.
+\begin{enumerate}
+    \item{
+        Si la secuencia es de tamaño $1$, la devolvemos sin modificar; es decir, $S(C_1) = C_1$.
+    }
 
-Realizamos el procedimiento anterior para $S_1, \ldots, S_n$ en orden, memorizando las subsoluciones halladas en cada paso para evitar resolver los mismos subproblemas más de una vez, y finalizamos devolviendo la solución del problema completo $S_n$.
+    \item{
+        Si el $n$-ésimo curso no se solapa con ningún curso, entonces $S(C_n) = S(C_{n-1}) + \langle (i_n, f_n) \rangle$.\\
+        Para que valga este caso, basta que se cumpla $f_{n-1} < i_n$.
+    }
+
+    \item\label{n-esimo-solapa}{
+        Si el $n$-ésimo curso sí se solapa con algún otro curso, evaluamos las dos siguientes soluciones posibles y devolvemos la de mayor tamaño:
+
+        \begin{enumerate}
+            \item{
+                Descartamos el $n$-ésimo curso y evaluamos $S(C_{n-1})$.
+            }
+            \item{
+                Conservamos el $n$-ésimo curso y descartamos todos los cursos que se solapan con este.
+
+                Para descartar los cursos que se solapan con el $n$-ésimo, buscamos el curso $(i_j, f_j)$ con fecha de finalización \textbf{más grande} que no se solape con el $n$-ésimo; es decir, tal que $f_j < i_n$. Esto nos garantiza que:
+
+                \begin{itemize}
+                    \item{
+                        El $j$-ésimo y $n$-ésimo curso no se solapan.
+                    }
+                    
+                    \item{
+                        Los cursos $C_j = \langle (i_1, f_1), \ldots, (i_j, f_j) \rangle$ \textbf{tampoco} se solapan con el $n$-ésimo curso, pues $f_1 \leq \ldots \leq f_j \leq i_n$.
+                    }
+
+                    \item{
+                        Los cursos $(i_{j+1}, f_{j+1}), \ldots, (i_n, f_n)$ \textbf{sí se solapan} con el $n$-ésimo curso, pues\\
+                        $i_n \leq f_{j+1} \leq \ldots \leq f_n$.
+                    }
+                \end{itemize}
+
+                Entonces evaluamos $S(C_j) + \langle (i_n, f_n) \rangle$.
+            }
+        \end{enumerate}
+    }
+\end{enumerate}
+
+De esta forma evaluamos todas las soluciones posibles y devolvemos una solución óptima.
+
+Ahora bien, esta solución recursiva presenta \textbf{superposición de problemas}. Por ejemplo, en el caso \ref{n-esimo-solapa} se evalúan las soluciones $S(C_{n-1})$ y $S(C_j)$. Como $n - 1 > j$, al evaluar $S(C_{n-1})$ eventualmente también se evalúa recursivamente $S(C_j)$, con lo que se terminaría evaluando $S(C_j)$ más de una vez.
+
+Además, la solución presenta \textbf{subestructura óptima}: Si $S(C_n) = S(C_{n-1}) + \langle (i_n, f_n) \rangle$ es una solución óptima, entonces $S(C_{n-1})$ también lo es. Demostración: supongamos que $S(C_{n-1})$ es una solución subóptima de tamaño $m$. Entonces $S(C_n)$ es de tamaño $m + 1$. Supongamos ahora que existe una solución mejor para $C_{n-1}$, llamémosla $S_2(C_{n-1})$, de tamaño $2m$. Si aplicamos esta solución mejor en $S(C_n)$, tenemos $S(C_n) = S_2(C_{n-1}) + \langle (i_n, f_n) \rangle$, de longitud $2m + 1 \geq m + 1$. Absurdo, pues si la solución $S(C_n)$ original era óptima, no puede existir otra de longitud mayor. Luego, las soluciones de los subproblemas de una solución óptima también son óptimas.
+
+Las dos características anteriores nos permiten aplicar la técnica de \textbf{programación dinámica} para resolver este problema.
+
+Utilizamos un approach bottom up: computamos y memorizamos las soluciones a los subproblemas $S(C_1), \ldots, S(C_n)$ en ese orden, de forma que tener precomputados $S(C_1), \ldots, S(C_{j-1})$ al momento de computar un $S(C_j)$ cualquiera, y devolvemos $S(C_n)$ al finalizar.
+
+\begin{pseudo}
+    \Procedure{Profesores-visitantes}{$\langle (i_1, f_1), \ldots, (i_n, f_n) \rangle$}
+        \State Pendiente.
+    \EndProcedure 
+\end{pseudo}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
