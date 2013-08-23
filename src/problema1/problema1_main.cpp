@@ -30,5 +30,6 @@ int main() {
 		cout << (*camiones)[j].second << " ";
 	}
 	cout << endl;
+	delete camiones;
 	return 0;
 }
