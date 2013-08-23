@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include "problema1.h"
+#include <utility>
 
 using namespace std;
 int main() {
@@ -23,13 +24,11 @@ int main() {
 		cin >> paquetes[i];
 		i++;
 	}
-	//problema1(limite, paquetes);
-	/*
-	cout << camiones.size();
-	for(i=0;i<camiones.size();i++) {
-		cout << camiones[i] << " ";
+	vector<pair<int, int> >* camiones = problema1(limite, paquetes);
+	cout << camiones->size() << " ";
+	for(unsigned j=0;j<camiones->size();j++) {
+		cout << (*camiones)[j].second << " ";
 	}
 	cout << endl;
-	*/
 	return 0;
 }
