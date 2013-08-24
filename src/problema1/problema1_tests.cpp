@@ -44,7 +44,7 @@ TEST(problema1, PaqueteSeAgregaAlMismoCamion) {
 }
 
 TEST(problema1, AgregoKVecesELMismoPaquete) {
-	for (int k = 0; k < 10000; k++){
+	for (int k = 0; k < 1000; k++){
 		std::vector<int> paquetes;
 		for (int i = 0; i < k; ++i) {
 				paquetes.push_back(100);
@@ -55,7 +55,7 @@ TEST(problema1, AgregoKVecesELMismoPaquete) {
 			EXPECT_EQ(i+1, (*res)[i].first);
 			EXPECT_EQ(100,(*res)[i].second);
 		}
-		if (k % 1000 == 0) cout << k << endl;
+		if (k % 100 == 0) cout << k << endl;
 		delete res;
 	}
 }
