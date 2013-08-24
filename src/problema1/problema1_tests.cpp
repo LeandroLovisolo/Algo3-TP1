@@ -1,9 +1,10 @@
 #include "gtest/gtest.h"
 #include "problema1.h"
+#include <ctime>
 using namespace std;
 
 TEST(problema1, CeroPaquetes) {
-	std::vector<pair<int,int> > *res = problema1(100, std::vector<int>())
+	std::vector<pair<int,int> > *res = problema1(100, std::vector<int>());
 	EXPECT_EQ(0,res->size());
 	delete res;
 }
@@ -41,6 +42,30 @@ TEST(problema1, PaqueteSeAgregaAlMismoCamion) {
 	EXPECT_EQ(100,(*res)[0].second);
 	delete res;
 }
+
+double performanceTest(const int iteraciones, const int limite, const vector<int> &paquetes) {
+	clock_t start = clock();
+	double time = 0;
+	for(int j=0;j<iteraciones;j++) {
+		clock_t end = clock();
+		problema1(limite, paquetes);
+		time += (double) (end-start) / CLOCKS_PER_SEC * 1000.0;
+	}
+	return time/iteraciones;
+}
+
+vector<int>* paquetesAleatorios(const int limite_max, const int cantidad_paquetes) {
+	//srand(time(NULL));
+	//int cant_paquetes = (rand() % cantidad_max);
+	vector<int>* paquetes = new vector<int>;
+    for(int j=0;j<cantidad_paquetes;j++) {
+    	srand(time(NULL));
+    	paquetes->push_back(rand() % limite_max);
+    }
+    return paquetes;
+}
+
+
 
 GTEST_API_ int main(int argc, char **argv) {
 	testing::InitGoogleTest(&argc, argv);
