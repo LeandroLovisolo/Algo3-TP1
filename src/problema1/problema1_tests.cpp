@@ -79,12 +79,12 @@ TEST(problema1, PaquetesSeAgreganADistintosCamiones) {
 	delete res;	
 }
 
-double performanceTest(const int iteraciones, const int limite, const vector<int> &paquetes) {
+double performance(int iteraciones, int limite, vector<int> paquetes) {
 	clock_t start = clock();
 	double time = 0;
-	for(int j=0;j<iteraciones;j++) {
-		clock_t end = clock();
+	for (int i = 0; i < iteraciones; ++i) {
 		problema1(limite, paquetes);
+		clock_t end = clock();
 		time += (double) (end-start) / CLOCKS_PER_SEC * 1000.0;
 	}
 	return time/iteraciones;
