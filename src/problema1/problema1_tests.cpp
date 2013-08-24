@@ -84,23 +84,22 @@ double performance(int iteraciones, int limite, vector<int> paquetes) {
 	clock_t start = clock();
 	double time = 0;
 	for (int i = 0; i < iteraciones; ++i) {
-		problema1(limite, paquetes);
+		// Ejecuto el problema y libero la memoria del vector devuelto.
+		delete problema1(limite, paquetes);
 		clock_t end = clock();
-		time += (double) (end-start) / CLOCKS_PER_SEC * 1000.0;
+		time += (double) (end-start) / CLOCKS_PER_SEC * 1000;
 	}
 	return time/iteraciones;
 }
 
 
 TEST(problema1, PerformancePeorCaso) {
-
-	ofstream fs("PerformancePeorCaso.txt");
-	for (int k = 0; k < 1000; k++){
-		std::vector<int> paquetes;
-		for (int i = 0; i < k; ++i) {
-			paquetes.push_back(100);
-		}
-		fs << k << " " << performance(1000, 100, paquetes) << endl;
+	ofstream fs("perf/problema1/peor-caso.csv");
+	int limite = 1;
+	std::vector<int> paquetes;
+	for (int i = 0; i <= 1000; i++){
+		paquetes.push_back(limite);
+		fs << i << ", " << performance(20, limite, paquetes) << endl;
 	}
 	fs.close();
 }
