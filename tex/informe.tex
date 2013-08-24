@@ -212,13 +212,13 @@ El algoritmo corre en tiempo $O(n*log(n))$, donde $n$ es la cantidad de paquetes
 Demostración: para cada uno de los $n$ paquetes, se realizan 1 ó 2 operaciones $O(log(n))$ sobre la cola de prioridad. Luego deducimos la complejidad total $n * O(log(n)) = O(n * log(n))$.
 
 \subsection{Correctitud}
-Al utilizar un \textbf{min-heap} como estructura para almacenar los camiones, es posible asegurar que en su cabecera se tendrá el camión menos cargado siempre, corroborando el correcto funcionamiento de la consigna, la cuál describe que las comparaciones para elegir el destino del paquete se hacen con el camión de menor peso. 
+Sea m el paquete número m de la secuencia de paquetes recibida, con m-1 paquetes ubicados en camiones anteriormente, quiero ver si al ubicar el paquete m el algoritmo cumple con la metodología de ordenar paquetes de Pascual.
 
-Si la suma del peso del camión en la cabecera y el nuevo paquete no superan el límite, se procede a desencolar del heap el camión, se le carga el nuevo paquete aumentando su peso y se lo encola nuevamente en el heap el cuál se encargará de dejar el nuevo camión con menos peso en la cabecera.
+Al utilizar un \textbf{min-heap} como estructura para almacenar los camiones, es posible asegurar que siempre se tendrá el camión menos cargado, corroborando el correcto funcionamiento de la consigna, la cuál describe que las comparaciones para elegir el destino del paquete se hacen con el camión de menor peso. 
 
-Si es requerido un nuevo camión, se crea uno nuevo con el peso del paquete a colocar y se lo encola en el heap, nuevamente el heap se encargará de colocar el camión de menor peso en la cabecera.
+Si la suma del peso del camión en la cabecera y el nuevo paquete m no superan el límite, se procede a desencolar del heap el camión, se le carga el nuevo paquete aumentando su peso y se lo encola nuevamente en el heap el cuál se encargará de dejar el nuevo camión con menos peso en la cabecera.
 
-Al asumir el correcto funcionamiento del heap, ya que para este se utiliza la STL, podemos  confirmar que las operaciones se realizan correctamente.
+Si es requerido un nuevo camión, se crea uno nuevo con el peso del paquete m y se lo encola en el heap, nuevamente el heap se encargará de colocar el camión de menor peso en la cabecera.
 
 \subsection{Experimentos computacionales}
 \subsubsection{Verificación de correctitud}
@@ -340,8 +340,11 @@ Utilizamos un approach bottom up: computamos y memorizamos las soluciones a los 
 
 \section{Problema 3: Una noche en el museo}
 
-Pendiente.
-
+\subsection{Solucion}
+\subsection{Complejidad}
+\subsection{Experimentos computacionales}
+\subsubsection{Correctitud}
+\subsubsection{Performance}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Conclusiones                                                              %%
