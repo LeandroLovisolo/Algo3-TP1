@@ -164,7 +164,7 @@ Dada una secuencia de paquetes y un límite de peso, se nos pide calcular, la ca
 
 Se nos pide resolver el problema con una cota de complejidad temporal \textbf{estrictamente mejor} que $O(n^2)$.
 
-\textbf{Ejemplo del problema y su solución:}
+\textbf{Ejemplos del problema y sus soluciones:}
 \begin{itemize}
 	\item El formato de entrada es el siguiente: \\
   límite cantidadDePaquetes paquete1 paquete 2... \#
@@ -174,13 +174,17 @@ Se nos pide resolver el problema con una cota de complejidad temporal \textbf{es
 
 \textbf{Entrada}: 100 3 80 40 60 \#.\\
 \textbf{Salida}: 2 80 100. \\
-El camión 1 recibe el primer paquete de 80. Al intentar luego colocar el paquete de 40 en este, no le es posible debido a que el límite es 100 y lo guarda en el camión 2, al que luego, se le suma el paquete de 60, el cuál no provoca que el límite sea superado al colocarse en este.
+El camión 1 recibe el primer paquete de 80. Al intentar luego colocar el paquete de 40 en este, no le es posible debido a que el límite es 100 y lo guarda en el camión 2, al que luego, se le suma el paquete de 60, el cuál no provoca que el límite sea superado al colocarse en este.\\
+
+\textbf{Entrada}: 100 0\#.\\
+\textbf{Salida}: 0. \\
+Al no haber paquetes no se utilizan comiones, sin importar el límite del mismo.
 
 \subsection{Solución}
 
 Sea $\langle p_1, \ldots, p_n \rangle$ la secuencia que contiene los pesos de los $n$ paquetes en orden de llegada, sea $\langle c_1, \ldots, c_m \rangle$ la secuencia en orden ascendente que contiene las cargas de los camiones en un determinado momento (inicialmente vacía) y sea $L$ el límite de carga de los camiones.
 
-Para cada paquete $p_i$, cargamos el paquete en el camión menos cargado $c_1$ si la nueva carga no supera el límite $L$, o en caso contrario agregamos un nuevo camión $c_{m+1} = p_i$ a la secuencia, realizando las permutaciones necesarias para preservar el orden ascendente.
+Para cada paquete $p_i$, cargamos el paquete en el camión con menor carga $c_1$ si la nueva carga no supera el límite $L$, o en caso contrario agregamos un nuevo camión $c_{m+1} = p_i$ a la secuencia, realizando las permutaciones necesarias para preservar el orden ascendente.
 
 Luego de haber cargado todos los paquetes, devolvemos la secuencia con la carga de cada camión.
 
