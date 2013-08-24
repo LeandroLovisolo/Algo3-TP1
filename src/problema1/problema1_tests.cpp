@@ -1,6 +1,8 @@
 #include "gtest/gtest.h"
 #include "problema1.h"
 #include <ctime>
+#include <iostream>
+#include <fstream>
 using namespace std;
 
 TEST(problema1, CeroPaquetes) {
@@ -55,7 +57,6 @@ TEST(problema1, AgregoKVecesELMismoPaquete) {
 			EXPECT_EQ(i+1, (*res)[i].first);
 			EXPECT_EQ(100,(*res)[i].second);
 		}
-		// if (k % 100 == 0) cout << k << endl;
 		delete res;
 	}
 }
@@ -79,25 +80,6 @@ TEST(problema1, PaquetesSeAgreganADistintosCamiones) {
 	delete res;	
 }
 
-TEST(problema1, PerformancePeorCaso) {
-	int limite = 1; // valor arbitrario; cualquier valor es lo mismo.
-	
-	for(int i = 1; i <= 1000; i++) {
-		// creo un vector con i paquetes de tamaño limite
-		std::vector<int> paquetes;
-		for(int j = 1; j <= i; j++) paquetes.push_back(limite);
-
-		// COMPLETAR:
-		// 1) llamar a la funcion performance() con los parametros que correspondan
-	    //    y una cantidad arbitraria de iteraciones, por ejemplo 1000.
-		// 2) imprimir en pantalla el tamaño del problema actual (variable i)
-	    //    seguido del tiempo que llevo ejecutar esta instancia
-		// 3) (para mas adelante) en vez de imprimir en la pantalla, guardar
-	    //    las mediciones de tiempo en un archivo CSV.
-	}
-}
-
-
 double performance(int iteraciones, int limite, vector<int> paquetes) {
 	clock_t start = clock();
 	double time = 0;
@@ -108,6 +90,22 @@ double performance(int iteraciones, int limite, vector<int> paquetes) {
 	}
 	return time/iteraciones;
 }
+
+
+TEST(problema1, PerformancePeorCaso) {
+
+	ofstream fs("PerformancePeorCaso.txt");
+	for (int k = 0; k < 1000; k++){
+		std::vector<int> paquetes;
+		for (int i = 0; i < k; ++i) {
+			paquetes.push_back(100);
+		}
+		fs << k << " " << performance(1000, 100, paquetes) << endl;
+	}
+	fs.close();
+}
+
+
 
 vector<int>* paquetesAleatorios(const int limite_max, const int cantidad_paquetes) {
 	//srand(time(NULL));
