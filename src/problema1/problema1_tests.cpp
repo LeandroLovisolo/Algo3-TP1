@@ -43,18 +43,21 @@ TEST(problema1, PaqueteSeAgregaAlMismoCamion) {
 	delete res;
 }
 
-TEST(problema1, AgregoSiempreMismoPaquete) {
-	std::vector<int> paquetes;
-	for (int i = 0; i < 1000; ++i) {
-		paquetes.push_back(100);
+TEST(problema1, AgregoKVecesELMismoPaquete) {
+	for (int k = 0; k < 10000; k++){
+		std::vector<int> paquetes;
+		for (int i = 0; i < k; ++i) {
+				paquetes.push_back(100);
+		}
+		std::vector<pair<int,int> > *res = problema1(100, paquetes);
+		EXPECT_EQ(k, res->size());
+		for (int i = 0; i < res->size(); ++i) {
+			EXPECT_EQ(i+1, (*res)[i].first);
+			EXPECT_EQ(100,(*res)[i].second);
+		}
+		if (k % 1000 == 0) cout << k << endl;
+		delete res;
 	}
-	std::vector<pair<int,int> > *res = problema1(100, paquetes);
-	EXPECT_EQ(1000, res->size());
-	for (int i = 0; i < res->size(); ++i) {
-		EXPECT_EQ(i+1, (*res)[i].first);
-		EXPECT_EQ(100,(*res)[i].second);
-	}
-	delete res;
 }
 
 TEST(problema1, PaquetesSeAgreganADistintosCamiones) {
