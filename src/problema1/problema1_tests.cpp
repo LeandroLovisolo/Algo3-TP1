@@ -55,7 +55,7 @@ TEST(problema1, AgregoKVecesELMismoPaquete) {
 			EXPECT_EQ(i+1, (*res)[i].first);
 			EXPECT_EQ(100,(*res)[i].second);
 		}
-		if (k % 100 == 0) cout << k << endl;
+		// if (k % 100 == 0) cout << k << endl;
 		delete res;
 	}
 }
@@ -78,6 +78,25 @@ TEST(problema1, PaquetesSeAgreganADistintosCamiones) {
 	EXPECT_EQ(80,(*res)[2].second);
 	delete res;	
 }
+
+TEST(problema1, PerformancePeorCaso) {
+	int limite = 1; // valor arbitrario; cualquier valor es lo mismo.
+	
+	for(int i = 1; i <= 1000; i++) {
+		// creo un vector con i paquetes de tamaño limite
+		std::vector<int> paquetes;
+		for(int j = 1; j <= i; j++) paquetes.push_back(limite);
+
+		// COMPLETAR:
+		// 1) llamar a la funcion performance() con los parametros que correspondan
+	    //    y una cantidad arbitraria de iteraciones, por ejemplo 1000.
+		// 2) imprimir en pantalla el tamaño del problema actual (variable i)
+	    //    seguido del tiempo que llevo ejecutar esta instancia
+		// 3) (para mas adelante) en vez de imprimir en la pantalla, guardar
+	    //    las mediciones de tiempo en un archivo CSV.
+	}
+}
+
 
 double performance(int iteraciones, int limite, vector<int> paquetes) {
 	clock_t start = clock();
