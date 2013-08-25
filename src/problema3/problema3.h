@@ -1,7 +1,7 @@
 #ifndef PROBLEMA3_H
 #define PROBLEMA3_H
 
-enum Casilla { Pared, Libre, Importante, SensorDoble, SensorCuadruple };
+enum Casilla { Pared, Libre, Importante, SensorDobleVertical, SensorDobleHorizontal, SensorCuadruple };
 
 class Piso {
 public:

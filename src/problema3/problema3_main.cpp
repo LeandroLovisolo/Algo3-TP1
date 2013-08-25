@@ -1,6 +1,7 @@
 #include <iostream>
 #include "problema3.h"
 using namespace std;
+
 int main() {
 	int n;
 	if(cin.eof()) {
@@ -14,12 +15,23 @@ int main() {
 		return 0;
 	}
 	cin >> m;
-
+	int casilla;
 	Piso mapa(n,m);
 	for (int i = 0; i < n; ++i) {
 		for(int j = 0; j < m; ++j) {
-			if(!cin.eof())	cin >> mapa.en(i, j);
+			if(!cin.eof()) {
+				cin >> casilla;
+				mapa.en(i, j) = (Casilla) casilla;
+			}
 		}
 	}
+	/* Test de lenctura
+	for (int i = 0; i < n; ++i) {
+		for(int j = 0; j < m; ++j) {
+			cout << mapa.en(i,j);
+		}
+		cout << endl;
+	}
+	*/
 	return 0;
 }
