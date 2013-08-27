@@ -77,7 +77,7 @@ TEST(problema3, todoParedes) {
 }
 
 TEST(problema3, todoParedeMenosUnElementoImportante) {
-/*
+/* Este caso no tiene solución
 	P 	P
 	P	I 
 */
@@ -94,7 +94,7 @@ TEST(problema3, todoParedeMenosUnElementoImportante) {
 }
 
 TEST(problema3, todoImportante) {
-/*
+/* Este no tiene solución
 	I 	I
 	I	I 
 */
@@ -193,6 +193,35 @@ TEST(problema3, noApuntan2Sensores) {
 	p.en(2, 0) = SensorCuadruple;
 	p.en(2, 1) = Libre;
 	p.en(2, 2) = Libre;
+	bool value = false;
+	EXPECT_EQ(value, checkPiso(p));
+
+}
+
+TEST(problema3, noApuntan2Sensores2) {
+/* Error importante, hay que calcular para importante
+	la posibilidad de que no se pueda poner un sensor
+	en su área dado que otro apunta a ese lugar específico
+	
+	L  SDV	L 	L
+	I  L	P 	I
+	SC L	L 	L
+*/
+
+	Piso p(3,4);
+	
+	p.en(0, 0) = Libre;
+	p.en(0, 1) = SensorDobleVertical;
+	p.en(0, 2) = Libre;
+	p.en(0, 3) = Libre;
+	p.en(1, 0) = Importante;
+	p.en(1, 1) = Libre;
+	p.en(1, 2) = Pared;
+	p.en(1, 3) = Importante;
+	p.en(2, 0) = SensorCuadruple;
+	p.en(2, 1) = Libre;
+	p.en(2, 2) = Libre;
+	p.en(2, 3) = Libre;
 	bool value = false;
 	EXPECT_EQ(value, checkPiso(p));
 
