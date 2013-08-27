@@ -32,6 +32,9 @@ bool casilleroCorrecto(Piso &piso, const unsigned int fila, const unsigned int c
 		y sensoresApuntandoHorizontal cuenta la cantidad de sensores apuntando a la casilla
 		horizontalmente
 	*/
+	//Si es una pared, no hay nada para hacer
+	if(piso.en(fila, columna) == Pared) return true;
+
 	int sensoresAreaHorizontal = 0, sensoresAreaVertical = 0;
 	int sensoresApuntandoHorizontal = 0, sensoresApuntandoVertical = 0;
 

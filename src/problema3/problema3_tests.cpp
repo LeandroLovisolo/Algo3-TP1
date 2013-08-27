@@ -60,7 +60,7 @@ TEST(problema3, chocanSensores) {
 }
 
 TEST(problema3, todoParedes) {
-/*
+/* En principio debería devolver true, ya que las 4 paredes darían un conjunto vacío de láseres
 	P 	P
 	P	P 
 */
@@ -71,7 +71,7 @@ TEST(problema3, todoParedes) {
 	p.en(0, 1) = Pared;
 	p.en(1, 0) = Pared;
 	p.en(1, 1) = Pared;
-	bool value = false;
+	bool value = true;
 	EXPECT_EQ(value, checkPiso(p));
 
 }
