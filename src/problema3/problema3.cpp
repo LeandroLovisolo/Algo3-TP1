@@ -57,7 +57,7 @@ bool casilleroCorrecto(Piso &piso, const unsigned int fila, const unsigned int c
 		}
 	}
 	//Por arriba de la posicion
-	for(unsigned int i = fila-1; i > 0; --i) {
+	for(int i = fila-1; i > 0; --i) {
 		if(piso.en(i, columna) == Pared) break;
 		switch(piso.en(i,columna)) {
 			case SensorDobleVertical:
@@ -93,7 +93,7 @@ bool casilleroCorrecto(Piso &piso, const unsigned int fila, const unsigned int c
 		}
 	}
 	//Por la izquierda de la posición
-	for(unsigned int j = columna-1; j > 0; j--) {
+	for(int j = columna-1; j > 0; j--) {
 		if(piso.en(fila, j) == Pared) break;
 		switch(piso.en(fila,j)) {
 			case SensorDobleVertical:

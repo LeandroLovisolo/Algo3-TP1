@@ -20,5 +20,6 @@ private:
 };
 
 Piso *problema3(const Piso &piso);
+bool checkPiso(Piso &piso);
 
 #endif // PROBLEMA3_H
