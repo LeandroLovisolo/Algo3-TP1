@@ -19,23 +19,114 @@ TEST(problema3, UnaSolaCasilla) {
 }
 */
 
-TEST(problema3, check) {
+TEST(problema3, okPeroQuedanCasillerosLibres) {
+/*
+	L 	L 	L
+	L 	I 	SC
+	L 	SC 	I
+*/
 
-	Piso p(2,2);
-	p.en(0, 0) = Pared;
-	p.en(0, 1) = SensorDobleVertical;
-	p.en(1, 0) = SensorDobleHorizontal;
+	Piso p(3,3);
+	// en (0, 0) o (0,1) puede haber un sensorVertical
+	p.en(0, 0) = Libre;
+	p.en(0, 1) = Libre;
+	p.en(0, 2) = Libre;
+	p.en(1, 0) = Libre;
 	p.en(1, 1) = Importante;
-
-	EXPECT_EQ(Pared, p.en(0, 0));
-	EXPECT_EQ(SensorDobleVertical, p.en(0, 1));
-	EXPECT_EQ(SensorDobleHorizontal, p.en(1, 0));
-	EXPECT_EQ(Importante, p.en(1, 1));
-
-	std::cout << "todo OK" << std::endl;
-
+	p.en(1, 2) = SensorCuadruple;
+	p.en(2, 0) = Libre;
+	p.en(2, 1) = SensorCuadruple;
+	p.en(2, 2) = Importante;
 
 	EXPECT_EQ(true, checkPiso(p));
+
+}
+
+TEST(problema3, chocanSensores) {
+/*
+	L 	L 
+	SDV	SC 
+*/
+
+	Piso p(2,2);
+	
+	p.en(0, 0) = Libre;
+	p.en(0, 1) = Libre;
+	p.en(1, 0) = SensorDobleVertical;
+	p.en(1, 1) = SensorCuadruple;
+
+	EXPECT_EQ(false, checkPiso(p));
+
+}
+
+TEST(problema3, sensoresNoTraspasanLaPared) {
+/*
+	L 	SDH	L
+	I 	SDH	I
+	SC 	P 	SC
+*/
+
+	Piso p(3,3);
+	
+	p.en(0, 0) = Libre;
+	p.en(0, 1) = SensorDobleHorizontal;
+	p.en(0, 2) = Libre;
+	p.en(1, 0) = Importante;
+	p.en(1, 1) = SensorDobleHorizontal;
+	p.en(1, 2) = Importante;
+	p.en(2, 0) = SensorCuadruple;
+	p.en(2, 1) = Pared;
+	p.en(2, 2) = SensorCuadruple;
+
+	EXPECT_EQ(true, checkPiso(p));
+
+}
+
+// Quedan lugares libres pero no es valida
+TEST(problema3, solucionNoValida) {
+/*
+	L 	L 	L
+	I 	P 	I
+	SC 	P 	L
+*/
+
+	Piso p(3,3);
+	
+	p.en(0, 0) = Libre;
+	p.en(0, 1) = Libre;
+	p.en(0, 2) = Libre;
+	p.en(1, 0) = Importante;
+	p.en(1, 1) = Pared;
+	p.en(1, 2) = Importante;
+	p.en(2, 0) = SensorCuadruple;
+	p.en(2, 1) = Pared;
+	p.en(2, 2) = Libre;
+
+	EXPECT_EQ(false, checkPiso(p));
+
+}
+
+// No hay 2 sensores apuntando a los casilleros importantes
+TEST(problema3, noApuntan2Sensores) {
+/*
+	L 	L 	SC
+	I 	P 	I
+	SC 	L 	L
+*/
+
+	Piso p(3,3);
+	
+	p.en(0, 0) = Libre;
+	p.en(0, 1) = Libre;
+	p.en(0, 2) = SensorCuadruple;
+	p.en(1, 0) = Importante;
+	p.en(1, 1) = Pared;
+	p.en(1, 2) = Importante;
+	p.en(2, 0) = SensorCuadruple;
+	p.en(2, 1) = Libre;
+	p.en(2, 2) = Libre;
+
+	EXPECT_EQ(false, checkPiso(p));
 
 }
 
