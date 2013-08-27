@@ -59,6 +59,74 @@ TEST(problema3, chocanSensores) {
 
 }
 
+TEST(problema3, todoParedes) {
+/*
+	P 	P
+	P	P 
+*/
+
+	Piso p(2,2);
+	
+	p.en(0, 0) = Pared;
+	p.en(0, 1) = Pared;
+	p.en(1, 0) = Pared;
+	p.en(1, 1) = Pared;
+
+	EXPECT_EQ(false, checkPiso(p));
+
+}
+
+TEST(problema3, todoParedeMenosUnElementoImportante) {
+/*
+	P 	P
+	P	I 
+*/
+
+	Piso p(2,2);
+	
+	p.en(0, 0) = Pared;
+	p.en(0, 1) = Pared;
+	p.en(1, 0) = Pared;
+	p.en(1, 1) = Pared;
+
+	EXPECT_EQ(false, checkPiso(p));
+
+}
+
+TEST(problema3, todoImportante) {
+/*
+	I 	I
+	I	I 
+*/
+
+	Piso p(2,2);
+	
+	p.en(0, 0) = Importante;
+	p.en(0, 1) = Importante;
+	p.en(1, 0) = Importante;
+	p.en(1, 1) = Importante;
+
+	EXPECT_EQ(false, checkPiso(p));
+
+}
+
+TEST(problema3, esSolucion) {
+/*
+	I 	SC
+	SC	I 
+*/
+
+	Piso p(2,2);
+	
+	p.en(0, 0) = Importante;
+	p.en(0, 1) = SensorCuadruple;
+	p.en(1, 0) = SensorCuadruple;
+	p.en(1, 1) = Importante;
+
+	EXPECT_EQ(true, checkPiso(p));
+
+}
+
 TEST(problema3, sensoresNoTraspasanLaPared) {
 /*
 	L 	SDH	L
