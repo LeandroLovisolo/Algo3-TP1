@@ -37,8 +37,8 @@ TEST(problema3, okPeroQuedanCasillerosLibres) {
 	p.en(2, 0) = Libre;
 	p.en(2, 1) = SensorCuadruple;
 	p.en(2, 2) = Importante;
-
-	EXPECT_EQ(true, checkPiso(p));
+	bool value = true;
+	EXPECT_EQ(value, checkPiso(p));
 
 }
 
@@ -54,8 +54,8 @@ TEST(problema3, chocanSensores) {
 	p.en(0, 1) = Libre;
 	p.en(1, 0) = SensorDobleVertical;
 	p.en(1, 1) = SensorCuadruple;
-
-	EXPECT_EQ(false, checkPiso(p));
+	bool value = false;
+	EXPECT_EQ(value, checkPiso(p));
 
 }
 
@@ -71,8 +71,8 @@ TEST(problema3, todoParedes) {
 	p.en(0, 1) = Pared;
 	p.en(1, 0) = Pared;
 	p.en(1, 1) = Pared;
-
-	EXPECT_EQ(false, checkPiso(p));
+	bool value = false;
+	EXPECT_EQ(value, checkPiso(p));
 
 }
 
@@ -88,8 +88,8 @@ TEST(problema3, todoParedeMenosUnElementoImportante) {
 	p.en(0, 1) = Pared;
 	p.en(1, 0) = Pared;
 	p.en(1, 1) = Pared;
-
-	EXPECT_EQ(false, checkPiso(p));
+	bool value = false;
+	EXPECT_EQ(value, checkPiso(p));
 
 }
 
@@ -105,8 +105,8 @@ TEST(problema3, todoImportante) {
 	p.en(0, 1) = Importante;
 	p.en(1, 0) = Importante;
 	p.en(1, 1) = Importante;
-
-	EXPECT_EQ(false, checkPiso(p));
+	bool value = false;
+	EXPECT_EQ(value, checkPiso(p));
 
 }
 
@@ -122,8 +122,8 @@ TEST(problema3, esSolucion) {
 	p.en(0, 1) = SensorCuadruple;
 	p.en(1, 0) = SensorCuadruple;
 	p.en(1, 1) = Importante;
-
-	EXPECT_EQ(true, checkPiso(p));
+	bool value = true;
+	EXPECT_EQ(value, checkPiso(p));
 
 }
 
@@ -145,8 +145,8 @@ TEST(problema3, sensoresNoTraspasanLaPared) {
 	p.en(2, 0) = SensorCuadruple;
 	p.en(2, 1) = Pared;
 	p.en(2, 2) = SensorCuadruple;
-
-	EXPECT_EQ(true, checkPiso(p));
+	bool value = true;
+	EXPECT_EQ(value, checkPiso(p));
 
 }
 
@@ -169,8 +169,8 @@ TEST(problema3, solucionNoValida) {
 	p.en(2, 0) = SensorCuadruple;
 	p.en(2, 1) = Pared;
 	p.en(2, 2) = Libre;
-
-	EXPECT_EQ(false, checkPiso(p));
+	bool value = false;
+	EXPECT_EQ(value, checkPiso(p));
 
 }
 
@@ -193,8 +193,8 @@ TEST(problema3, noApuntan2Sensores) {
 	p.en(2, 0) = SensorCuadruple;
 	p.en(2, 1) = Libre;
 	p.en(2, 2) = Libre;
-
-	EXPECT_EQ(false, checkPiso(p));
+	bool value = false;
+	EXPECT_EQ(value, checkPiso(p));
 
 }
 
