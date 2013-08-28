@@ -1,51 +1,61 @@
-#include "problema1.h"
-#include <queue>          // std::priority_queue
-#include <vector>         // std::vector
-#include <functional>     // std::greater
-#include <utility>
+#include <tuple>
+#include <queue>
 #include <algorithm>
-#include <iostream>
+
+#include "problema1.h"
+
 using namespace std;
 
-//Clase de comparación utilizada para ordenar los elementos de la priority_queue
-class comparacion {
+// Campos: <carga, índice>
+typedef std::tuple<int, int> Camion;
+
+// Macros para acceder a los campos de la tupla Camion
+#define carga(c)  get<0>(c)
+#define indice(c) get<1>(c)
+
+// Relación de orden de la priority_queue de tuplas Camion
+class orden {
 public:
-  bool operator() (const pair<int,int> &x, const pair<int,int> &y) const {
-    return (x.second > y.second);
+  bool operator() (const Camion &x, const Camion &y) const {
+    return carga(x) > carga(y);
   }
 };
 
-//Función utilizada para ordenar los camiones por número
-bool ordenarCamiones(pair<int,int> x, pair<int,int> y){
-    return(x.first<y.first);
-}
+vector<int> problema1(int limite, const vector<int> &paquetes) {
+    priority_queue<Camion, vector<Camion>, orden> cola;
 
-vector<pair<int, int> >* problema1(const int capacidad_camiones, const vector<int> &paquetes) {
-	priority_queue < pair<int, int>, vector<pair<int, int> >, comparacion > cola_camiones;
-	for(unsigned int i=0;i<paquetes.size();i++) {
-        //Es el primer paquete? 
-		if(cola_camiones.size() == 0) {
-        	cola_camiones.push(pair<int,int>(1, paquetes[i]));
-		}
-        //Entra el paquete en el camión de menor peso disponible?
-		else if((cola_camiones.top().second + paquetes[i]) <= capacidad_camiones) {
-			pair <int,int> camion_modificado = cola_camiones.top();
-			camion_modificado.second += paquetes[i];
-			cola_camiones.pop();
-			cola_camiones.push(camion_modificado);
-		}
-        //Se crea un nuevo camión con el paquete
-		else {
-			cola_camiones.push(make_pair(cola_camiones.size()+1, paquetes[i]));
-		}
-	}
-	//Ordena los camiones por su número (camión 1, camión 2, etc), para tener en la salida ordenada
-    vector<pair<int, int> >* camiones = new vector<pair<int, int> >(cola_camiones.size(),make_pair(0,0));
-    unsigned int size = cola_camiones.size();
-    for(unsigned int j=0;j<size;j++) {
-        (*camiones)[j] = cola_camiones.top();
-        cola_camiones.pop();
+    for(size_t i = 0; i < paquetes.size(); i++) {
+        // Primer camión.
+        if(cola.empty()) cola.push(Camion(paquetes[i], 1));
+
+        // Se carga el paquete en el camión menos cargado.
+        else if(carga(cola.top()) + paquetes[i] <= limite) {
+            Camion c = cola.top();
+            carga(c) += paquetes[i];
+            cola.pop();
+            cola.push(c);
+        }
+
+        // Se carga el paquete en un nuevo camión.
+        else cola.push(Camion(paquetes[i], cola.size() + 1));
     }
-    sort(camiones->begin(),camiones->end(),ordenarCamiones);
-    return camiones;
+
+    // Convertimos la cola a un vector de camiones.
+    vector<Camion> camiones;
+    while(!cola.empty()) {
+        camiones.push_back(cola.top());
+        cola.pop();
+    }
+
+    // Ordenamos el vector de camiones por índice.
+    sort(camiones.begin(),
+         camiones.end(),
+         [] (Camion c, Camion d) { return indice(c) < indice(d); } );
+
+    // Convertimos el vector de camiones a un vector de cargas.
+    vector<int> cargas;
+    for(size_t i = 0; i < camiones.size(); i++)
+        cargas.push_back(carga(camiones[i]));
+
+    return cargas;
 }
