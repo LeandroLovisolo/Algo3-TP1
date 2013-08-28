@@ -8,29 +8,13 @@
 \usepackage{lastpage}
 \usepackage{amsmath}
 \usepackage{amsfonts}
+\usepackage{amsthm}
 \usepackage{verbatim}
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{algpseudocode}
 \usepackage{enumitem} % Provee macro \setlist
 \usepackage[toc, page]{appendix}
-
-% Evita que el documento se estire verticalmente para ocupar el espacio vacío
-% en cada página.
-\raggedbottom
-
-% Deshabilita sangría en la primer línea de un párrafo.
-\setlength{\parindent}{0em}
-
-% Separación entre párrafos.
-\setlength{\parskip}{0.5em}
-
-% Separación entre elementos de listas.
-\setlist{itemsep=0.5em}
-
-% Asigna la traducción de la palabra 'Appendices'.
-\renewcommand{\appendixtocname}{Apéndices}
-\renewcommand{\appendixpagename}{Apéndices}
 
 
 %%%%%%%%%% Configuración de Fancyhdr - Inicio %%%%%%%%%%
@@ -64,9 +48,32 @@
 % Conectivo 'in' para usar así: \ForAll{$foo$ \In $bar$}
 \newcommand{\In}{\textbf{in} }
 
+% Conectivo 'to' para usar así: \For{$i = 1$ \In $n$}
+\newcommand{\To}{\textbf{to} }
+
 % Complejidades
 \newcommand{\Ode}[1]{\hfill $O(#1)$}
 %%%%%%%%%% Configuración de Algorithmic - Fin %%%%%%%%%%
+
+
+%%%%%%%%%% Miscelánea - Inicio %%%%%%%%%%
+% Evita que el documento se estire verticalmente para ocupar el espacio vacío
+% en cada página.
+\raggedbottom
+
+% Deshabilita sangría en la primer línea de un párrafo.
+\setlength{\parindent}{0em}
+
+% Separación entre párrafos.
+\setlength{\parskip}{0.5em}
+
+% Separación entre elementos de listas.
+\setlist{itemsep=0.5em}
+
+% Asigna la traducción de la palabra 'Appendices'.
+\renewcommand{\appendixtocname}{Apéndices}
+\renewcommand{\appendixpagename}{Apéndices}
+%%%%%%%%%% Miscelánea - Fin %%%%%%%%%%
 
 
 \begin{document}
@@ -215,6 +222,7 @@ El algoritmo corre en tiempo $O(n*log(n))$, donde $n$ es la cantidad de paquetes
 
 Demostración: para cada uno de los $n$ paquetes, se realizan 1 ó 2 operaciones $O(log(n))$ sobre la cola de prioridad. Luego deducimos la complejidad total $n * O(log(n)) = O(n * log(n))$.
 
+
 \subsection{Correctitud}
 Sea m el paquete número m de la secuencia de paquetes recibida, con m-1 paquetes ubicados en camiones anteriormente, quiero ver si al ubicar el paquete m el algoritmo cumple con la metodología de ordenar paquetes de Pascual.
 
@@ -248,9 +256,11 @@ Dado un conjunto de $n$ cursos con una fecha de inicio y una fecha de finalizaci
 
 Se representa cada curso con una tupla $(i, f)$, donde $i$ y $f$ son las fechas de inicio y finalización del curso, respectivamente, tales que $i \leq f$.
 
-Formalizamos solapamiento de la siguiente manera: dos cursos $(i_1, f_1)$ y $(i_2, f_2)$ con $f_1 \leq f_2$ se solapan si y sólo si $f_1 \geq i_2$.
+Decimos que dos cursos $(i_1, f_1)$ y $(i_2, f_2)$ con $f_1 \leq f_2$ se solapan si y sólo si $f_1 \geq i_2$.
 
-Se nos pide resolver el problema con una cota de complejidad temporal \textbf{estrictamente mejor} que $O(n^2)$.
+Formalmente, dado un conjunto de cursos $C = \{ (i_1, f_1), \ldots, (i_n, f_n) \}$, se nos pide hallar un subconjunto $S \subseteq C$ sin cursos solapados, tal que para cualquier otro $S' \subseteq C$ sin cursos solapados, vale que $|S| \geq |S'|$.
+
+El problema debe ser resuelto con una cota de complejidad temporal \textbf{estrictamente mejor} que $O(n^2)$.
 
 Algunas instancias del problema y sus soluciones:
 
@@ -269,72 +279,83 @@ Algunas instancias del problema y sus soluciones:
 
 \subsection{Solución}
 
-Sea $C = \langle (i_1, f_1), \ldots, (i_n, f_n) \rangle$ la secuencia de los $n$ cursos ordenados por fecha de finalización en forma creciente, donde $i_j$ y $f_j$ son las fechas de inicio y finalización del $j$-ésimo curso, respectivamente, y $i_j \leq f_j$.
+Sea $C = \{ (i_1, f_1), \ldots, (i_n, f_n) \}$ el conjunto con los $n$ cursos ordenados por fecha de finalización en forma creciente ($i < j \Rightarrow f_i \leq f_j$), y sea $S = \emptyset$ una solución del problema, inicialmente vacía.
 
-Definimos $C_j = \langle (i_1, f_1), \ldots, (i_j, f_j) \rangle$; es decir, $C_j$ es un prefijo de $C$ compuesto de sus primeros $j$ cursos. (Notemos que $C = C_n$.)
+Recorremos los cursos $c_j \in C$ (con $j = 1, \ldots, n$) en el orden anterior, realizando una de las siguientes acciones para cada $c_j$:
 
-Llamamos $S(C)$ a la solución a nuestro problema, definida como una subsecuencia de $C$ de tamaño máximo tal que sus cursos no se solapan.
-
-Podemos definir $S(C_n)$ recursivamente en función de una solución a un problema más pequeño $S(C_j)$ (con $j < n$) de la siguiente manera:
-
-\begin{enumerate}
+\begin{itemize}
     \item{
-        Si la secuencia es de tamaño $1$, la devolvemos sin modificar; es decir, $S(C_1) = C_1$.
+        Si $j = 1$, incluímos $c_1 = (i_1, f_1)$ en la solución: $S = \{ (i_1, f_1) \}$.
     }
-
     \item{
-        Si el $n$-ésimo curso no se solapa con ningún curso, entonces $S(C_n) = S(C_{n-1}) + \langle (i_n, f_n) \rangle$.\\
-        Para que valga este caso, basta que se cumpla $f_{n-1} < i_n$.
+        Si $j > 1$ y $c_j = (i_j, f_j)$ \textbf{no se solapa} con el último curso agregado a la solución, lo incluímos en la misma: $S = S \cup \{ (i_j, f_j) \}$.
     }
-
-    \item\label{n-esimo-solapa}{
-        Si el $n$-ésimo curso sí se solapa con algún otro curso, evaluamos las dos siguientes soluciones posibles y devolvemos la de mayor tamaño:
-
-        \begin{enumerate}
-            \item{
-                Descartamos el $n$-ésimo curso y evaluamos $S(C_{n-1})$.
-            }
-            \item{
-                Conservamos el $n$-ésimo curso y descartamos todos los cursos que se solapan con este.
-
-                Para descartar los cursos que se solapan con el $n$-ésimo, buscamos el curso $(i_j, f_j)$ con fecha de finalización \textbf{más grande} que no se solape con el $n$-ésimo; es decir, tal que $f_j < i_n$. Esto nos garantiza que:
-
-                \begin{itemize}
-                    \item{
-                        El $j$-ésimo y $n$-ésimo curso no se solapan.
-                    }
-                    
-                    \item{
-                        Los cursos $C_j = \langle (i_1, f_1), \ldots, (i_j, f_j) \rangle$ \textbf{tampoco} se solapan con el $n$-ésimo curso, pues $f_1 \leq \ldots \leq f_j \leq i_n$.
-                    }
-
-                    \item{
-                        Los cursos $(i_{j+1}, f_{j+1}), \ldots, (i_n, f_n)$ \textbf{sí se solapan} con el $n$-ésimo curso, pues\\
-                        $i_n \leq f_{j+1} \leq \ldots \leq f_n$.
-                    }
-                \end{itemize}
-
-                Entonces evaluamos $S(C_j) + \langle (i_n, f_n) \rangle$.
-            }
-        \end{enumerate}
+    \item{
+        En caso contrario, ignoramos $c_j$.
     }
-\end{enumerate}
+\end{itemize}
 
-De esta forma evaluamos todas las soluciones posibles y devolvemos una solución óptima.
+Finalmente devolvemos la solución $S$ hallada.
 
-Ahora bien, esta solución recursiva presenta \textbf{superposición de problemas}. Por ejemplo, en el caso \ref{n-esimo-solapa} se evalúan las soluciones $S(C_{n-1})$ y $S(C_j)$. Como $n - 1 > j$, al evaluar $S(C_{n-1})$ eventualmente también se evalúa recursivamente $S(C_j)$, con lo que se terminaría evaluando $S(C_j)$ más de una vez.
-
-Además, la solución presenta \textbf{subestructura óptima}: Si $S(C_n) = S(C_{n-1}) + \langle (i_n, f_n) \rangle$ es una solución óptima, entonces $S(C_{n-1})$ también lo es. Demostración: supongamos que $S(C_{n-1})$ es una solución subóptima de tamaño $m$. Entonces $S(C_n)$ es de tamaño $m + 1$. Supongamos ahora que existe una solución mejor para $C_{n-1}$, llamémosla $S_2(C_{n-1})$, de tamaño $2m$. Si aplicamos esta solución mejor en $S(C_n)$, tenemos $S(C_n) = S_2(C_{n-1}) + \langle (i_n, f_n) \rangle$, de longitud $2m + 1 \geq m + 1$. Absurdo, pues si la solución $S(C_n)$ original era óptima, no puede existir otra de longitud mayor. Luego, las soluciones de los subproblemas de una solución óptima también son óptimas.
-
-Las dos características anteriores nos permiten aplicar la técnica de \textbf{programación dinámica} para resolver este problema.
-
-Utilizamos un approach bottom up: computamos y memorizamos las soluciones a los subproblemas $S(C_1), \ldots, S(C_n)$ en ese orden, de forma que tener precomputados $S(C_1), \ldots, S(C_{j-1})$ al momento de computar un $S(C_j)$ cualquiera, y devolvemos $S(C_n)$ al finalizar.
+En el pseudocódigo a continuación, $C$ denota el conjunto con la oferta de $n$ cursos $\{ (i_1, f_1), \ldots, (i_n, f_n) \}$.
 
 \begin{pseudo}
-    \Procedure{Profesores-visitantes}{$\langle (i_1, f_1), \ldots, (i_n, f_n) \rangle$}
-        \State Pendiente.
+    \Procedure{Profesores-visitantes}{$C$}
+        \If{$|C| < 2$}
+            \State{\Return{$C$}}                                \Ode{1}
+        \Else
+            \State{Ordenar $C$ por fecha de finalización
+                   en forma creciente.}                         \Ode{n * log(n)}
+            \State{$S = \{(i_1, j_1)\}$}                        \Ode{1}
+            \State{$k = 1$}                                     \Ode{1}
+            \For{$j = 2$ \To $|C|$}                             \Ode{n}
+                \If{$i_j > f_k$}                                \Ode{1}
+                    \State{$S = S \cup \{ (i_j, f_j) \}$}       \Ode{1}
+                    \State{$k = j$}                             \Ode{1}
+                \EndIf
+            \EndFor
+            \State{\Return{$S$}}
+        \EndIf
     \EndProcedure 
 \end{pseudo}
+
+
+\subsection{Complejidad}
+
+El algoritmo corre en tiempo $O(n*log(n))$, donde $n$ es la cantidad de cursos.
+
+Demostración: para el caso no trivial ($n > 1$) se ordenan los cursos en $O(n * log(n))$, luego se recorre cada curso y se decide si se lo incluye en la solución o no, con costo $n * O(1)$. La complejidad total resulta $O(n * log(n)) + n * O(1) = O(n * log(n) + n) = O(n * log(n))$. Para el caso trivial, se devuelve el conjunto de cursos intacto en tiempo constante.
+
+
+\subsection{Correctitud}
+
+El algoritmo incluye en la solución el curso que termina primero, descarta los cursos que se solapan con este y repite lo anterior con los cursos restantes hasta que no queden más cursos.
+
+Para que el procedimiento anterior arroje una solución válida, tiene que cumplirse que para cualquier instancia del problema, el curso con fecha de finalización más temprana siempre sea parte de alguna solución. Si esto se cumple, podemos incluir dicho curso en nuestra solución, descartar todos los cursos que se solapan con este, resolver el subproblema resultante aplicando el mismo razonamiento e incluir la solución del subproblema en la solución al problema original.
+
+El teorema a continuación muestra que la suposición anterior es de hecho cierta.
+
+\newtheorem*{teorema-ej2}{Teorema}
+
+\begin{teorema-ej2}
+    Sea $C = \{ (i_1, f_1), \ldots, (i_n, f_n) \}$ la oferta de $n$ cursos ordenados por fecha de finalización de forma creciente. Entonces el curso $(i_1, f_1)$ está incluido en algún subconjunto de $C$ tal que sus cursos no se solapan entre sí y su cardinalidad es máxima.
+\end{teorema-ej2}
+
+\begin{proof}
+    Sea $S$ algún subconjunto $\subseteq C$ tal que sus cursos no se solapan entre sí y su cardinalidad es máxima, y sea $(i_j, f_j)$ el curso $\in S$ con fecha de finalización más temprana.
+
+    Si $(i_j, f_j) = (i_1, f_1)$ terminamos la demostración, pues hemos mostrado que $(i_1, f_1)$ está incluido en algún subconjunto de $C$ tal que sus cursos no se solapan entre sí y su cardinalidad es máxima.
+
+    Si $(i_j, f_j) \neq (i_1, f_1)$, entonces sea $S' = S - \{ (i_j, f_j) \} \cup \{ (i_1, f_1) \}$ el conjunto $S$ al que le reemplazamos $(i_j, f_j)$ por $(i_1, f_1)$. Los cursos en $S'$ no se solapan entre sí pues:
+
+    \begin{itemize}[nolistsep]
+        \item{los cursos en $S$ no se solapan entre sí,}
+        \item{$(i_j, f_j)$ es la actividad en $S$ que termina primero, y}
+        \item{$f_1 \leq f_j$.}
+    \end{itemize}
+
+    Como $|S'| = |S|$, concluímos que $S'$ es un subconjunto de $C$ tal que sus cursos no se solapan entre sí y su cardinalidad es máxima, y $(i_1, f_1)$ está incluido en $S'$, como queríamos ver.
+\end{proof}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
