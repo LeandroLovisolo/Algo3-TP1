@@ -19,7 +19,7 @@ private:
 	Casilla *grilla;
 };
 
-Piso *problema3(const Piso &piso);
+Piso *problema3(Piso &piso);
 bool checkPiso(Piso &piso);
 
 #endif // PROBLEMA3_H

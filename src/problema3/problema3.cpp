@@ -1,4 +1,6 @@
 #include "problema3.h"
+#include <iostream>
+using namespace std;
 
 Piso::Piso(unsigned int filas, unsigned int columnas) {
 	_filas = filas;
@@ -34,7 +36,6 @@ bool casilleroCorrecto(Piso &piso, const unsigned int fila, const unsigned int c
 	*/
 	//Si es una pared, no hay nada para hacer
 	if(piso.en(fila, columna) == Pared) return true;
-
 	int sensoresAreaHorizontal = 0, sensoresAreaVertical = 0;
 	int sensoresApuntandoHorizontal = 0, sensoresApuntandoVertical = 0;
 
@@ -60,7 +61,7 @@ bool casilleroCorrecto(Piso &piso, const unsigned int fila, const unsigned int c
 		}
 	}
 	//Por arriba de la posicion
-	for(int i = fila-1; i > 0; --i) {
+	for(int i = fila-1; i >= 0; --i) {
 		if(piso.en(i, columna) == Pared) break;
 		switch(piso.en(i,columna)) {
 			case SensorDobleVertical:
@@ -96,7 +97,7 @@ bool casilleroCorrecto(Piso &piso, const unsigned int fila, const unsigned int c
 		}
 	}
 	//Por la izquierda de la posición
-	for(int j = columna-1; j > 0; j--) {
+	for(int j = columna-1; j >= 0; j--) {
 		if(piso.en(fila, j) == Pared) break;
 		switch(piso.en(fila,j)) {
 			case SensorDobleVertical:
@@ -135,6 +136,72 @@ bool casilleroCorrecto(Piso &piso, const unsigned int fila, const unsigned int c
 			//Los sensores en el área vertical y horizontal no apuntan al sensor importante
 			//Aclaración, hay al menos 1 sensor horizontal en la columna o en la fila 1 vertical
 			if(sensoresAreaHorizontal >= 1 || sensoresAreaVertical >= 1) return false;
+			if(sensoresApuntandoHorizontal >= 1 && sensoresApuntandoVertical >= 1) return true;
+			//Si esto no se da, hay que checkear si es posible cubrirlo con las casillas libres que queden
+			if(sensoresApuntandoVertical == 0) {
+				for(unsigned int i = fila+1; i < piso.filas(); ++i) {
+					if(piso.en(i, columna) == Pared) break;
+					if(piso.en(i, columna) == Importante) continue;
+					//Veo si entra un sensor vertical que lo apunte
+					piso.en(i, columna) = SensorDobleVertical;
+					if(casilleroCorrecto(piso, i, columna)) {
+						piso.en(i, columna) = Libre;
+						sensoresApuntandoVertical++;
+						break;
+					}
+
+				}
+				//Por arriba de la posicion
+				//Me fijo si ya encontró un espacio libre antes
+				if(sensoresApuntandoVertical == 0) {
+					for(int i = fila-1; i >= 0; --i) {
+						if(piso.en(i, columna) == Pared) break;
+						if(piso.en(i, columna) == Importante) continue;
+						//Veo si entra un sensor vertical que lo apunte
+						piso.en(i, columna) = SensorDobleVertical;
+						if(casilleroCorrecto(piso, i, columna)) {
+							piso.en(i, columna) = Libre;
+							sensoresApuntandoVertical++;
+							break;
+						}
+					}
+					//Termina el for y no encontré ningún lugar libre, falso
+					if(sensoresApuntandoVertical == 0) return false;
+				}
+			}
+			//Moviendome por las columnas
+			//Por la derecha de la posición
+			if(sensoresApuntandoHorizontal == 0)  {
+				for(unsigned int j = columna+1; j < piso.columnas(); j++) {
+					if(piso.en(fila, j) == Pared) break;
+					if(piso.en(fila, j) == Importante) continue;
+					//Veo si entra un sensor horizontal que lo apunte
+					piso.en(fila, j) = SensorDobleHorizontal;
+					if(casilleroCorrecto(piso, fila, j)) {
+						piso.en(fila, j) = Libre;
+						sensoresApuntandoHorizontal++;
+						break;
+					}
+				}
+				//Por la izquierda de la posición
+				if(sensoresApuntandoHorizontal == 0) {
+					for(int j = columna-1; j >= 0; j--) {
+						if(piso.en(fila, j) == Pared) break;
+						if(piso.en(fila, j) == Importante) continue;
+						//Veo si entra un sensor horizontal que lo apunte
+						piso.en(fila, j) = SensorDobleHorizontal;
+						if(casilleroCorrecto(piso, fila, j)) {
+							piso.en(fila, j) = Libre;
+							sensoresApuntandoHorizontal++;
+							break;
+						}
+					}
+					//Termina el for y no encontré ningún lugar libre, falso
+					if(sensoresApuntandoHorizontal == 0) return false;
+				}
+			}
+			//Si no cayó antes en un caso verdadero, devuelve falso
+			return true;
 			break;
 		default:
 			break;
@@ -144,15 +211,20 @@ bool casilleroCorrecto(Piso &piso, const unsigned int fila, const unsigned int c
 
 bool checkPiso(Piso &piso) {
 	for(unsigned int j=0;j<piso.filas();j++) {
-		for(unsigned int i=0;i<piso.filas();i++) {
-			if(!casilleroCorrecto(piso, i, j)) return false;
+		for(unsigned int i=0;i<piso.columnas();i++) {
+			if(!casilleroCorrecto(piso, j, i)) return false;
 		}
 	}
 	return true;
 } 
 
 
-Piso *problema3(const Piso &piso) {
-
+Piso *problema3(Piso &piso) {
+	if(checkPiso(piso)) {
+		cout << "Resulto valido" << endl;
+	}
+	else {
+		cout << "Resulto invalido" << endl;
+	}
 	return new Piso(piso);
 }
