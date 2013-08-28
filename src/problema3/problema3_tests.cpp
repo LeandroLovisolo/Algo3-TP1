@@ -87,7 +87,7 @@ TEST(problema3, todoParedeMenosUnElementoImportante) {
 	p.en(0, 0) = Pared;
 	p.en(0, 1) = Pared;
 	p.en(1, 0) = Pared;
-	p.en(1, 1) = Pared;
+	p.en(1, 1) = Importante;
 	bool value = false;
 	EXPECT_EQ(value, checkPiso(p));
 
