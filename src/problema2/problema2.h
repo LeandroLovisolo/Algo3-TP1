@@ -1,21 +1,17 @@
 #ifndef PROBLEMA2_H
 #define PROBLEMA2_H
 
-#include <utility>
+#include <tuple>
 #include <vector>
 
-class Curso {
-public:
-	int _numero, _inicio, _final;
-	Curso(int numero, int inicio, int final) {
-		_numero = numero;
-		_inicio = inicio;
-		_final = final;
-	}
-};
+// Campos: <fecha inicial, fecha final, índice>
+typedef std::tuple<int, int, int> Curso;
 
-//typedef std::pair<int, int> Curso;
+// Macros para acceder a los campos de la tupla Curso
+#define inicio(c) get<0>(c)
+#define fin(c)    get<1>(c)
+#define indice(c) get<2>(c)
 
-std::vector<Curso> *problema2(std::vector<Curso> &cursos);
+std::vector<Curso> problema2(const std::vector<Curso> cursos);
 
 #endif // PROBLEMA2_H
