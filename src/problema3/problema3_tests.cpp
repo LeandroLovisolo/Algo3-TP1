@@ -19,6 +19,8 @@ TEST(problema3, UnaSolaCasilla) {
 }
 */
 
+
+
 TEST(problema3, okPeroQuedanCasillerosLibres) {
 /*
 	L 	L 	L
@@ -127,6 +129,7 @@ TEST(problema3, esSolucion) {
 
 }
 
+
 TEST(problema3, sensoresNoTraspasanLaPared) {
 /*
 	L 	SDH	L
@@ -150,7 +153,7 @@ TEST(problema3, sensoresNoTraspasanLaPared) {
 
 }
 
-// Quedan lugares libres pero no es valida
+//Quedan lugares libres pero no es valida
 TEST(problema3, solucionNoValida) {
 /*
 	L 	L 	L
@@ -174,7 +177,7 @@ TEST(problema3, solucionNoValida) {
 
 }
 
-// No hay 2 sensores apuntando a los casilleros importantes
+// // No hay 2 sensores apuntando a los casilleros importantes
 TEST(problema3, noApuntan2Sensores) {
 /*
 	L 	L 	SC

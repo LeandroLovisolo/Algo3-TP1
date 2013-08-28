@@ -25,6 +25,8 @@ int main() {
 			}
 		}
 	}
+	Piso* test = problema3(mapa);
+	delete test;
 	/* Test de lenctura
 	for (int i = 0; i < n; ++i) {
 		for(int j = 0; j < m; ++j) {
