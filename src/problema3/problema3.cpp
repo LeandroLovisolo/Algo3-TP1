@@ -11,6 +11,20 @@ Piso::Piso(unsigned filas, unsigned columnas) {
     for(unsigned i = 0; i < filas * columnas; i++) grilla[i] = Libre;
 }
 
+Piso::Piso(unsigned filas, unsigned columnas, string casillas) : Piso(filas, columnas) {
+    for(unsigned i = 0; i < filas; i++) {
+        for(unsigned j = 0; j < columnas; j++) {
+            switch(casillas[columnas * i + j]) {
+                case '#': en(i, j) = Pared;            break;
+                case '*': en(i, j) = Importante;       break;
+                case '|': en(i, j) = SensorVertical;   break;
+                case '-': en(i, j) = SensorHorizontal; break;
+                case '+': en(i, j) = SensorCuadruple;  break;
+            }
+        }
+    }
+}
+
 Piso::Piso(const Piso &otro) {
     _filas = otro._filas;
     /*

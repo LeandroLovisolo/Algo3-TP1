@@ -7,6 +7,7 @@ enum Casilla { Libre, Pared, Importante, SensorVertical,
 class Piso {
 public:
     Piso(unsigned filas, unsigned columnas);
+    Piso(unsigned filas, unsigned columnas, std::string casillas);
     Piso(const Piso &otro);
     ~Piso();
 
