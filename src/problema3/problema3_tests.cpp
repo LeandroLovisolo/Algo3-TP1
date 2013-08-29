@@ -231,7 +231,7 @@ TEST(problema3, noApuntan2Sensores2) {
 }
 
 TEST(problema3, noApuntanSensoresACasilleroLibre) {
-/* El mismo problema
+/* Debería dar true, se puede meter un sensor vertical en (0,2)
 	L SDV L
 	SC L  P
 */
@@ -242,7 +242,7 @@ TEST(problema3, noApuntanSensoresACasilleroLibre) {
 	p.en(1, 0) = SensorCuadruple;
 	p.en(1, 1) = Libre;
 	p.en(1, 2) = Pared;
-	bool value = false;
+	bool value = true;
 	EXPECT_EQ(value, checkPiso(p));
 }
 

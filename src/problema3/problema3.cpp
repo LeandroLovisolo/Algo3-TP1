@@ -119,6 +119,54 @@ bool casilleroCorrecto(Piso &piso, const unsigned int fila, const unsigned int c
 		case Libre:
 			//Si hay al menos un sensor vertical y uno horizontal y no apuntan, no es sol
 			if(sensoresAreaHorizontal >= 1 && sensoresAreaVertical >= 1) return false;
+			if(sensoresApuntandoHorizontal >= 1 || sensoresApuntandoVertical >= 1) return true;
+			if(sensoresAreaVertical == 0) {
+				//En este caso checkeo también la posición dónde estoy
+				for(unsigned int i = fila; i < piso.filas(); ++i) {
+					if(piso.en(i, columna) == Pared) break;
+					if(piso.en(i, columna) == Importante) continue;
+					//Veo si entra un sensor vertical que lo apunte
+					piso.en(i, columna) = SensorDobleVertical;
+					if(casilleroCorrecto(piso, i, columna)) {
+						piso.en(i, columna) = Libre;
+						return true;
+					}
+				}
+				for(int i = fila-1; i >= 0; --i) {
+					if(piso.en(i, columna) == Pared) break;
+					if(piso.en(i, columna) == Importante) continue;
+					//Veo si entra un sensor vertical que lo apunte
+					piso.en(i, columna) = SensorDobleVertical;
+					if(casilleroCorrecto(piso, i, columna)) {
+						piso.en(i, columna) = Libre;
+						return true;
+					}
+				}
+			}
+			if(sensoresAreaHorizontal == 0) {
+				//En este caso checkeo también la posición dónde estoy
+				for(unsigned int j = columna; j < piso.columnas(); j++) {
+					if(piso.en(fila, j) == Pared) break;
+					if(piso.en(fila, j) == Importante) continue;
+					//Veo si entra un sensor horizontal que lo apunte
+					piso.en(fila, j) = SensorDobleHorizontal;
+					if(casilleroCorrecto(piso, fila, j)) {
+						piso.en(fila, j) = Libre;
+						return true;
+					}
+				}
+				for(int j = columna-1; j >= 0; j--) {
+					if(piso.en(fila, j) == Pared) break;
+					if(piso.en(fila, j) == Importante) continue;
+					//Veo si entra un sensor horizontal que lo apunte
+					piso.en(fila, j) = SensorDobleHorizontal;
+					if(casilleroCorrecto(piso, fila, j)) {
+						piso.en(fila, j) = Libre;
+						return true;
+					}
+				}
+			}
+			return false;
 			break;
 		case SensorDobleHorizontal:
 			if(sensoresAreaHorizontal >= 1 || sensoresApuntandoHorizontal >= 1) return false;
