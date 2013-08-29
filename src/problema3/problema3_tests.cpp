@@ -14,7 +14,7 @@ TEST(problema3, en) {
 TEST(problema3, UnaSolaCasilla) {
 	Piso p(1, 1);
 	Piso *p2 = problema3(p);
-	EXPECT_EQ(SensorDoble, p2->en(0, 0));
+	EXPECT_EQ(Sensor, p2->en(0, 0));
 	delete p2;
 }
 */
@@ -54,7 +54,7 @@ TEST(problema3, chocanSensores) {
 	
 	p.en(0, 0) = Libre;
 	p.en(0, 1) = Libre;
-	p.en(1, 0) = SensorDobleVertical;
+	p.en(1, 0) = SensorVertical;
 	p.en(1, 1) = SensorCuadruple;
 	bool value = false;
 	EXPECT_EQ(value, checkPiso(p));
@@ -140,10 +140,10 @@ TEST(problema3, sensoresNoTraspasanLaPared) {
 	Piso p(3,3);
 	
 	p.en(0, 0) = Libre;
-	p.en(0, 1) = SensorDobleHorizontal;
+	p.en(0, 1) = SensorHorizontal;
 	p.en(0, 2) = Libre;
 	p.en(1, 0) = Importante;
-	p.en(1, 1) = SensorDobleHorizontal;
+	p.en(1, 1) = SensorHorizontal;
 	p.en(1, 2) = Importante;
 	p.en(2, 0) = SensorCuadruple;
 	p.en(2, 1) = Pared;
@@ -214,7 +214,7 @@ TEST(problema3, noApuntan2Sensores2) {
 	Piso p(3,4);
 	
 	p.en(0, 0) = Libre;
-	p.en(0, 1) = SensorDobleVertical;
+	p.en(0, 1) = SensorVertical;
 	p.en(0, 2) = Libre;
 	p.en(0, 3) = Libre;
 	p.en(1, 0) = Importante;
@@ -237,7 +237,7 @@ TEST(problema3, noApuntanSensoresACasilleroLibre) {
 */
 	Piso p(2,3);
 	p.en(0, 0) = Libre;
-	p.en(0, 1) = SensorDobleVertical;
+	p.en(0, 1) = SensorVertical;
 	p.en(0, 2) = Libre;
 	p.en(1, 0) = SensorCuadruple;
 	p.en(1, 1) = Libre;
