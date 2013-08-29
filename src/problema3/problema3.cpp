@@ -29,6 +29,7 @@ Casilla& Piso::en(unsigned int fila, unsigned int columna) {
 
 
 //Checkea si el casillero tiene un valor que podría llegar a ser una solución
+//Complejidad O(n + m) n filas, m columnas
 bool casilleroCorrecto(Piso &piso, const unsigned int fila, const unsigned int columna) {
 	/* sensoresAreaHorizontal cuenta la cantidad de sensores en el área horizontal (fila)
 		y sensoresApuntandoHorizontal cuenta la cantidad de sensores apuntando a la casilla
@@ -43,6 +44,7 @@ bool casilleroCorrecto(Piso &piso, const unsigned int fila, const unsigned int c
 	de la celda para poder cortar la búsqueda al toparse con una pared (esto está hecho)
 	para poder seguir bien la trayectoria de los láseres. */
 
+	//Los dos fors siguientes tienen complejidad O(n) con n como filas
 	//Debajo de la posicion
 	for(unsigned int i = fila+1; i < piso.filas(); ++i) {
 		if(piso.en(i, columna) == Pared) break;
@@ -77,6 +79,8 @@ bool casilleroCorrecto(Piso &piso, const unsigned int fila, const unsigned int c
 				break;
 		}
 	}
+
+	//Los dos fors siguientes tienen complejidad O(m) con m columnas
 
 	//Moviendome por las columnas
 	//Por la derecha de la posición
@@ -121,6 +125,7 @@ bool casilleroCorrecto(Piso &piso, const unsigned int fila, const unsigned int c
 			if(sensoresAreaHorizontal >= 1 && sensoresAreaVertical >= 1) return false;
 			if(sensoresApuntandoHorizontal >= 1 || sensoresApuntandoVertical >= 1) return true;
 			if(sensoresAreaVertical == 0) {
+				//Complejidad O(n) para los dos fors
 				//En este caso checkeo también la posición dónde estoy
 				for(unsigned int i = fila; i < piso.filas(); ++i) {
 					if(piso.en(i, columna) == Pared) break;
@@ -145,6 +150,7 @@ bool casilleroCorrecto(Piso &piso, const unsigned int fila, const unsigned int c
 			}
 			if(sensoresAreaHorizontal == 0) {
 				//En este caso checkeo también la posición dónde estoy
+				//Complejidad O(m) para los dos fors
 				for(unsigned int j = columna; j < piso.columnas(); j++) {
 					if(piso.en(fila, j) == Pared) break;
 					if(piso.en(fila, j) == Importante) continue;
@@ -185,6 +191,7 @@ bool casilleroCorrecto(Piso &piso, const unsigned int fila, const unsigned int c
 			//Aclaración, hay al menos 1 sensor horizontal en la columna o en la fila 1 vertical
 			if(sensoresAreaHorizontal >= 1 || sensoresAreaVertical >= 1) return false;
 			if(sensoresApuntandoHorizontal >= 1 && sensoresApuntandoVertical >= 1) return true;
+			//Complejidad O(n) para los dos fors
 			//Si esto no se da, hay que checkear si es posible cubrirlo con las casillas libres que queden
 			if(sensoresApuntandoVertical == 0) {
 				for(unsigned int i = fila+1; i < piso.filas(); ++i) {
@@ -217,6 +224,7 @@ bool casilleroCorrecto(Piso &piso, const unsigned int fila, const unsigned int c
 					if(sensoresApuntandoVertical == 0) return false;
 				}
 			}
+			//Complejidad O(m) para los dos fors
 			//Moviendome por las columnas
 			//Por la derecha de la posición
 			if(sensoresApuntandoHorizontal == 0)  {
@@ -257,6 +265,7 @@ bool casilleroCorrecto(Piso &piso, const unsigned int fila, const unsigned int c
 	return true;
 }
 
+//Complejidad O(n*m(n+m))
 bool checkPiso(Piso &piso) {
 	for(unsigned int j=0;j<piso.filas();j++) {
 		for(unsigned int i=0;i<piso.columnas();i++) {
@@ -264,8 +273,7 @@ bool checkPiso(Piso &piso) {
 		}
 	}
 	return true;
-} 
-
+}
 
 Piso *problema3(Piso &piso) {
 	if(checkPiso(piso)) {
