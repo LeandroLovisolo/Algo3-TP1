@@ -227,7 +227,6 @@ TEST(problema3, noApuntan2Sensores2) {
 	p.en(2, 3) = Libre;
 	bool value = false;
 	EXPECT_EQ(value, checkPiso(p));
-
 }
 
 TEST(problema3, noApuntanSensoresACasilleroLibre) {

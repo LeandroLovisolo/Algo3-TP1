@@ -1,22 +1,23 @@
 #ifndef PROBLEMA3_H
 #define PROBLEMA3_H
 
-enum Casilla { Pared, Libre, Importante, SensorVertical,
+enum Casilla { Libre, Pared, Importante, SensorVertical,
                SensorHorizontal, SensorCuadruple };
 
 class Piso {
 public:
-    Piso(unsigned int filas, unsigned int columnas);
+    Piso(unsigned filas, unsigned columnas);
     Piso(const Piso &otro);
     ~Piso();
 
-    unsigned int filas() { return _filas; }
-    unsigned int columnas() { return _columnas; }
-    Casilla& en(unsigned int fila, unsigned int columna);
+    unsigned filas() { return _filas; }
+    unsigned columnas() { return _columnas; }
+    Casilla& en(unsigned fila, unsigned columna);
+    void imprimir();
 
 private:
-    unsigned int _filas;
-    unsigned int _columnas;
+    unsigned _filas;
+    unsigned _columnas;
     Casilla *grilla;
 };
 

@@ -1,12 +1,14 @@
-#include "problema3.h"
 #include <iostream>
+
+#include "problema3.h"
+
 using namespace std;
 
-Piso::Piso(unsigned int filas, unsigned int columnas) {
+Piso::Piso(unsigned filas, unsigned columnas) {
     _filas = filas;
     _columnas = columnas;
     grilla = new Casilla[filas * columnas];
-    for(unsigned int i = 0; i < filas * columnas; i++) grilla[i] = Libre;
+    for(unsigned i = 0; i < filas * columnas; i++) grilla[i] = Libre;
 }
 
 Piso::Piso(const Piso &otro) {
@@ -14,7 +16,7 @@ Piso::Piso(const Piso &otro) {
     /*
     _columnas = otro._columnas;
     grilla = new Casilla[_filas * _columnas];
-    for(unsigned int i = 0; i < _filas * _columnas; i++) grilla[i] = otro.grilla[i];
+    for(unsigned i = 0; i < _filas * _columnas; i++) grilla[i] = otro.grilla[i];
     */
 }
 
@@ -22,15 +24,44 @@ Piso::~Piso() {
     delete grilla;
 }
 
-Casilla& Piso::en(unsigned int fila, unsigned int columna) {
+Casilla& Piso::en(unsigned fila, unsigned columna) {
     return grilla[_columnas * (fila) + columna];
 }
 
+void Piso::imprimir() {
+    // Límite superior
+    cout << "\u2554";
+    for(unsigned i = 0; i < _columnas; i++) cout << "\u2550";
+    cout << "\u2557" << endl;
 
+    for(unsigned i = 0; i < _filas; i++) {
+        // Límite izquierdo
+        cout << "\u2551";
+
+        for(unsigned j = 0; j < _columnas; j++) {
+            switch(en(i, j)) {
+                case Libre:            cout << " "; break;
+                case Pared:            cout << "#"; break;
+                case Importante:       cout << "*"; break;
+                case SensorVertical:   cout << "|"; break;
+                case SensorHorizontal: cout << "-"; break;
+                case SensorCuadruple:  cout << "+"; break;
+            }
+        }
+
+        // Límite derecho
+        cout << "\u2551" << endl;
+    }
+
+    // Límite inferior
+    cout << "\u255a";
+    for(unsigned i = 0; i < _columnas; i++) cout << "\u2550";
+    cout << "\u255d" << endl;    
+}
 
 //Checkea si el casillero tiene un valor que podría llegar a ser una solución
 //Complejidad O(n + m) n filas, m columnas
-bool casilleroCorrecto(Piso &piso, const unsigned int fila, const unsigned int columna) {
+bool casilleroCorrecto(Piso &piso, const unsigned fila, const unsigned columna) {
     /* sensoresAreaHorizontal cuenta la cantidad de sensores en el área horizontal (fila)
         y sensoresApuntandoHorizontal cuenta la cantidad de sensores apuntando a la casilla
         horizontalmente
@@ -46,7 +77,7 @@ bool casilleroCorrecto(Piso &piso, const unsigned int fila, const unsigned int c
 
     //Los dos fors siguientes tienen complejidad O(n) con n como filas
     //Debajo de la posicion
-    for(unsigned int i = fila+1; i < piso.filas(); ++i) {
+    for(unsigned i = fila+1; i < piso.filas(); ++i) {
         if(piso.en(i, columna) == Pared) break;
         switch(piso.en(i,columna)) {
             case SensorVertical:
@@ -84,7 +115,7 @@ bool casilleroCorrecto(Piso &piso, const unsigned int fila, const unsigned int c
 
     //Moviendome por las columnas
     //Por la derecha de la posición
-    for(unsigned int j = columna+1; j < piso.columnas(); j++) {
+    for(unsigned j = columna+1; j < piso.columnas(); j++) {
         if(piso.en(fila, j) == Pared) break;
         switch(piso.en(fila,j)) {
             case SensorVertical:
@@ -127,7 +158,7 @@ bool casilleroCorrecto(Piso &piso, const unsigned int fila, const unsigned int c
             if(sensoresAreaVertical == 0) {
                 //Complejidad O(n) para los dos fors
                 //En este caso checkeo también la posición dónde estoy
-                for(unsigned int i = fila; i < piso.filas(); ++i) {
+                for(unsigned i = fila; i < piso.filas(); ++i) {
                     if(piso.en(i, columna) == Pared) break;
                     if(piso.en(i, columna) == Importante) continue;
                     //Veo si entra un sensor vertical que lo apunte
@@ -151,7 +182,7 @@ bool casilleroCorrecto(Piso &piso, const unsigned int fila, const unsigned int c
             if(sensoresAreaHorizontal == 0) {
                 //En este caso checkeo también la posición dónde estoy
                 //Complejidad O(m) para los dos fors
-                for(unsigned int j = columna; j < piso.columnas(); j++) {
+                for(unsigned j = columna; j < piso.columnas(); j++) {
                     if(piso.en(fila, j) == Pared) break;
                     if(piso.en(fila, j) == Importante) continue;
                     //Veo si entra un sensor horizontal que lo apunte
@@ -194,7 +225,7 @@ bool casilleroCorrecto(Piso &piso, const unsigned int fila, const unsigned int c
             //Complejidad O(n) para los dos fors
             //Si esto no se da, hay que checkear si es posible cubrirlo con las casillas libres que queden
             if(sensoresApuntandoVertical == 0) {
-                for(unsigned int i = fila+1; i < piso.filas(); ++i) {
+                for(unsigned i = fila+1; i < piso.filas(); ++i) {
                     if(piso.en(i, columna) == Pared) break;
                     if(piso.en(i, columna) == Importante) continue;
                     //Veo si entra un sensor vertical que lo apunte
@@ -228,7 +259,7 @@ bool casilleroCorrecto(Piso &piso, const unsigned int fila, const unsigned int c
             //Moviendome por las columnas
             //Por la derecha de la posición
             if(sensoresApuntandoHorizontal == 0)  {
-                for(unsigned int j = columna+1; j < piso.columnas(); j++) {
+                for(unsigned j = columna+1; j < piso.columnas(); j++) {
                     if(piso.en(fila, j) == Pared) break;
                     if(piso.en(fila, j) == Importante) continue;
                     //Veo si entra un sensor horizontal que lo apunte
@@ -267,8 +298,8 @@ bool casilleroCorrecto(Piso &piso, const unsigned int fila, const unsigned int c
 
 //Complejidad O(n*m(n+m))
 bool checkPiso(Piso &piso) {
-    for(unsigned int j=0;j<piso.filas();j++) {
-        for(unsigned int i=0;i<piso.columnas();i++) {
+    for(unsigned j=0;j<piso.filas();j++) {
+        for(unsigned i=0;i<piso.columnas();i++) {
             if(!casilleroCorrecto(piso, j, i)) return false;
         }
     }
