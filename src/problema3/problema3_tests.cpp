@@ -255,8 +255,14 @@ TEST(problema3, EjemploDelEnuncaido) {
                  " #     #"
                  "    *  #");
     // p.imprimir();
+    // resolver(p);
 }
 
+TEST(problema3, MiEjemplo) {
+    Piso p(2, 2, " *"
+                 "  ");
+    resolver(p);
+}
 
 GTEST_API_ int main(int argc, char **argv) {
     testing::InitGoogleTest(&argc, argv);

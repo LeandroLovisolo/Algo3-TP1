@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 
 #include "problema3.h"
 
@@ -27,11 +28,9 @@ Piso::Piso(unsigned filas, unsigned columnas, string casillas) : Piso(filas, col
 
 Piso::Piso(const Piso &otro) {
     _filas = otro._filas;
-    /*
     _columnas = otro._columnas;
     grilla = new Casilla[_filas * _columnas];
     for(unsigned i = 0; i < _filas * _columnas; i++) grilla[i] = otro.grilla[i];
-    */
 }
 
 Piso::~Piso() {
@@ -42,7 +41,11 @@ Casilla& Piso::en(unsigned fila, unsigned columna) {
     return grilla[_columnas * (fila) + columna];
 }
 
-void Piso::imprimir() {
+Casilla Piso::en(unsigned fila, unsigned columna) const {
+    return grilla[_columnas * (fila) + columna];
+}
+
+void Piso::imprimir() const {
     // Límite superior
     cout << "\u2554";
     for(unsigned i = 0; i < _columnas; i++) cout << "\u2550";
@@ -55,7 +58,7 @@ void Piso::imprimir() {
         for(unsigned j = 0; j < _columnas; j++) {
             switch(en(i, j)) {
                 case Libre:            cout << " "; break;
-                case Pared:            cout << "#"; break;
+                case Pared:            cout << "\u2588"; break;
                 case Importante:       cout << "*"; break;
                 case SensorVertical:   cout << "|"; break;
                 case SensorHorizontal: cout << "-"; break;
@@ -328,4 +331,233 @@ Piso *problema3(Piso &piso) {
         cout << "Resulto invalido" << endl;
     }
     return new Piso(piso);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Implementación alternativa                                                //
+///////////////////////////////////////////////////////////////////////////////
+
+// Niveles de impresión de información de debugging
+#define NONE   0
+#define NORMAL 1
+#define FULL   2
+
+// Nivel elegido
+#define DEBUG_LEVEL NORMAL
+
+bool esSensorVertical(const Piso& p, unsigned fila, unsigned columna) {
+    return p.en(fila, columna) == SensorVertical ||
+           p.en(fila, columna) == SensorCuadruple;
+}
+
+bool esSensorHorizontal(const Piso& p, unsigned fila, unsigned columna) {
+    return p.en(fila, columna) == SensorHorizontal ||
+           p.en(fila, columna) == SensorCuadruple;
+}
+
+bool esSensor(const Piso& p, unsigned fila, unsigned columna) {
+    return esSensorVertical(p, fila, columna) || esSensorHorizontal(p, fila, columna);
+}
+
+bool esPared(const Piso& p, unsigned fila, unsigned columna) {
+    return p.en(fila, columna) == Pared;
+}
+
+// Devuelve true si no hay ningún sensor apuntando a otro.
+bool esValido(const Piso& p) {
+
+    // Macro para informar el motivo cuando un piso es inválido.
+    #if DEBUG_LEVEL == FULL
+        #define pisoInvalido(p, f1, c1, f2, c2) \
+            cout << "Piso inválido. El sensor en (" << f2 << ", " << c2 << ") " \
+                 << "está en conflicto con (" << f1 << ", " << c1 << ")." << endl;
+    #else
+        #define pisoInvalido(p, f1, c1, f2, c2) { }
+    #endif
+
+    // Recorro todas las posiciones
+    for(unsigned i = 0; i < p.filas(); i++) {
+        for(unsigned j = 0; j < p.columnas(); j++) {
+
+            // Si la posición actual contiene un sensor,
+            // miro en las 4 direcciones y verifico que
+            // no exista ningún sensor apuntando al actual.
+            if(esSensor(p, i, j)) {
+                
+                // Miro hacia arriba.
+                for(int k = i - 1; k >= 0; k--) {
+                    if(esPared(p, k, j)) break;
+                    if(esSensorVertical(p, k, j)) {
+                        pisoInvalido(p, i, j, k, j);
+                        return false;
+                    }
+                }
+
+                // Miro hacia abajo.
+                for(int k = i + 1; k < (int) p.filas(); k++) {
+                    if(esPared(p, k, j)) break;
+                    if(esSensorVertical(p, k, j)) {
+                        pisoInvalido(p, i, j, k, j);
+                        return false;
+                    }
+                }
+
+                // Miro hacia la izquierda.
+                for(int k = j - 1; k >= 0; k--) {
+                    if(esPared(p, i, k)) break;
+                    if(esSensorHorizontal(p, i, k)) {
+                        pisoInvalido(p, i, j, i, k);
+                        return false;
+                    }
+                }
+
+                // Miro hacia la derecha.
+                for(int k = j + 1; k < (int) p.columnas(); k++) {
+                    if(esPared(p, i, k)) break;
+                    if(esSensorHorizontal(p, i, k)) {
+                        pisoInvalido(p, i, j, i, k);
+                        return false;
+                    }
+                }
+            }
+        }
+    }
+
+    return true;
+}
+
+bool requiereSensado(const Piso& p, unsigned fila, unsigned columna) {
+    return p.en(fila, columna) == Libre ||
+           p.en(fila, columna) == Importante;
+}
+
+// Devuelve true si todas las casillas libres están sensadas y
+// todas las casillas importantes están doblemente sensadas.
+// Asume que el piso recibido es válido. (Ver esValido().)
+bool esSolucion(const Piso& p) {
+
+    // Recorro todas las posiciones
+    for(unsigned i = 0; i < p.filas(); i++) {
+        for(unsigned j = 0; j < p.columnas(); j++) {
+
+            // Si la posición actual requiere sensado, cuento los
+            // sensores actuando sobre esta y verifico que sea
+            // la cantidad correcta.
+            if(requiereSensado(p, i, j)) {
+                int sensores = 0;
+
+                // Miro hacia arriba.
+                for(int k = i - 1; k >= 0; k--) {
+                    if(esPared(p, k, j)) break;
+                    if(esSensorVertical(p, k, j)) {
+                        sensores++;
+                        break;
+                    }
+                }
+
+                // Miro hacia abajo.
+                for(int k = i + 1; k < (int) p.filas(); k++) {
+                    if(esPared(p, k, j)) break;
+                    if(esSensorVertical(p, k, j)) {
+                        sensores++;
+                        break;
+                    }
+                }
+
+                // Miro hacia la izquierda.
+                for(int k = j - 1; k >= 0; k--) {
+                    if(esPared(p, i, k)) break;
+                    if(esSensorHorizontal(p, i, k)) {
+                        sensores++;
+                        break;
+                    }
+                }
+
+                // Miro hacia la derecha.
+                for(int k = j + 1; k < (int) p.columnas(); k++) {
+                    if(esPared(p, i, k)) break;
+                    if(esSensorHorizontal(p, i, k)) {
+                        sensores++;
+                        break;
+                    }
+                }
+
+                // Verifico que la cantidad de sensores sea correcta.
+                if(p.en(i, j) == Libre && sensores == 0) return false;
+                if(p.en(i, j) == Importante && sensores < 2) return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+void recorrer(const Piso& p, unsigned fila, unsigned columna,
+              vector<Piso>& soluciones, int& iteracion) {
+    iteracion++;
+
+    #if DEBUG_LEVEL == FULL
+        cout << endl << "Iteración " << iteracion << ". Evaluando posición "
+             << "(" << fila << ", " << columna << ") en el siguiente piso:" << endl;
+        p.imprimir();
+    #elif DEBUG_LEVEL == NORMAL
+        if(iteracion % 10000 == 0) cout << "Iteración " << iteracion << endl;
+    #endif
+
+    // Verificamos que no hayan sensores apuntándose entre sí.
+    if(!esValido(p)) return;
+
+    // Si es solución, terminamos.
+    if(esSolucion(p)) {
+        #if DEBUG_LEVEL >= NORMAL
+            cout << "Se halló una solución." << endl;
+        #endif
+
+        soluciones.push_back(p);
+        return;
+    }
+
+    // Decidimos las coordenadas de la próxima posición a evaluar.
+    unsigned filaSig    = columna + 1 == p.columnas() ? fila + 1 : fila;
+    unsigned columnaSig = columna + 1 == p.columnas() ? 0        : columna + 1;
+
+    // Verificamos que no hayamos terminado de recorrer todo el piso.
+    if(fila == p.filas()) return;
+
+    // Si la posición actual está libre, probamos cada tipo de sensor.
+    if(p.en(fila, columna) == Libre) {
+        Piso q(p);
+
+        q.en(fila, columna) = SensorVertical;
+        recorrer(q, filaSig, columnaSig, soluciones, iteracion);
+
+        q.en(fila, columna) = SensorHorizontal;
+        recorrer(q, filaSig, columnaSig, soluciones, iteracion);
+
+        q.en(fila, columna) = SensorCuadruple;
+        recorrer(q, filaSig, columnaSig, soluciones, iteracion);
+    }
+
+    // Además, probamos dejando la posición actual intacta.
+    recorrer(p, filaSig, columnaSig, soluciones, iteracion);
+}
+
+void resolver(const Piso& p) {
+    cout << "Iniciando búsqueda de soluciones para el siguiente piso:" << endl;
+    p.imprimir();
+    cout << endl;
+
+    vector<Piso> soluciones;
+    int iteraciones = 0;
+    recorrer(p, 0, 0, soluciones, iteraciones);
+
+    cout << endl;
+
+    if(soluciones.size() == 0) {
+        cout << "No se encontraron soluciones." << endl;
+    } else {
+        cout << "Se encontraron " << soluciones.size() << " soluciones:" << endl;
+        for(size_t i = 0; i < soluciones.size(); i++) soluciones[i].imprimir();
+    }
 }

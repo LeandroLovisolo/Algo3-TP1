@@ -11,10 +11,11 @@ public:
     Piso(const Piso &otro);
     ~Piso();
 
-    unsigned filas() { return _filas; }
-    unsigned columnas() { return _columnas; }
+    unsigned filas() const { return _filas; }
+    unsigned columnas() const { return _columnas; }
     Casilla& en(unsigned fila, unsigned columna);
-    void imprimir();
+    Casilla en(unsigned fila, unsigned columna) const;
+    void imprimir() const;
 
 private:
     unsigned _filas;
@@ -24,5 +25,8 @@ private:
 
 Piso *problema3(Piso &piso);
 bool checkPiso(Piso &piso);
+
+void resolver(const Piso& p);
+
 
 #endif // PROBLEMA3_H
