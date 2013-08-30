@@ -358,17 +358,22 @@ Piso *problema3(Piso &piso) {
 #define DEBUG_LEVEL NORMAL
 
 bool esSensorVertical(const Piso& p, unsigned fila, unsigned columna) {
-    return p.en(fila, columna) == SensorVertical ||
-           p.en(fila, columna) == SensorCuadruple;
+    Casilla c = p.en(fila, columna);
+    return c == SensorVertical ||
+           c == SensorCuadruple;
 }
 
 bool esSensorHorizontal(const Piso& p, unsigned fila, unsigned columna) {
-    return p.en(fila, columna) == SensorHorizontal ||
-           p.en(fila, columna) == SensorCuadruple;
+    Casilla c = p.en(fila, columna);
+    return c == SensorHorizontal ||
+           c == SensorCuadruple;
 }
 
 bool esSensor(const Piso& p, unsigned fila, unsigned columna) {
-    return esSensorVertical(p, fila, columna) || esSensorHorizontal(p, fila, columna);
+    Casilla c = p.en(fila, columna);
+    return c == SensorVertical ||
+           c == SensorHorizontal ||
+           c == SensorCuadruple;
 }
 
 bool esPared(const Piso& p, unsigned fila, unsigned columna) {
