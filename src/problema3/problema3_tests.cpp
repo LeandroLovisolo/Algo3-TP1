@@ -259,10 +259,57 @@ TEST(problema3, EjemploDelEnuncaido) {
 }
 
 TEST(problema3, MiEjemplo) {
-    Piso p(2, 2, " *"
-                 "  ");
+    // Piso p(2, 2, " *"
+    //              "  ");
+    
+    // Piso p(2, 3, " * "
+    //              "   ");
+
+    // Piso p(3, 3, " # "
+    //              "* *"
+    //              " # ");
+
+    // Piso p(4, 2, "* "
+    //              "# "
+    //              "* "
+    //              "  ");
+
+    // Piso p(3, 3, "   "
+    //              "   "
+    //              "   ");
+
+    // resolver(vacio(5, 5));
+
+    // Piso p(8, 8, "###  *##"
+    //              "#       "
+    //              "# * #  #"
+    //              "# * #  #"
+    //              "        "
+    //              "### ####"
+    //              " #     #"
+    //              "    *  #");
+
+    // Piso p(4, 4, "### "
+    //              "#   "
+    //              "# * "
+    //              "# * ");
+
+    // Piso p(5, 5, "###  "
+    //              "#    "
+    //              "# * #"
+    //              "# * #"
+    //              "     ");
+
+    Piso p(6, 6, "###  *"
+                 "#     "
+                 "# * # "
+                 "# * # "
+                 "      "
+                 "### ##");
+
     resolver(p);
 }
+
 
 GTEST_API_ int main(int argc, char **argv) {
     testing::InitGoogleTest(&argc, argv);

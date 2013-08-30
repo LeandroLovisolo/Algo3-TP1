@@ -38,10 +38,20 @@ Piso::~Piso() {
 }
 
 Casilla& Piso::en(unsigned fila, unsigned columna) {
+    if(fila >= _filas || columna >= _columnas) {
+        cout << "Acceso fuera de rango: (" << fila << ", " << columna << ")." << endl;;
+        exit(-1);
+    }
+
     return grilla[_columnas * (fila) + columna];
 }
 
 Casilla Piso::en(unsigned fila, unsigned columna) const {
+    if(fila >= _filas || columna >= _columnas) {
+        cout << "Acceso fuera de rango: (" << fila << ", " << columna << ")." << endl;
+        exit(-1);
+    }
+
     return grilla[_columnas * (fila) + columna];
 }
 
@@ -63,6 +73,7 @@ void Piso::imprimir() const {
                 case SensorVertical:   cout << "|"; break;
                 case SensorHorizontal: cout << "-"; break;
                 case SensorCuadruple:  cout << "+"; break;
+                case Sensado:          cout << "·"; break;
             }
         }
 
@@ -493,10 +504,48 @@ bool esSolucion(const Piso& p) {
     return true;
 }
 
+// Ubica un sensor del tipo especificado en la posición dada,
+// y marca como sensadas todas las posiciones afectadas por este.
+void ubicarSensor(Piso& p, unsigned fila, unsigned columna, Casilla sensor) {
+    p.en(fila, columna) = sensor;
+
+    if(esSensorVertical(p, fila, columna)) {
+        // Senso hacia arriba.
+        for(int k = fila - 1; k >= 0; k--) {
+            if(esPared(p, k, columna)) break;
+            if(p.en(k, columna) == Libre) p.en(k, columna) = Sensado;
+        }
+
+        // Senso hacia abajo.
+        for(int k = fila + 1; k < (int) p.filas(); k++) {
+            if(esPared(p, k, columna)) break;
+            if(p.en(k, columna) == Libre) p.en(k, columna) = Sensado;
+        }
+    }
+
+    if(esSensorHorizontal(p, fila, columna)) {
+        // Senso hacia la izquierda.
+        for(int k = columna - 1; k >= 0; k--) {
+            if(esPared(p, fila, k)) break;
+            if(p.en(fila, k) == Libre) p.en(fila, k) = Sensado;
+        }
+
+        // Senso hacia la derecha.
+        for(int k = columna + 1; k < (int) p.columnas(); k++) {
+            if(esPared(p, fila, k)) break;
+            if(p.en(fila, k) == Libre) p.en(fila, k) = Sensado;
+        }
+    }
+}
+
+// Verifica la validez del piso, agrega el piso a la lista de soluciones
+// en caso de ser solución, y si la posición dada es válida, continúa la
+// recursión probando cada tipo de sensor en la posición dada.
 void recorrer(const Piso& p, unsigned fila, unsigned columna,
               vector<Piso>& soluciones, int& iteracion) {
     iteracion++;
 
+    // Imprimimos información de debugging.
     #if DEBUG_LEVEL == FULL
         cout << endl << "Iteración " << iteracion << ". Evaluando posición "
              << "(" << fila << ", " << columna << ") en el siguiente piso:" << endl;
@@ -518,28 +567,39 @@ void recorrer(const Piso& p, unsigned fila, unsigned columna,
         return;
     }
 
-    // Decidimos las coordenadas de la próxima posición a evaluar.
-    unsigned filaSig    = columna + 1 == p.columnas() ? fila + 1 : fila;
-    unsigned columnaSig = columna + 1 == p.columnas() ? 0        : columna + 1;
-
     // Verificamos que no hayamos terminado de recorrer todo el piso.
-    if(fila == p.filas()) return;
+    if(fila >= p.filas() || columna >= p.columnas()) return;
 
-    // Si la posición actual está libre, probamos cada tipo de sensor.
-    if(p.en(fila, columna) == Libre) {
+    // Decidimos las coordenadas de la próxima posición a evaluar.
+    unsigned filaSig    = fila;
+    unsigned columnaSig = columna;
+    do {
+        filaSig    = columnaSig + 1 == p.columnas() ? filaSig + 1 : filaSig;
+        columnaSig = columnaSig + 1 == p.columnas() ? 0           : columnaSig + 1;
+    } while(filaSig < p.filas() && p.en(filaSig, columnaSig) != Libre);
+
+    // Continuamos ubicando un sensor vertical.
+    {
         Piso q(p);
-
-        q.en(fila, columna) = SensorVertical;
-        recorrer(q, filaSig, columnaSig, soluciones, iteracion);
-
-        q.en(fila, columna) = SensorHorizontal;
-        recorrer(q, filaSig, columnaSig, soluciones, iteracion);
-
-        q.en(fila, columna) = SensorCuadruple;
+        ubicarSensor(q, fila, columna, SensorVertical);
         recorrer(q, filaSig, columnaSig, soluciones, iteracion);
     }
 
-    // Además, probamos dejando la posición actual intacta.
+    // Continuamos ubicando un sensor horizontal.
+    {
+        Piso q(p);
+        ubicarSensor(q, fila, columna, SensorHorizontal);
+        recorrer(q, filaSig, columnaSig, soluciones, iteracion);
+    }
+
+    // Continuamos ubicando un sensor cuádruple.
+    {
+        Piso q(p);
+        ubicarSensor(q, fila, columna, SensorCuadruple);
+        recorrer(q, filaSig, columnaSig, soluciones, iteracion);
+    }
+
+    // Continuamios dejando la posición actual intacta.
     recorrer(p, filaSig, columnaSig, soluciones, iteracion);
 }
 
@@ -560,4 +620,6 @@ void resolver(const Piso& p) {
         cout << "Se encontraron " << soluciones.size() << " soluciones:" << endl;
         for(size_t i = 0; i < soluciones.size(); i++) soluciones[i].imprimir();
     }
+
+    cout << "Iteraciones realizadas: " << iteraciones << endl;
 }

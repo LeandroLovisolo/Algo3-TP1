@@ -2,7 +2,7 @@
 #define PROBLEMA3_H
 
 enum Casilla { Libre, Pared, Importante, SensorVertical,
-               SensorHorizontal, SensorCuadruple };
+               SensorHorizontal, SensorCuadruple, Sensado };
 
 class Piso {
 public:
