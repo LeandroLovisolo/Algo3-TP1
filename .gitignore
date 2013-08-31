@@ -1,10 +1,10 @@
 # Binarios
-./problema1
-./problema1_tests
-./problema2
-./problema2_tests
-./problema3
-./problema3_tests
+problema1
+problema1_tests
+problema2
+problema2_tests
+problema3
+problema3_tests
 
 # Código objeto
 *.o
@@ -16,3 +16,12 @@ tex/*.aux
 tex/*.toc
 tex/*.log
 
+# Eclipse
+.cproject
+.project
+
+# Ouput de profiler gprof
+gmon.out
+
+# Output de callgrind
+callgrind.out.*
