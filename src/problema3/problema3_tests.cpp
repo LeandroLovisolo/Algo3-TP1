@@ -1,6 +1,10 @@
+#include <iostream>
+#include <ctime>
+
 #include "gtest/gtest.h"
 #include "problema3.h"
 
+using namespace std;
 
 TEST(problema3, en) {
     Piso p(1, 2);
@@ -269,16 +273,55 @@ TEST(problema3, MiEjemplo) {
     //              "* *"
     //              " # ");
 
+    // Piso p(3, 3, "  *"
+    //              "   "
+    //              "   ");    
+
     // Piso p(4, 2, "* "
     //              "# "
     //              "* "
     //              "  ");
 
-    // Piso p(3, 3, "   "
-    //              "   "
-    //              "   ");
+    // Piso p(4, 4, "### "
+    //              "#   "
+    //              "# * "
+    //              "# * ");
 
-    // resolver(vacio(5, 5));
+    Piso p(5, 5, "###  "
+                 "#    "
+                 "# * #"
+                 "# * #"
+                 "     ");
+
+    // Piso p(6, 6, "###  *"
+    //              "#     "
+    //              "# * # "
+    //              "# * # "
+    //              "      "
+    //              "### ##");
+
+    // Piso p(6, 7, "###  *#"
+    //              "#      "
+    //              "# * #  "
+    //              "# * #  "
+    //              "       "
+    //              "### ###");
+
+    // Piso p(7, 7, "###  *#"
+    //              "#      "
+    //              "# * #  "
+    //              "# * #  "
+    //              "       "
+    //              "### ###"
+    //              " #     ");
+
+    // Piso p(7, 8, "###  *##"
+    //              "#       "
+    //              "# * #  #"
+    //              "# * #  #"
+    //              "        "
+    //              "### ####"
+    //              " #     #");
 
     // Piso p(8, 8, "###  *##"
     //              "#       "
@@ -289,26 +332,49 @@ TEST(problema3, MiEjemplo) {
     //              " #     #"
     //              "    *  #");
 
-    // Piso p(4, 4, "### "
-    //              "#   "
-    //              "# * "
-    //              "# * ");
-
-    // Piso p(5, 5, "###  "
-    //              "#    "
-    //              "# * #"
-    //              "# * #"
-    //              "     ");
-
-    Piso p(6, 6, "###  *"
-                 "#     "
-                 "# * # "
-                 "# * # "
-                 "      "
-                 "### ##");
-
-    resolver(p);
+    resolver(p, false);
 }
+
+// TEST(problema3, Diferencias) {
+//     Piso p(5, 5);
+//     int i = 0, costo1, costo2;
+//     clock_t tiempo1, tiempo2;
+
+//     do {
+//         i++;
+//         if(i % 100 == 1)
+//             cout << "Experimento " << i << endl
+//                  << "Tiempo total default:     " << tiempo1 << endl
+//                  << "Tiempo total alternativa: " << tiempo2 << endl
+//                  << "Relación default/alt:     "
+//                  << (double) tiempo1 / (double) tiempo2 << endl << endl;
+
+//         for(unsigned i = 0; i < p.filas(); i++) {
+//             for(unsigned j = 0; j < p.columnas(); j++) {
+//                 switch(rand() % 3) {
+//                     case 0: p.en(i, j) = Pared; break;
+//                     case 1: p.en(i, j) = Importante; break;
+//                     default: break;
+//                 }
+//             }
+//         }
+
+//         clock_t inicio = clock();
+//         costo1 = costo(resolver(p, false));
+//         tiempo1 += clock() - inicio;
+
+//         inicio = clock();
+//         costo2 = costo(resolver(p, true));
+//         tiempo2 += clock() - inicio;
+
+//     } while(costo1 == costo2);
+
+//     cout << "Piso: " << endl;
+//     p.imprimir();
+
+//     cout << "Costo implementación default:     $" << costo1 << endl;
+//     cout << "Costo implementación alternativa: $" << costo2 << endl;
+// }
 
 
 GTEST_API_ int main(int argc, char **argv) {

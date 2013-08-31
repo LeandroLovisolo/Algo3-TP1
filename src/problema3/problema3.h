@@ -24,9 +24,10 @@ private:
 };
 
 Piso *problema3(Piso &piso);
-bool checkPiso(Piso &piso);
+bool checkPiso(const Piso &piso);
 
-void resolver(const Piso& p);
+Piso resolver(const Piso& p, bool checkAlternativo);
+int costo(const Piso& p);
 
 
 #endif // PROBLEMA3_H

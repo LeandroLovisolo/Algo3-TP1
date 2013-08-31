@@ -325,10 +325,11 @@ bool casilleroCorrecto(Piso &piso, const unsigned fila, const unsigned columna) 
 }
 
 //Complejidad O(n*m(n+m))
-bool checkPiso(Piso &piso) {
-    for(unsigned j=0;j<piso.filas();j++) {
-        for(unsigned i=0;i<piso.columnas();i++) {
-            if(!casilleroCorrecto(piso, j, i)) return false;
+bool checkPiso(const Piso &piso) {
+    Piso copia(piso);
+    for(unsigned j=0;j<copia.filas();j++) {
+        for(unsigned i=0;i<copia.columnas();i++) {
+            if(!casilleroCorrecto(copia, j, i)) return false;
         }
     }
     return true;
@@ -378,6 +379,10 @@ bool esSensor(const Piso& p, unsigned fila, unsigned columna) {
 
 bool esPared(const Piso& p, unsigned fila, unsigned columna) {
     return p.en(fila, columna) == Pared;
+}
+
+bool esLibre(const Piso& p, unsigned fila, unsigned columna) {
+    return p.en(fila, columna) == Libre;
 }
 
 // Devuelve true si no hay ningún sensor apuntando a otro.
@@ -436,6 +441,64 @@ bool esValido(const Piso& p) {
                         return false;
                     }
                 }
+            }
+        }
+    }
+
+    return true;
+}
+
+// Devuelve true si no hay ninguna posición libre imposible de sensar.
+bool esCandidatoASolucion(const Piso& p) {
+
+    // Recorro todas las posiciones
+    for(unsigned i = 0; i < p.filas(); i++) {
+        for(unsigned j = 0; j < p.columnas(); j++) {
+
+            // Si la posición actual está libre, verifico
+            // que no hayan sensores verticales sobre su fila
+            // ni sensores horizontales sobre su columna.
+            if(esLibre(p, i, j)) {
+                bool haySensorVertical = false,
+                     haySensorHorizontal = false;
+
+                // Miro hacia arriba.
+                for(int k = i - 1; k >= 0; k--) {
+                    if(esPared(p, k, j)) break;
+                    if(p.en(k, j) == SensorHorizontal) {
+                        haySensorHorizontal = true;
+                        break;
+                    }
+                }
+
+                // Miro hacia abajo.
+                for(int k = i + 1; k < (int) p.filas(); k++) {
+                    if(esPared(p, k, j)) break;
+                    if(p.en(k, j) == SensorHorizontal) {
+                        haySensorHorizontal = true;
+                        break;
+                    }
+                }
+
+                // Miro hacia la izquierda.
+                for(int k = j - 1; k >= 0; k--) {
+                    if(esPared(p, i, k)) break;
+                    if(p.en(i, k) == SensorVertical) {
+                        haySensorVertical = true;
+                        break;
+                    }
+                }
+
+                // Miro hacia la derecha.
+                for(int k = j + 1; k < (int) p.columnas(); k++) {
+                    if(esPared(p, i, k)) break;
+                    if(p.en(i, k) == SensorVertical) {
+                        haySensorVertical = true;
+                        break;
+                    }
+                }
+
+                if(haySensorVertical && haySensorHorizontal) return false;
             }
         }
     }
@@ -547,7 +610,7 @@ void ubicarSensor(Piso& p, unsigned fila, unsigned columna, Casilla sensor) {
 // en caso de ser solución, y si la posición dada es válida, continúa la
 // recursión probando cada tipo de sensor en la posición dada.
 void recorrer(const Piso& p, unsigned fila, unsigned columna,
-              vector<Piso>& soluciones, int& iteracion) {
+              vector<Piso>& soluciones, int& iteracion, bool checkAlternativo) {
     iteracion++;
 
     // Imprimimos información de debugging.
@@ -556,18 +619,26 @@ void recorrer(const Piso& p, unsigned fila, unsigned columna,
              << "(" << fila << ", " << columna << ") en el siguiente piso:" << endl;
         p.imprimir();
     #elif DEBUG_LEVEL == NORMAL
-        if(iteracion % 10000 == 0) cout << "Iteración " << iteracion << endl;
+        if(iteracion % 10000 == 0)
+            cout << "Iteración " << iteracion << ". "
+                 << "Soluciones halladas: " << soluciones.size() << endl;
     #endif
 
-    // Verificamos que no hayan sensores apuntándose entre sí.
-    if(!esValido(p)) return;
+    
+    if(checkAlternativo) {
+        if(!checkPiso(p)) return;
+    } else {
+
+        // Verificamos que no hayan sensores apuntándose entre sí.
+        if(!esValido(p)) return;
+
+        // Verificamos que no hayan posiciones libres imposibles de sensar.
+        if(!esCandidatoASolucion(p)) return;
+    }
 
     // Si es solución, terminamos.
     if(esSolucion(p)) {
-        #if DEBUG_LEVEL >= NORMAL
-            cout << "Se halló una solución." << endl;
-        #endif
-
+        #pragma omp critical
         soluciones.push_back(p);
         return;
     }
@@ -583,48 +654,116 @@ void recorrer(const Piso& p, unsigned fila, unsigned columna,
         columnaSig = columnaSig + 1 == p.columnas() ? 0           : columnaSig + 1;
     } while(filaSig < p.filas() && p.en(filaSig, columnaSig) != Libre);
 
-    // Continuamos ubicando un sensor vertical.
-    {
-        Piso q(p);
-        ubicarSensor(q, fila, columna, SensorVertical);
-        recorrer(q, filaSig, columnaSig, soluciones, iteracion);
+    // Si la posición actual no está libre, pasamos a la siguiente sin hacer nada
+    // (caso borde, pasa cuando se llama inicialmente a recorrer() con la posición (0, 0).)
+    if(p.en(fila, columna) != Libre) {
+        recorrer(p, filaSig, columnaSig, soluciones, iteracion, checkAlternativo);
+        return;
     }
 
-    // Continuamos ubicando un sensor horizontal.
+    #pragma omp parallel sections
     {
-        Piso q(p);
-        ubicarSensor(q, fila, columna, SensorHorizontal);
-        recorrer(q, filaSig, columnaSig, soluciones, iteracion);
-    }
+        // Continuamos ubicando un sensor vertical.
+        #pragma omp section
+        {
+            Piso q(p);
+            ubicarSensor(q, fila, columna, SensorVertical);
+            recorrer(q, filaSig, columnaSig, soluciones, iteracion, checkAlternativo);
+        }
 
-    // Continuamos ubicando un sensor cuádruple.
-    {
-        Piso q(p);
-        ubicarSensor(q, fila, columna, SensorCuadruple);
-        recorrer(q, filaSig, columnaSig, soluciones, iteracion);
-    }
+        // Continuamos ubicando un sensor horizontal.
+        #pragma omp section
+        {
+            Piso q(p);
+            ubicarSensor(q, fila, columna, SensorHorizontal);
+            recorrer(q, filaSig, columnaSig, soluciones, iteracion, checkAlternativo);
+        }
 
-    // Continuamios dejando la posición actual intacta.
-    recorrer(p, filaSig, columnaSig, soluciones, iteracion);
+        // Continuamos ubicando un sensor cuádruple.
+        #pragma omp section
+        {
+            Piso q(p);
+            ubicarSensor(q, fila, columna, SensorCuadruple);
+            recorrer(q, filaSig, columnaSig, soluciones, iteracion, checkAlternativo);
+        }
+
+        // Continuamios dejando la posición actual intacta.
+        #pragma omp section
+        {
+            recorrer(p, filaSig, columnaSig, soluciones, iteracion, checkAlternativo);
+        }
+    }
 }
 
-void resolver(const Piso& p) {
-    cout << "Iniciando búsqueda de soluciones para el siguiente piso:" << endl;
-    p.imprimir();
-    cout << endl;
+// Devuelve el costo de una solución
+int costo(const Piso& p) {
+    int costo = 0;
+
+    for(unsigned i = 0; i < p.filas(); i++) {
+        for(unsigned j = 0; j < p.columnas(); j++) {
+            switch(p.en(i, j)) {
+                case SensorVertical:
+                case SensorHorizontal:
+                costo += 4000;
+                break;
+
+                case SensorCuadruple:
+                costo += 6000;
+                break;
+
+                default: break;
+            }
+        }
+    }
+
+    return costo;
+}
+
+Piso resolver(const Piso& p, bool checkAlternativo) {
+    #if DEBUG_LEVEL >= NORMAL
+        cout << "Iniciando búsqueda de soluciones para el siguiente piso:" << endl;
+        p.imprimir();
+        cout << endl;
+    #endif
 
     vector<Piso> soluciones;
     int iteraciones = 0;
-    recorrer(p, 0, 0, soluciones, iteraciones);
+    recorrer(p, 0, 0, soluciones, iteraciones, checkAlternativo);
 
-    cout << endl;
+    #if DEBUG_LEVEL >= NORMAL
+        cout << "Iteraciones realizadas: " << iteraciones << endl;
+    #endif
 
     if(soluciones.size() == 0) {
-        cout << "No se encontraron soluciones." << endl;
-    } else {
-        cout << "Se encontraron " << soluciones.size() << " soluciones:" << endl;
-        for(size_t i = 0; i < soluciones.size(); i++) soluciones[i].imprimir();
-    }
+        #if DEBUG_LEVEL >= NORMAL
+            cout << "No se encontraron soluciones." << endl;
+        #endif
 
-    cout << "Iteraciones realizadas: " << iteraciones << endl;
+        return p;
+    } else {
+        #if DEBUG_LEVEL >= NORMAL
+            cout << "Se encontraron " << soluciones.size() << " soluciones:" << endl;
+            // for(size_t i = 0; i < soluciones.size(); i++) soluciones[i].imprimir();
+        #endif
+
+        int mejorPiso = 0;
+        int mejorCosto = costo(soluciones[mejorPiso]);
+
+        for(size_t i = 0; i < soluciones.size(); i++) {
+            int otroCosto = costo(soluciones[i]);
+
+            if(otroCosto < mejorCosto) {
+                mejorCosto = otroCosto;
+                mejorPiso = i;
+            }
+        }
+
+        #if DEBUG_LEVEL >= NORMAL
+            cout << "Mejor solución:" << endl;
+            soluciones[mejorPiso].imprimir();
+            cout << "Costo: $" << mejorCosto << endl;
+        #endif
+
+        return soluciones[mejorPiso];
+    }
 }

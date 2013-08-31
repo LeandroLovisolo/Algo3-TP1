@@ -11,7 +11,7 @@ GTEST_DIR = lib/gtest-1.6.0
 CPPFLAGS += -I$(GTEST_DIR)/include
 
 # Flags del compilador C++.
-CXXFLAGS += -g -Wall -Wextra -std=c++11 -pg
+CXXFLAGS += -g -Wall -Wextra -std=c++11 -fopenmp
 
 # Comando para generar código objeto (.o)
 OBJ       = $(CXX) $(CPPFLAGS) $(CXXFLAGS) -c
