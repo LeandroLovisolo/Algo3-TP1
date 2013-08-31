@@ -172,18 +172,12 @@ Dada una secuencia de paquetes y un límite de peso, se nos pide calcular, la ca
 Se nos pide resolver el problema con una cota de complejidad temporal \textbf{estrictamente mejor} que $O(n^2)$.
 
 \textbf{Ejemplos del problema y sus soluciones:}
-\begin{itemize}
-	\item El formato de entrada es el siguiente: \\
-  límite cantidadDePaquetes paquete1 paquete 2... \#
-	\item El formato de salida es el siguiente: \\
-	cantidadDeCamiones pesoCamion1 pesoCamion2 ...
-\end{itemize}
 
-\textbf{Entrada}: 100 3 80 40 60 \#.\\
+\textbf{Entrada}: límite: 100 , peso de paquetes: 3 80 40 60. \\
 \textbf{Salida}: 2 80 100. \\
 El camión 1 recibe el primer paquete de 80. Al intentar luego colocar el paquete de 40 en este, no le es posible debido a que el límite es 100 y lo guarda en el camión 2, al que luego, se le suma el paquete de 60, el cuál no provoca que el límite sea superado al colocarse en este.\\
 
-\textbf{Entrada}: 100 0\#.\\
+\textbf{Entrada}: límite: 100, paquetes: 0.\\
 \textbf{Salida}: 0. \\
 Al no haber paquetes no se utilizan comiones, sin importar el límite del mismo.
 
@@ -198,20 +192,30 @@ Luego de haber cargado todos los paquetes, devolvemos la secuencia con la carga 
 Para cumplir con los requerimientos de complejidad temporal, utilizamos una cola de prioridad min-heap en lugar de una secuencia para almacenar las cargas de cada camión.
 
 \begin{pseudo}
+	\State Tipo de dato Camion es Tupla $\langle$ id : entero, carga : entero  $\rangle$
     \Procedure{Pascual-y-el-correo}{$\langle p_1, \ldots, p_n \rangle, L$}
-        \State $C \leftarrow$ nuevo min-heap                    \Ode{1}
-        \ForAll{$p$ \In $\langle p_1, \ldots, p_n \rangle$}     \Ode{1}
+        \State $C \leftarrow$ nuevo min-heap de Camion, ordenado por carga   \Ode{1}
+        \ForAll{$p$ \In $\langle p_1, \ldots, p_n \rangle$}    	
             \If{$C.tama\tilde{n}o = 0$}                         \Ode{1}
-                \State $C.encolar(p)$                           \Ode{log(n)}
+                \State $C.encolar(\langle 1 , p \rangle)$       \Ode{log(n)}
             \ElsIf{$C.siguiente() + p \leq L$}                  \Ode{1}
-                \State $c \leftarrow C.siguiente() + p$         \Ode{1}
+                \State $c : Camion \leftarrow C.siguiente()$   \Ode{1}
+                \State $c.carga \leftarrow c.carga + p$			\Ode{1}
                 \State $C.desencolar()$                         \Ode{log(n)}
                 \State $C.encolar(c)$                           \Ode{log(n)}
             \Else
-                \State $C.encolar(c)$                           \Ode{log(n)}
+                \State $C.encolar(\langle C.tama\tilde{n}o(), p \rangle)$ \Ode{log(n)}
             \EndIf
         \EndFor
-        \State \textbf{return} $C$
+
+  		\State $Camiones \leftarrow$ Arreglo de camiones de C.tamaño()
+        \ForAll{$i$ \In $\langle 1, \ldots,$ C.tamaño() $\rangle$}			
+      		\State Camiones[i] $\leftarrow$ $C.siguiente()$		\Ode{1}
+      		\State $C.desencolar()$								\Ode{log(n)}
+        \EndFor
+        
+        \State $Ordenar(Camiones)$ (Ordenamiento por id)		\Ode{log(n)}
+        \State \textbf{return} $Camiones$
     \EndProcedure
 \end{pseudo}
 
@@ -226,7 +230,7 @@ Demostración: para cada uno de los $n$ paquetes, se realizan 1 ó 2 operaciones
 \subsection{Correctitud}
 Sea m el paquete número m de la secuencia de paquetes recibida, con m-1 paquetes ubicados en camiones anteriormente, quiero ver si al ubicar el paquete m el algoritmo cumple con la metodología de ordenar paquetes de Pascual.
 
-Al utilizar un \textbf{min-heap} como estructura para almacenar los camiones, es posible asegurar que siempre se tendrá el camión menos cargado, corroborando el correcto funcionamiento de la consigna, la cuál describe que las comparaciones para elegir el destino del paquete se hacen con el camión de menor peso. 
+Al utilizar una \textbf{cola de prioridad} para almacenar los camiones, es posible asegurar que siempre se tendrá el camión menos cargado en cada llamada a \textbf{Siguiente}, corroborando el correcto funcionamiento de la consigna, la cuál describe que las comparaciones para elegir el destino del paquete se hacen con el camión de menor peso. 
 
 Si la suma del peso del camión en la cabecera y el nuevo paquete m no superan el límite, se procede a desencolar del heap el camión, se le carga el nuevo paquete aumentando su peso y se lo encola nuevamente en el heap el cuál se encargará de dejar el nuevo camión con menos peso en la cabecera.
 
