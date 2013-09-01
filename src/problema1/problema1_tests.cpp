@@ -1,5 +1,9 @@
 #include <ctime>
 #include <fstream>
+#include <cmath>
+#include <algorithm>
+#include <climits>
+
 
 #include "gtest/gtest.h"
 #include "problema1.h"
@@ -63,28 +67,33 @@ TEST(problema1, SeisPaquetesTresCamiones) {
 }
 
 double performance(int iteraciones, int limite, vector<int> paquetes) {
-    clock_t start = clock();
-    double time = 0;
+    struct timespec st,en;
+    unsigned long res = UINT_MAX;
     for (int i = 0; i < iteraciones; ++i) {
+        clock_gettime(CLOCK_THREAD_CPUTIME_ID ,&st);
         problema1(limite, paquetes);
-        clock_t end = clock();
-        time += (double) (end-start) / CLOCKS_PER_SEC * 1000;
+        clock_gettime(CLOCK_THREAD_CPUTIME_ID ,&en);
+        unsigned long diff = en.tv_nsec - st.tv_nsec;
+        res = min(res,diff);
     }
-    return time/iteraciones;
+    return res;
 }
 
 TEST(problema1, PerformancePeorCaso) {
     ofstream fs("perf/problema1/peor-caso.csv");
     vector<int> paquetes;
-    int limite = 1;
+    int limite = 1000;
 
     for (int i = 0; i <= 1000; i++){
-        paquetes.push_back(limite);
-        fs << i << ", " << performance(20, limite, paquetes) << endl;
+        cout << "Iteración " << i << endl;
+        paquetes.push_back(limite - i*0.5);
+        if(i % 10 == 0)
+            fs << i << ", " << performance(20, limite, paquetes) << endl;
     }
 
     fs.close();
 }
+
 
 vector<int>* paquetesAleatorios(const int limite_max, const int cantidad_paquetes) {
     //srand(time(NULL));
