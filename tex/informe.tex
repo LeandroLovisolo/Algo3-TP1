@@ -368,13 +368,21 @@ El teorema a continuación muestra que la suposición anterior es de hecho ciert
 
 
 \section{Problema 3: Una noche en el museo}
-Dada una grilla de n x m casillas, se nos pide ubicar una serie de sensores, los cuales deben poder sensar la totalidad de las casillas, obteniendo un gasto mínimo a la hora de poner los sensores.
+Se desea instalar un sistema de detección de movimientos basado en sensores láser, para esto cada piso del museo fue modelado por una grilla de $n$ $x$ $m$ casillas.
 
-Existen dos tipos de sensores, bidireccionales (izquierda y derecha) y cuatridireccionales (izquierda, derecha, arriba y abajo), de \$4000 y \$6000 respectivamente y 3 tipos de casilla, vacía, importante y pared. Es necesario que las casillas importantes tengan un cruce de sensores de dos láseres.
+Existen dos tipos de sensores, bidireccionales (emiten señales hacia la izquierda y la derecha o bien hacia arriba y abajo) y cuatridireccionales (emiten señales en las 4 direcciones), de \$4000 y \$6000 respectivamente y 3 tipos de casilla, vacía, importante y pared.
+
+Dado un piso se debe cumplir:
+
+\begin{itemize}
+\item las casillas libres deben quedar cubiertas por al menos un sensor.
+\item las casilla importantes deben ser cubiertas por dos sensores.
+\item no se puede ubicar un sensor de forma tal que alguna de sus señales impacten contra otro dispositivo.
+\item no se puede instalar más de un dispositivo en una misma casilla libre.
+\item en caso de haber solución, la misma debrá minimizar la cantidad de dinero invertido en sensores.
+\end{itemize}
 
 Se pide realizar el algoritmo mediante la técnica de Backtracking.
-
-Ejemplos:
 
 \subsection{Solucion}
 \subsection{Complejidad}
