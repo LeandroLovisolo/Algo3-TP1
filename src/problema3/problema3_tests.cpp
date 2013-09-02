@@ -267,7 +267,7 @@ TEST(problema3, MiEjemplo) {
     //              "  ");
     
     // Piso p(2, 3, " * "
-    //              "   ");
+    //              "  *");
 
     // Piso p(3, 3, " # "
     //              "* *"
@@ -275,7 +275,7 @@ TEST(problema3, MiEjemplo) {
 
     // Piso p(3, 3, "  *"
     //              "   "
-    //              "   ");    
+    //              "   ");
 
     // Piso p(4, 2, "* "
     //              "# "
@@ -332,7 +332,7 @@ TEST(problema3, MiEjemplo) {
     //              " #     #"
     //              "    *  #");
 
-    resolver(p, false);
+    resolver(p);
 }
 
 // TEST(problema3, Diferencias) {

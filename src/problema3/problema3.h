@@ -11,6 +11,7 @@ public:
     Piso(const Piso &otro);
     ~Piso();
 
+    bool operator==(const Piso& otro) const;
     unsigned filas() const { return _filas; }
     unsigned columnas() const { return _columnas; }
     Casilla& en(unsigned fila, unsigned columna);
@@ -26,7 +27,7 @@ private:
 Piso *problema3(Piso &piso);
 bool checkPiso(const Piso &piso);
 
-Piso resolver(const Piso& p, bool checkAlternativo);
+Piso resolver(const Piso& p);
 int costo(const Piso& p);
 
 
