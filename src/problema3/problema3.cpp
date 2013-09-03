@@ -707,11 +707,6 @@ bool podar(const Piso& p, unsigned fila, unsigned columna) {
     #endif
 }
 
-bool requiereSensado(const Piso& p, unsigned fila, unsigned columna) {
-    return p.get(fila, columna) == Libre ||
-           p.get(fila, columna) == Importante;
-}
-
 // Devuelve true si todas las casillas libres están sensadas y
 // todas las casillas importantes están doblemente sensadas.
 // Asume que el piso recibido es válido.
@@ -721,14 +716,12 @@ bool esSolucion(const Piso& p) {
     for(unsigned i = 0; i < p.filas(); i++) {
         for(unsigned j = 0; j < p.columnas(); j++) {
 
-            // Si la posición actual requiere sensado, cuento los
-            // sensores actuando sobre esta y verifico que sea
-            // la cantidad correcta.
-
-            //Si es libre, quiere decir que no está Sensado
+            // Si fuera solución, no podría tener ninguna posición sin sensar.
             if(esLibre(p, i, j)) return false;
 
-            //if(requiereSensado(p, i, j)) {
+            // Si la posición actual requiere doble sensado, cuento
+            // los sensores actuando sobre esta y verifico que sea
+            // la cantidad correcta.
             if(p.get(i,j) == Importante) {
                 int sensores = 0;
 
@@ -769,8 +762,7 @@ bool esSolucion(const Piso& p) {
                 }
 
                 // Verifico que la cantidad de sensores sea correcta.
-                if(p.get(i, j) == Libre && sensores == 0) return false;
-                if(p.get(i, j) == Importante && sensores < 2) return false;
+                if(sensores < 2) return false;
             }
         }
     }
