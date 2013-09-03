@@ -8,22 +8,11 @@ using namespace std;
 
 TEST(problema3, en) {
     Piso p(1, 2);
-    p.en(0, 0) = Pared;
+    p.set(0, 0, Pared);
 
-    EXPECT_EQ(Pared, p.en(0, 0));
-    EXPECT_EQ(Libre, p.en(0, 1));
+    EXPECT_EQ(Pared, p.get(0, 0));
+    EXPECT_EQ(Libre, p.get(0, 1));
 }
-
-/*
-TEST(problema3, UnaSolaCasilla) {
-    Piso p(1, 1);
-    Piso *p2 = problema3(p);
-    EXPECT_EQ(Sensor, p2->en(0, 0));
-    delete p2;
-}
-*/
-
-
 
 TEST(problema3, okPeroQuedanCasillerosLibres) {
 /*
@@ -34,18 +23,17 @@ TEST(problema3, okPeroQuedanCasillerosLibres) {
 
     Piso p(3,3);
     // en (0, 0) o (0,1) puede haber un sensorVertical
-    p.en(0, 0) = Libre;
-    p.en(0, 1) = Libre;
-    p.en(0, 2) = Libre;
-    p.en(1, 0) = Libre;
-    p.en(1, 1) = Importante;
-    p.en(1, 2) = SensorCuadruple;
-    p.en(2, 0) = Libre;
-    p.en(2, 1) = SensorCuadruple;
-    p.en(2, 2) = Importante;
+    p.set(0, 0, Libre);
+    p.set(0, 1, Libre);
+    p.set(0, 2, Libre);
+    p.set(1, 0, Libre);
+    p.set(1, 1, Importante);
+    p.set(1, 2, SensorCuadruple);
+    p.set(2, 0, Libre);
+    p.set(2, 1, SensorCuadruple);
+    p.set(2, 2, Importante);
     bool value = true;
     EXPECT_EQ(value, checkPiso(p));
-
 }
 
 TEST(problema3, chocanSensores) {
@@ -56,10 +44,10 @@ TEST(problema3, chocanSensores) {
 
     Piso p(2,2);
     
-    p.en(0, 0) = Libre;
-    p.en(0, 1) = Libre;
-    p.en(1, 0) = SensorVertical;
-    p.en(1, 1) = SensorCuadruple;
+    p.set(0, 0, Libre);
+    p.set(0, 1, Libre);
+    p.set(1, 0, SensorVertical);
+    p.set(1, 1, SensorCuadruple);
     bool value = false;
     EXPECT_EQ(value, checkPiso(p));
 
@@ -73,10 +61,10 @@ TEST(problema3, todoParedes) {
 
     Piso p(2,2);
     
-    p.en(0, 0) = Pared;
-    p.en(0, 1) = Pared;
-    p.en(1, 0) = Pared;
-    p.en(1, 1) = Pared;
+    p.set(0, 0, Pared);
+    p.set(0, 1, Pared);
+    p.set(1, 0, Pared);
+    p.set(1, 1, Pared);
     bool value = true;
     EXPECT_EQ(value, checkPiso(p));
 
@@ -90,10 +78,10 @@ TEST(problema3, todoParedeMenosUnElementoImportante) {
 
     Piso p(2,2);
     
-    p.en(0, 0) = Pared;
-    p.en(0, 1) = Pared;
-    p.en(1, 0) = Pared;
-    p.en(1, 1) = Importante;
+    p.set(0, 0, Pared);
+    p.set(0, 1, Pared);
+    p.set(1, 0, Pared);
+    p.set(1, 1, Importante);
     bool value = false;
     EXPECT_EQ(value, checkPiso(p));
 
@@ -107,10 +95,10 @@ TEST(problema3, todoImportante) {
 
     Piso p(2,2);
     
-    p.en(0, 0) = Importante;
-    p.en(0, 1) = Importante;
-    p.en(1, 0) = Importante;
-    p.en(1, 1) = Importante;
+    p.set(0, 0, Importante);
+    p.set(0, 1, Importante);
+    p.set(1, 0, Importante);
+    p.set(1, 1, Importante);
     bool value = false;
     EXPECT_EQ(value, checkPiso(p));
 
@@ -124,10 +112,10 @@ TEST(problema3, esSolucion) {
 
     Piso p(2,2);
     
-    p.en(0, 0) = Importante;
-    p.en(0, 1) = SensorCuadruple;
-    p.en(1, 0) = SensorCuadruple;
-    p.en(1, 1) = Importante;
+    p.set(0, 0, Importante);
+    p.set(0, 1, SensorCuadruple);
+    p.set(1, 0, SensorCuadruple);
+    p.set(1, 1, Importante);
     bool value = true;
     EXPECT_EQ(value, checkPiso(p));
 
@@ -143,15 +131,15 @@ TEST(problema3, sensoresNoTraspasanLaPared) {
 
     Piso p(3,3);
     
-    p.en(0, 0) = Libre;
-    p.en(0, 1) = SensorHorizontal;
-    p.en(0, 2) = Libre;
-    p.en(1, 0) = Importante;
-    p.en(1, 1) = SensorHorizontal;
-    p.en(1, 2) = Importante;
-    p.en(2, 0) = SensorCuadruple;
-    p.en(2, 1) = Pared;
-    p.en(2, 2) = SensorCuadruple;
+    p.set(0, 0, Libre);
+    p.set(0, 1, SensorHorizontal);
+    p.set(0, 2, Libre);
+    p.set(1, 0, Importante);
+    p.set(1, 1, SensorHorizontal);
+    p.set(1, 2, Importante);
+    p.set(2, 0, SensorCuadruple);
+    p.set(2, 1, Pared);
+    p.set(2, 2, SensorCuadruple);
     bool value = true;
     EXPECT_EQ(value, checkPiso(p));
 
@@ -167,15 +155,15 @@ TEST(problema3, solucionNoValida) {
 
     Piso p(3,3);
     
-    p.en(0, 0) = Libre;
-    p.en(0, 1) = Libre;
-    p.en(0, 2) = Libre;
-    p.en(1, 0) = Importante;
-    p.en(1, 1) = Pared;
-    p.en(1, 2) = Importante;
-    p.en(2, 0) = SensorCuadruple;
-    p.en(2, 1) = Pared;
-    p.en(2, 2) = Libre;
+    p.set(0, 0, Libre);
+    p.set(0, 1, Libre);
+    p.set(0, 2, Libre);
+    p.set(1, 0, Importante);
+    p.set(1, 1, Pared);
+    p.set(1, 2, Importante);
+    p.set(2, 0, SensorCuadruple);
+    p.set(2, 1, Pared);
+    p.set(2, 2, Libre);
     bool value = false;
     EXPECT_EQ(value, checkPiso(p));
 
@@ -191,15 +179,15 @@ TEST(problema3, noApuntan2Sensores) {
 
     Piso p(3,3);
     
-    p.en(0, 0) = Libre;
-    p.en(0, 1) = Libre;
-    p.en(0, 2) = SensorCuadruple;
-    p.en(1, 0) = Importante;
-    p.en(1, 1) = Pared;
-    p.en(1, 2) = Importante;
-    p.en(2, 0) = SensorCuadruple;
-    p.en(2, 1) = Libre;
-    p.en(2, 2) = Libre;
+    p.set(0, 0, Libre);
+    p.set(0, 1, Libre);
+    p.set(0, 2, SensorCuadruple);
+    p.set(1, 0, Importante);
+    p.set(1, 1, Pared);
+    p.set(1, 2, Importante);
+    p.set(2, 0, SensorCuadruple);
+    p.set(2, 1, Libre);
+    p.set(2, 2, Libre);
     bool value = false;
     EXPECT_EQ(value, checkPiso(p));
 
@@ -217,18 +205,18 @@ TEST(problema3, noApuntan2Sensores2) {
 
     Piso p(3,4);
     
-    p.en(0, 0) = Libre;
-    p.en(0, 1) = SensorVertical;
-    p.en(0, 2) = Libre;
-    p.en(0, 3) = Libre;
-    p.en(1, 0) = Importante;
-    p.en(1, 1) = Libre;
-    p.en(1, 2) = Pared;
-    p.en(1, 3) = Importante;
-    p.en(2, 0) = SensorCuadruple;
-    p.en(2, 1) = Libre;
-    p.en(2, 2) = Libre;
-    p.en(2, 3) = Libre;
+    p.set(0, 0, Libre);
+    p.set(0, 1, SensorVertical);
+    p.set(0, 2, Libre);
+    p.set(0, 3, Libre);
+    p.set(1, 0, Importante);
+    p.set(1, 1, Libre);
+    p.set(1, 2, Pared);
+    p.set(1, 3, Importante);
+    p.set(2, 0, SensorCuadruple);
+    p.set(2, 1, Libre);
+    p.set(2, 2, Libre);
+    p.set(2, 3, Libre);
     bool value = false;
     EXPECT_EQ(value, checkPiso(p));
 }
@@ -239,12 +227,12 @@ TEST(problema3, noApuntanSensoresACasilleroLibre) {
     SC L  P
 */
     Piso p(2,3);
-    p.en(0, 0) = Libre;
-    p.en(0, 1) = SensorVertical;
-    p.en(0, 2) = Libre;
-    p.en(1, 0) = SensorCuadruple;
-    p.en(1, 1) = Libre;
-    p.en(1, 2) = Pared;
+    p.set(0, 0, Libre);
+    p.set(0, 1, SensorVertical);
+    p.set(0, 2, Libre);
+    p.set(1, 0, SensorCuadruple);
+    p.set(1, 1, Libre);
+    p.set(1, 2, Pared);
     bool value = true;
     EXPECT_EQ(value, checkPiso(p));
 }
@@ -287,18 +275,18 @@ TEST(problema3, MiEjemplo) {
     //              "# * "
     //              "# * ");
 
-    Piso p(5, 5, "###  "
-                 "#    "
-                 "# * #"
-                 "# * #"
-                 "     ");
+    // Piso p(5, 5, "###  "
+    //              "#    "
+    //              "# * #"
+    //              "# * #"
+    //              "     ");
 
-    // Piso p(6, 6, "###  *"
-    //              "#     "
-    //              "# * # "
-    //              "# * # "
-    //              "      "
-    //              "### ##");
+    Piso p(6, 6, "###  *"
+                 "#     "
+                 "# * # "
+                 "# * # "
+                 "      "
+                 "### ##");
 
     // Piso p(6, 7, "###  *#"
     //              "#      "
@@ -306,6 +294,14 @@ TEST(problema3, MiEjemplo) {
     //              "# * #  "
     //              "       "
     //              "### ###");
+
+    // Piso p(7, 7, "###  *#"
+    //              "#      "
+    //              "# * #  "
+    //              "# * #  "
+    //              "       "
+    //              "### ###"
+    //              " # ####");
 
     // Piso p(7, 7, "###  *#"
     //              "#      "
@@ -324,6 +320,15 @@ TEST(problema3, MiEjemplo) {
     //              " #     #");
 
     // Piso p(8, 8, "###  *##"
+    //              "#      #"
+    //              "# * #  #"
+    //              "# * #  #"
+    //              "       #"
+    //              "### ####"
+    //              " #     #"
+    //              "####* ##");
+
+    // Piso p(8, 8, "###  *##"
     //              "#       "
     //              "# * #  #"
     //              "# * #  #"
@@ -332,50 +337,8 @@ TEST(problema3, MiEjemplo) {
     //              " #     #"
     //              "    *  #");
 
-    resolver(p);
+    // resolver(p);
 }
-
-// TEST(problema3, Diferencias) {
-//     Piso p(5, 5);
-//     int i = 0, costo1, costo2;
-//     clock_t tiempo1, tiempo2;
-
-//     do {
-//         i++;
-//         if(i % 100 == 1)
-//             cout << "Experimento " << i << endl
-//                  << "Tiempo total default:     " << tiempo1 << endl
-//                  << "Tiempo total alternativa: " << tiempo2 << endl
-//                  << "Relación default/alt:     "
-//                  << (double) tiempo1 / (double) tiempo2 << endl << endl;
-
-//         for(unsigned i = 0; i < p.filas(); i++) {
-//             for(unsigned j = 0; j < p.columnas(); j++) {
-//                 switch(rand() % 3) {
-//                     case 0: p.en(i, j) = Pared; break;
-//                     case 1: p.en(i, j) = Importante; break;
-//                     default: break;
-//                 }
-//             }
-//         }
-
-//         clock_t inicio = clock();
-//         costo1 = costo(resolver(p, false));
-//         tiempo1 += clock() - inicio;
-
-//         inicio = clock();
-//         costo2 = costo(resolver(p, true));
-//         tiempo2 += clock() - inicio;
-
-//     } while(costo1 == costo2);
-
-//     cout << "Piso: " << endl;
-//     p.imprimir();
-
-//     cout << "Costo implementación default:     $" << costo1 << endl;
-//     cout << "Costo implementación alternativa: $" << costo2 << endl;
-// }
-
 
 GTEST_API_ int main(int argc, char **argv) {
     testing::InitGoogleTest(&argc, argv);

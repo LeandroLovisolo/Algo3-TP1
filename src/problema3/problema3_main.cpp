@@ -21,7 +21,7 @@ int main() {
 		for(int j = 0; j < m; ++j) {
 			if(!cin.eof()) {
 				cin >> casilla;
-				mapa.en(i, j) = (Casilla) casilla;
+				mapa.set(i, j, (Casilla) casilla);
 			}
 		}
 	}
@@ -30,7 +30,7 @@ int main() {
 	/* Test de lenctura
 	for (int i = 0; i < n; ++i) {
 		for(int j = 0; j < m; ++j) {
-			cout << mapa.en(i,j);
+			cout << mapa.get(i,j);
 		}
 		cout << endl;
 	}

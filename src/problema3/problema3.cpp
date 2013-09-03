@@ -7,36 +7,33 @@
 
 using namespace std;
 
-Piso::Piso(unsigned filas, unsigned columnas) {
+Piso::Piso(unsigned filas, unsigned columnas)
+        : grilla(filas * columnas, Libre) {
     _filas = filas;
     _columnas = columnas;
-    grilla = new Casilla[filas * columnas];
-    for(unsigned i = 0; i < filas * columnas; i++) grilla[i] = Libre;
+    _costo = 0;
 }
 
-Piso::Piso(unsigned filas, unsigned columnas, string casillas) : Piso(filas, columnas) {
+Piso::Piso(unsigned filas, unsigned columnas, string casillas)
+        : Piso(filas, columnas) {
     for(unsigned i = 0; i < filas; i++) {
         for(unsigned j = 0; j < columnas; j++) {
             switch(casillas[columnas * i + j]) {
-                case '#': en(i, j) = Pared;            break;
-                case '*': en(i, j) = Importante;       break;
-                case '|': en(i, j) = SensorVertical;   break;
-                case '-': en(i, j) = SensorHorizontal; break;
-                case '+': en(i, j) = SensorCuadruple;  break;
+                case '#': set(i, j, Pared);            break;
+                case '*': set(i, j, Importante);       break;
+                case '|': set(i, j, SensorVertical);   break;
+                case '-': set(i, j, SensorHorizontal); break;
+                case '+': set(i, j, SensorCuadruple);  break;
             }
         }
     }
 }
 
-Piso::Piso(const Piso &otro) {
+Piso::Piso(const Piso &otro)
+        : grilla(otro.grilla) {
     _filas = otro._filas;
     _columnas = otro._columnas;
-    grilla = new Casilla[_filas * _columnas];
-    for(unsigned i = 0; i < _filas * _columnas; i++) grilla[i] = otro.grilla[i];
-}
-
-Piso::~Piso() {
-    delete grilla;
+    _costo = otro._costo;
 }
 
 bool Piso::operator==(const Piso& otro) const {
@@ -46,22 +43,55 @@ bool Piso::operator==(const Piso& otro) const {
     return true;
 }
 
-Casilla& Piso::en(unsigned fila, unsigned columna) {
-    if(fila >= _filas || columna >= _columnas) {
-        cout << "Acceso fuera de rango: (" << fila << ", " << columna << ")." << endl;;
-        exit(-1);
-    }
-
-    return grilla[_columnas * (fila) + columna];
-}
-
-Casilla Piso::en(unsigned fila, unsigned columna) const {
+Casilla Piso::get(unsigned fila, unsigned columna) const {
     if(fila >= _filas || columna >= _columnas) {
         cout << "Acceso fuera de rango: (" << fila << ", " << columna << ")." << endl;
         exit(-1);
     }
 
     return grilla[_columnas * (fila) + columna];
+}
+
+void Piso::set(unsigned fila, unsigned columna, Casilla valor) {
+    if(fila >= _filas || columna >= _columnas) {
+        cout << "Acceso fuera de rango: (" << fila << ", " << columna << ")." << endl;;
+        exit(-1);
+    }
+
+    // Restamos el costo original de la posición.
+    switch(get(fila, columna)) {
+        case SensorVertical:
+        case SensorHorizontal:
+        _costo -= 4000;
+        break;
+
+        case SensorCuadruple:
+        _costo -= 6000;
+        break;
+
+        default: break;        
+    }
+
+    // Asignamos el valor de la posición.
+    grilla[_columnas * (fila) + columna] = valor;
+
+    // Sumamos su costo.
+    switch(valor) {
+        case SensorVertical:
+        case SensorHorizontal:
+        _costo += 4000;
+        break;
+
+        case SensorCuadruple:
+        _costo += 6000;
+        break;
+
+        default: break;        
+    }
+}
+
+unsigned Piso::costo() const {
+    return _costo;
 }
 
 void Piso::imprimir() const {
@@ -75,7 +105,7 @@ void Piso::imprimir() const {
         cout << "\u2551";
 
         for(unsigned j = 0; j < _columnas; j++) {
-            switch(en(i, j)) {
+            switch(get(i, j)) {
                 case Libre:            cout << " "; break;
                 case Pared:            cout << "\u2588"; break;
                 case Importante:       cout << "*"; break;
@@ -104,7 +134,7 @@ bool casilleroCorrecto(Piso &piso, const unsigned fila, const unsigned columna) 
         horizontalmente
     */
     //Si es una pared, no hay nada para hacer
-    if(piso.en(fila, columna) == Pared) return true;
+    if(piso.get(fila, columna) == Pared) return true;
     int sensoresAreaHorizontal = 0, sensoresAreaVertical = 0;
     int sensoresApuntandoHorizontal = 0, sensoresApuntandoVertical = 0;
 
@@ -115,8 +145,8 @@ bool casilleroCorrecto(Piso &piso, const unsigned fila, const unsigned columna) 
     //Los dos fors siguientes tienen complejidad O(n) con n como filas
     //Debajo de la posicion
     for(unsigned i = fila+1; i < piso.filas(); ++i) {
-        if(piso.en(i, columna) == Pared) break;
-        switch(piso.en(i,columna)) {
+        if(piso.get(i, columna) == Pared) break;
+        switch(piso.get(i,columna)) {
             case SensorVertical:
                 sensoresApuntandoVertical++;
                 break;
@@ -132,8 +162,8 @@ bool casilleroCorrecto(Piso &piso, const unsigned fila, const unsigned columna) 
     }
     //Por arriba de la posicion
     for(int i = fila-1; i >= 0; --i) {
-        if(piso.en(i, columna) == Pared) break;
-        switch(piso.en(i,columna)) {
+        if(piso.get(i, columna) == Pared) break;
+        switch(piso.get(i,columna)) {
             case SensorVertical:
                 sensoresApuntandoVertical++;
                 break;
@@ -153,8 +183,8 @@ bool casilleroCorrecto(Piso &piso, const unsigned fila, const unsigned columna) 
     //Moviendome por las columnas
     //Por la derecha de la posición
     for(unsigned j = columna+1; j < piso.columnas(); j++) {
-        if(piso.en(fila, j) == Pared) break;
-        switch(piso.en(fila,j)) {
+        if(piso.get(fila, j) == Pared) break;
+        switch(piso.get(fila,j)) {
             case SensorVertical:
                 sensoresAreaHorizontal++;
                 break;
@@ -170,8 +200,8 @@ bool casilleroCorrecto(Piso &piso, const unsigned fila, const unsigned columna) 
     }
     //Por la izquierda de la posición
     for(int j = columna-1; j >= 0; j--) {
-        if(piso.en(fila, j) == Pared) break;
-        switch(piso.en(fila,j)) {
+        if(piso.get(fila, j) == Pared) break;
+        switch(piso.get(fila,j)) {
             case SensorVertical:
                 sensoresAreaHorizontal++;
                 break;
@@ -187,7 +217,7 @@ bool casilleroCorrecto(Piso &piso, const unsigned fila, const unsigned columna) 
     }
     
     //Checkeo las reglas que debería cumplir cada tipo de celda
-    switch(piso.en(fila,columna)) {
+    switch(piso.get(fila,columna)) {
         case Libre:
             //Si hay al menos un sensor vertical y uno horizontal y no apuntan, no es sol
             if(sensoresAreaHorizontal >= 1 && sensoresAreaVertical >= 1) return false;
@@ -196,22 +226,22 @@ bool casilleroCorrecto(Piso &piso, const unsigned fila, const unsigned columna) 
                 //Complejidad O(n) para los dos fors
                 //En este caso checkeo también la posición dónde estoy
                 for(unsigned i = fila; i < piso.filas(); ++i) {
-                    if(piso.en(i, columna) == Pared) break;
-                    if(piso.en(i, columna) == Importante) continue;
+                    if(piso.get(i, columna) == Pared) break;
+                    if(piso.get(i, columna) == Importante) continue;
                     //Veo si entra un sensor vertical que lo apunte
-                    piso.en(i, columna) = SensorVertical;
+                    piso.set(i, columna, SensorVertical);
                     if(casilleroCorrecto(piso, i, columna)) {
-                        piso.en(i, columna) = Libre;
+                        piso.set(i, columna, Libre);
                         return true;
                     }
                 }
                 for(int i = fila-1; i >= 0; --i) {
-                    if(piso.en(i, columna) == Pared) break;
-                    if(piso.en(i, columna) == Importante) continue;
+                    if(piso.get(i, columna) == Pared) break;
+                    if(piso.get(i, columna) == Importante) continue;
                     //Veo si entra un sensor vertical que lo apunte
-                    piso.en(i, columna) = SensorVertical;
+                    piso.set(i, columna, SensorVertical);
                     if(casilleroCorrecto(piso, i, columna)) {
-                        piso.en(i, columna) = Libre;
+                        piso.set(i, columna, Libre);
                         return true;
                     }
                 }
@@ -220,22 +250,22 @@ bool casilleroCorrecto(Piso &piso, const unsigned fila, const unsigned columna) 
                 //En este caso checkeo también la posición dónde estoy
                 //Complejidad O(m) para los dos fors
                 for(unsigned j = columna; j < piso.columnas(); j++) {
-                    if(piso.en(fila, j) == Pared) break;
-                    if(piso.en(fila, j) == Importante) continue;
+                    if(piso.get(fila, j) == Pared) break;
+                    if(piso.get(fila, j) == Importante) continue;
                     //Veo si entra un sensor horizontal que lo apunte
-                    piso.en(fila, j) = SensorHorizontal;
+                    piso.set(fila, j, SensorHorizontal);
                     if(casilleroCorrecto(piso, fila, j)) {
-                        piso.en(fila, j) = Libre;
+                        piso.set(fila, j, Libre);
                         return true;
                     }
                 }
                 for(int j = columna-1; j >= 0; j--) {
-                    if(piso.en(fila, j) == Pared) break;
-                    if(piso.en(fila, j) == Importante) continue;
+                    if(piso.get(fila, j) == Pared) break;
+                    if(piso.get(fila, j) == Importante) continue;
                     //Veo si entra un sensor horizontal que lo apunte
-                    piso.en(fila, j) = SensorHorizontal;
+                    piso.set(fila, j, SensorHorizontal);
                     if(casilleroCorrecto(piso, fila, j)) {
-                        piso.en(fila, j) = Libre;
+                        piso.set(fila, j, Libre);
                         return true;
                     }
                 }
@@ -263,12 +293,12 @@ bool casilleroCorrecto(Piso &piso, const unsigned fila, const unsigned columna) 
             //Si esto no se da, hay que checkear si es posible cubrirlo con las casillas libres que queden
             if(sensoresApuntandoVertical == 0) {
                 for(unsigned i = fila+1; i < piso.filas(); ++i) {
-                    if(piso.en(i, columna) == Pared) break;
-                    if(piso.en(i, columna) == Importante) continue;
+                    if(piso.get(i, columna) == Pared) break;
+                    if(piso.get(i, columna) == Importante) continue;
                     //Veo si entra un sensor vertical que lo apunte
-                    piso.en(i, columna) = SensorVertical;
+                    piso.set(i, columna, SensorVertical);
                     if(casilleroCorrecto(piso, i, columna)) {
-                        piso.en(i, columna) = Libre;
+                        piso.set(i, columna, Libre);
                         sensoresApuntandoVertical++;
                         break;
                     }
@@ -278,12 +308,12 @@ bool casilleroCorrecto(Piso &piso, const unsigned fila, const unsigned columna) 
                 //Me fijo si ya encontró un espacio libre antes
                 if(sensoresApuntandoVertical == 0) {
                     for(int i = fila-1; i >= 0; --i) {
-                        if(piso.en(i, columna) == Pared) break;
-                        if(piso.en(i, columna) == Importante) continue;
+                        if(piso.get(i, columna) == Pared) break;
+                        if(piso.get(i, columna) == Importante) continue;
                         //Veo si entra un sensor vertical que lo apunte
-                        piso.en(i, columna) = SensorVertical;
+                        piso.set(i, columna, SensorVertical);
                         if(casilleroCorrecto(piso, i, columna)) {
-                            piso.en(i, columna) = Libre;
+                            piso.set(i, columna, Libre);
                             sensoresApuntandoVertical++;
                             break;
                         }
@@ -297,12 +327,12 @@ bool casilleroCorrecto(Piso &piso, const unsigned fila, const unsigned columna) 
             //Por la derecha de la posición
             if(sensoresApuntandoHorizontal == 0)  {
                 for(unsigned j = columna+1; j < piso.columnas(); j++) {
-                    if(piso.en(fila, j) == Pared) break;
-                    if(piso.en(fila, j) == Importante) continue;
+                    if(piso.get(fila, j) == Pared) break;
+                    if(piso.get(fila, j) == Importante) continue;
                     //Veo si entra un sensor horizontal que lo apunte
-                    piso.en(fila, j) = SensorHorizontal;
+                    piso.set(fila, j, SensorHorizontal);
                     if(casilleroCorrecto(piso, fila, j)) {
-                        piso.en(fila, j) = Libre;
+                        piso.set(fila, j, Libre);
                         sensoresApuntandoHorizontal++;
                         break;
                     }
@@ -310,12 +340,12 @@ bool casilleroCorrecto(Piso &piso, const unsigned fila, const unsigned columna) 
                 //Por la izquierda de la posición
                 if(sensoresApuntandoHorizontal == 0) {
                     for(int j = columna-1; j >= 0; j--) {
-                        if(piso.en(fila, j) == Pared) break;
-                        if(piso.en(fila, j) == Importante) continue;
+                        if(piso.get(fila, j) == Pared) break;
+                        if(piso.get(fila, j) == Importante) continue;
                         //Veo si entra un sensor horizontal que lo apunte
-                        piso.en(fila, j) = SensorHorizontal;
+                        piso.set(fila, j, SensorHorizontal);
                         if(casilleroCorrecto(piso, fila, j)) {
-                            piso.en(fila, j) = Libre;
+                            piso.set(fila, j, Libre);
                             sensoresApuntandoHorizontal++;
                             break;
                         }
@@ -375,35 +405,44 @@ Piso *problema3(Piso &piso) {
 // #define PODA ORIGINAL
 #define PODA ALTERNATIVA
 
+// Funciones para obtener o asignar la mejor solución hallada hasta el momento
+Piso mejorSolucion(0, 0);
+const Piso& getMejorSolucion() { return mejorSolucion; }
+void setMejorSolucion(const Piso& p) { mejorSolucion = Piso(p); }
+void limpiarMejorSolucion() { mejorSolucion = Piso(0, 0); }
+unsigned getCostoMejorSolucion() {
+    return mejorSolucion.filas() == 0 ? UINT_MAX : mejorSolucion.costo();
+}
+
 bool esLibre(const Piso& p, unsigned fila, unsigned columna) {
-    return p.en(fila, columna) == Libre;
+    return p.get(fila, columna) == Libre;
 }
 
 bool esPared(const Piso& p, unsigned fila, unsigned columna) {
-    return p.en(fila, columna) == Pared;
+    return p.get(fila, columna) == Pared;
 }
 
 bool esSensor(const Piso& p, unsigned fila, unsigned columna) {
-    Casilla c = p.en(fila, columna);
+    Casilla c = p.get(fila, columna);
     return c == SensorVertical ||
            c == SensorHorizontal ||
            c == SensorCuadruple;
 }
 
 bool esSensorVertical(const Piso& p, unsigned fila, unsigned columna) {
-    Casilla c = p.en(fila, columna);
+    Casilla c = p.get(fila, columna);
     return c == SensorVertical ||
            c == SensorCuadruple;
 }
 
 bool esSensorHorizontal(const Piso& p, unsigned fila, unsigned columna) {
-    Casilla c = p.en(fila, columna);
+    Casilla c = p.get(fila, columna);
     return c == SensorHorizontal ||
            c == SensorCuadruple;
 }
 
 bool esSensorCuadruple(const Piso& p, unsigned fila, unsigned columna) {
-    return p.en(fila, columna) == SensorCuadruple;
+    return p.get(fila, columna) == SensorCuadruple;
 }
 
 // Decide si las posiciones (f1, c1), (f2, c2) están en conflicto.
@@ -412,8 +451,7 @@ bool noSonCompatibles(const Piso& p, unsigned f1, unsigned c1, unsigned f2, unsi
            (f1 == f2 && (esSensorHorizontal(p, f1, c1) || esSensorHorizontal(p, f2, c2)));
 }
 
-// Devuelve true si (fila, columna) es compatible con todas las posiciones
-// en la misma fila o columna.
+// Devuelve false sólo si (fila, columna) es un sensor y apunta o es apuntado por otro sensor.
 bool esCompatible(const Piso& p, unsigned fila, unsigned columna) {
 
     // Macro para informar el motivo cuando un piso no es compatible.
@@ -470,8 +508,13 @@ bool esCompatible(const Piso& p, unsigned fila, unsigned columna) {
     return true;
 }
 
-// Devuelve true si el sensor ubicado en (fila, columna) no genera posiciones
-// libres imposibles de sensar, o si (fila, columna) es una posición libre.
+// Devuelve false sólo si se cumplen todas las condiciones a continuación:
+// - (fila, columna) es un sensor unidireccional.
+// - Existe una posición *p* libre en su misma fila o columna con línea de visión al sensor.
+// - La posición *p* no es sensada por el sensor en (fila, columna).
+// - Existe otro sensor con línea de visión a la posición *p* que no la sensa, ubicado en:
+//   - Su misma columna, si *p* está en la misma fila que el sensor en (fila, columna), o bien
+//   - Su misma fila, si *p* está en la misma columna que el sensor en (fila, columna).
 bool esCandidatoASolucion(const Piso& p, unsigned fila, unsigned columna) {
 
     // Macro para informar el motivo cuando un piso no es compatible.
@@ -488,7 +531,7 @@ bool esCandidatoASolucion(const Piso& p, unsigned fila, unsigned columna) {
 
     // Si es un sensor vertical, recorro su fila y me aseguro que no haya
     // en ésta ninguna posición libre con un sensor horizontal en su columna.
-    if(p.en(fila, columna) == SensorVertical) {
+    if(p.get(fila, columna) == SensorVertical) {
 
         // Miro hacia la izquierda.
         for(int k = columna - 1; k >= 0; k--) {
@@ -498,7 +541,7 @@ bool esCandidatoASolucion(const Piso& p, unsigned fila, unsigned columna) {
             // Miro hacia arriba
             for(int q = fila - 1; q >= 0; q--) {
                 if(esPared(p, q, k)) break;
-                if(p.en(q, k) == SensorHorizontal) {
+                if(p.get(q, k) == SensorHorizontal) {
                     pisoInvalido(fila, k, fila, columna, q, k);
                     return false;
                 }
@@ -507,7 +550,7 @@ bool esCandidatoASolucion(const Piso& p, unsigned fila, unsigned columna) {
             // Miro hacia abajo
             for(int q = fila + 1; q < (int) p.filas(); q++) {
                 if(esPared(p, q, k)) break;
-                if(p.en(q, k) == SensorHorizontal) {
+                if(p.get(q, k) == SensorHorizontal) {
                     pisoInvalido(fila, k, fila, columna, q, k);
                     return false;
                 }
@@ -522,7 +565,7 @@ bool esCandidatoASolucion(const Piso& p, unsigned fila, unsigned columna) {
             // Miro hacia arriba
             for(int q = fila - 1; q >= 0; q--) {
                 if(esPared(p, q, k)) break;
-                if(p.en(q, k) == SensorHorizontal) {
+                if(p.get(q, k) == SensorHorizontal) {
                     pisoInvalido(fila, k, fila, columna, q, k);
                     return false;
                 }
@@ -531,7 +574,7 @@ bool esCandidatoASolucion(const Piso& p, unsigned fila, unsigned columna) {
             // Miro hacia abajo
             for(int q = fila + 1; q < (int) p.filas(); q++) {
                 if(esPared(p, q, k)) break;
-                if(p.en(q, k) == SensorHorizontal) {
+                if(p.get(q, k) == SensorHorizontal) {
                     pisoInvalido(fila, k, fila, columna, q, k);
                     return false;
                 }
@@ -541,7 +584,7 @@ bool esCandidatoASolucion(const Piso& p, unsigned fila, unsigned columna) {
 
     // Si es un sensor horizontal, recorro su columna y me aseguro que no haya
     // en ésta ninguna posición libre con un sensor vertical en su fila.
-    if(p.en(fila, columna) == SensorHorizontal) {
+    if(p.get(fila, columna) == SensorHorizontal) {
 
         // Miro hacia arriba.
         for(int k = fila - 1; k >= 0; k--) {
@@ -551,7 +594,7 @@ bool esCandidatoASolucion(const Piso& p, unsigned fila, unsigned columna) {
             // Miro hacia la izquierda
             for(int q = columna - 1; q >= 0; q--) {
                 if(esPared(p, k, q)) break;
-                if(p.en(k, q) == SensorVertical) {
+                if(p.get(k, q) == SensorVertical) {
                     pisoInvalido(k, columna, fila, columna, k, q);
                     return false;
                 }
@@ -560,7 +603,7 @@ bool esCandidatoASolucion(const Piso& p, unsigned fila, unsigned columna) {
             // Miro hacia abajo
             for(int q = columna + 1; q < (int) p.columnas(); q++) {
                 if(esPared(p, k, q)) break;
-                if(p.en(k, q) == SensorVertical) {
+                if(p.get(k, q) == SensorVertical) {
                     pisoInvalido(k, columna, fila, columna, k, q);
                     return false;
                 }
@@ -575,7 +618,7 @@ bool esCandidatoASolucion(const Piso& p, unsigned fila, unsigned columna) {
             // Miro hacia la izquierda
             for(int q = columna - 1; q >= 0; q--) {
                 if(esPared(p, k, q)) break;
-                if(p.en(k, q) == SensorVertical) {
+                if(p.get(k, q) == SensorVertical) {
                     pisoInvalido(k, columna, fila, columna, k, q);
                     return false;
                 }
@@ -584,7 +627,7 @@ bool esCandidatoASolucion(const Piso& p, unsigned fila, unsigned columna) {
             // Miro hacia abajo
             for(int q = columna + 1; q < (int) p.columnas(); q++) {
                 if(esPared(p, k, q)) break;
-                if(p.en(k, q) == SensorVertical) {
+                if(p.get(k, q) == SensorVertical) {
                     pisoInvalido(k, columna, fila, columna, k, q);
                     return false;
                 }
@@ -595,8 +638,9 @@ bool esCandidatoASolucion(const Piso& p, unsigned fila, unsigned columna) {
     return true;
 }
 
-// Devuelve true si la posición libre ubicada en (fila, columna) tiene alguna posición
-// libre en su entorno donde poder poner un sensor que la cubra.
+// Devuelve false sólo si la posición (fila, columna) es un sensor y no existe ninguna
+// posición libre en su misma fila/columna donde se pueda ubicar un sensor que la afecte
+// y que no esté en conflicto con otros sensores.
 bool esSensable(const Piso& p, unsigned fila, unsigned columna) {
     if(!esLibre(p, fila, columna)) return true;
 
@@ -605,7 +649,7 @@ bool esSensable(const Piso& p, unsigned fila, unsigned columna) {
         if(esPared(p, k, columna)) break;
         if(esLibre(p, k, columna)) {
             Piso q(p);
-            q.en(k, columna) = SensorVertical;
+            q.set(k, columna, SensorVertical);
             if(esCompatible(q, k, columna)) return true;
         }
     }
@@ -615,7 +659,7 @@ bool esSensable(const Piso& p, unsigned fila, unsigned columna) {
         if(esPared(p, k, columna)) break;
         if(esLibre(p, k, columna)) {
             Piso q(p);
-            q.en(k, columna) = SensorVertical;
+            q.set(k, columna, SensorVertical);
             if(esCompatible(q, k, columna)) return true;
         }
     }
@@ -625,7 +669,7 @@ bool esSensable(const Piso& p, unsigned fila, unsigned columna) {
         if(esPared(p, fila, k)) break;
         if(esLibre(p, fila, k)) {
             Piso q(p);
-            q.en(fila, k) = SensorHorizontal;
+            q.set(fila, k, SensorHorizontal);
             if(esCompatible(q, fila, k)) return true;
         }
     }
@@ -635,7 +679,7 @@ bool esSensable(const Piso& p, unsigned fila, unsigned columna) {
         if(esPared(p, fila, k)) break;
         if(esLibre(p, fila, k)) {
             Piso q(p);
-            q.en(fila, k) = SensorHorizontal;
+            q.set(fila, k, SensorHorizontal);
             if(esCompatible(q, fila, k)) return true;
         }
     }
@@ -643,7 +687,13 @@ bool esSensable(const Piso& p, unsigned fila, unsigned columna) {
     return false;
 }
 
-// Devuelve false si la modificación del piso p en (fila, columna)
+// Devuelve true si el costo total de los sensores del piso no excede
+// el costo de la mejor solución hallada hasta el momento.
+bool esMasBaratoQueMejorSolucion(const Piso& piso) {
+    return piso.costo() < getCostoMejorSolucion();
+}
+
+// Devuelve false si la modificación del piso en (fila, columna)
 // no conduce a una solución.
 bool podar(const Piso& p, unsigned fila, unsigned columna) {
     #if PODA == ORIGINAL
@@ -651,20 +701,20 @@ bool podar(const Piso& p, unsigned fila, unsigned columna) {
         return !casilleroCorrecto(copia, fila, columna);
     #else
         return !esCompatible(p, fila, columna) ||
-               // !esCandidatoASolucion(p, fila, columna);
                !esCandidatoASolucion(p, fila, columna) ||
-               !esSensable(p, fila, columna);
+               !esSensable(p, fila, columna) ||
+               !esMasBaratoQueMejorSolucion(p);
     #endif
 }
 
 bool requiereSensado(const Piso& p, unsigned fila, unsigned columna) {
-    return p.en(fila, columna) == Libre ||
-           p.en(fila, columna) == Importante;
+    return p.get(fila, columna) == Libre ||
+           p.get(fila, columna) == Importante;
 }
 
 // Devuelve true si todas las casillas libres están sensadas y
 // todas las casillas importantes están doblemente sensadas.
-// Asume que el piso recibido es válido. (Ver esCompatible().)
+// Asume que el piso recibido es válido.
 bool esSolucion(const Piso& p) {
 
     // Recorro todas las posiciones
@@ -714,8 +764,8 @@ bool esSolucion(const Piso& p) {
                 }
 
                 // Verifico que la cantidad de sensores sea correcta.
-                if(p.en(i, j) == Libre && sensores == 0) return false;
-                if(p.en(i, j) == Importante && sensores < 2) return false;
+                if(p.get(i, j) == Libre && sensores == 0) return false;
+                if(p.get(i, j) == Importante && sensores < 2) return false;
             }
         }
     }
@@ -726,20 +776,20 @@ bool esSolucion(const Piso& p) {
 // Ubica un sensor del tipo especificado en la posición dada,
 // y marca como sensadas todas las posiciones afectadas por este.
 void ubicarSensor(Piso& p, unsigned fila, unsigned columna, Casilla sensor) {
-    p.en(fila, columna) = sensor;
+    p.set(fila, columna, sensor);
 
     #if PODA == ALTERNATIVA
         if(esSensorVertical(p, fila, columna)) {
             // Senso hacia arriba.
             for(int k = fila - 1; k >= 0; k--) {
                 if(esPared(p, k, columna)) break;
-                if(p.en(k, columna) == Libre) p.en(k, columna) = Sensado;
+                if(p.get(k, columna) == Libre) p.set(k, columna, Sensado);
             }
 
             // Senso hacia abajo.
             for(int k = fila + 1; k < (int) p.filas(); k++) {
                 if(esPared(p, k, columna)) break;
-                if(p.en(k, columna) == Libre) p.en(k, columna) = Sensado;
+                if(p.get(k, columna) == Libre) p.set(k, columna, Sensado);
             }
         }
 
@@ -747,21 +797,21 @@ void ubicarSensor(Piso& p, unsigned fila, unsigned columna, Casilla sensor) {
             // Senso hacia la izquierda.
             for(int k = columna - 1; k >= 0; k--) {
                 if(esPared(p, fila, k)) break;
-                if(p.en(fila, k) == Libre) p.en(fila, k) = Sensado;
+                if(p.get(fila, k) == Libre) p.set(fila, k, Sensado);
             }
 
             // Senso hacia la derecha.
             for(int k = columna + 1; k < (int) p.columnas(); k++) {
                 if(esPared(p, fila, k)) break;
-                if(p.en(fila, k) == Libre) p.en(fila, k) = Sensado;
+                if(p.get(fila, k) == Libre) p.set(fila, k, Sensado);
             }
         }
     #endif
 }
 
 // Busca la siguiente posición libre desde (fila, columna) recorriendo el piso
-// de izquierda a derecha y de arriba a abajo, sin tener a esa posición en cuenta,
-// y devuelve el resultado en (filaSig, columnaSig).
+// de izquierda a derecha y de arriba a abajo, sin tener a esa posición en cuenta.
+// Devuelve el resultado en (filaSig, columnaSig).
 //
 // Si no encontró ninguna posición libre, devuelve una posición fuera de rango.
 void buscarSiguientePosicionLibre(
@@ -774,7 +824,7 @@ void buscarSiguientePosicionLibre(
     do {
         filaSig    = columnaSig + 1 == p.columnas() ? filaSig + 1 : filaSig;
         columnaSig = columnaSig + 1 == p.columnas() ? 0           : columnaSig + 1;
-    } while(filaSig < p.filas() && p.en(filaSig, columnaSig) != Libre);
+    } while(filaSig < p.filas() && p.get(filaSig, columnaSig) != Libre);
 }
 
 // 1. Decide si se realiza la poda:
@@ -785,7 +835,8 @@ void buscarSiguientePosicionLibre(
 // 2. Decide la siguiente posición a evaluar, recorriendo de izquierda a derecha
 //    y de arriba a abajo hasta encontrar una posición libre.
 // 3. Si no quedan más posiciones por evaluar, verifica si el piso recibido es
-//    solución, y en tal caso lo agrega al vector de soluciones.
+//    solución, y si lo es, compara el costo con el de la mejor solución hasta el momento
+//    y la reemplaza en caso de ser más barato.
 // 4. En caso contrario, evalúa cada posible modificación en la posición elegida,
 //    y se llama recursivamente pasándose como parámetro el piso resultante.
 //
@@ -796,8 +847,7 @@ void buscarSiguientePosicionLibre(
 // Invariante:
 // El piso recibido *siempre* es compatible si reemplazamos la posición (fila, columna)
 // por una casilla Libre.
-void recorrer(const Piso& p, unsigned fila, unsigned columna,
-              vector<Piso>& soluciones, int& iteracion) {
+void recorrer(const Piso& p, unsigned fila, unsigned columna, int& iteracion) {
     iteracion++;
 
     // Imprimimos información de debugging.
@@ -812,8 +862,8 @@ void recorrer(const Piso& p, unsigned fila, unsigned columna,
         }
     #elif DEBUG_LEVEL == NORMAL
         if(iteracion % 10000 == 0)
-            cout << "Iteración " << iteracion << ". "
-                 << "Soluciones halladas: " << soluciones.size() << endl;
+            cout << "Iteración " << iteracion << "." << endl;
+
     #endif
 
     // Paso 1: Verificamos la validez de la posición (fila, columna).
@@ -824,7 +874,7 @@ void recorrer(const Piso& p, unsigned fila, unsigned columna,
     // Paso 2: Decidimos las coordenadas de la próxima posición a evaluar.
     unsigned filaSig, columnaSig;
     if(fila == UINT_MAX || columna == UINT_MAX) {
-        if(p.en(0, 0) != Libre) {
+        if(p.get(0, 0) != Libre) {
             buscarSiguientePosicionLibre(p, 0, 0, filaSig, columnaSig);
         } else {
             filaSig = columnaSig = 0;
@@ -836,11 +886,12 @@ void recorrer(const Piso& p, unsigned fila, unsigned columna,
     // Paso 3: Si no quedan más posiciones por evaluar, decidimos si hallamos una solución.
     if(filaSig >= p.filas() || columnaSig >= p.columnas()) {
         // Si es solución, terminamos.
-        if(esSolucion(p)) {
-            #pragma omp critical
-            soluciones.push_back(p);
+        #pragma omp critical
+        if(esSolucion(p) && p.costo() < getCostoMejorSolucion()) {
+            setMejorSolucion(p);
+
             #if DEBUG_LEVEL == FULL
-                cout << "Se halló una solución." << endl;
+                cout << "Se halló una solución con costo " << p.costo() << "." << endl;
             #endif
         }
     }
@@ -855,7 +906,7 @@ void recorrer(const Piso& p, unsigned fila, unsigned columna,
             {
                 Piso q(p);
                 ubicarSensor(q, filaSig, columnaSig, SensorVertical);
-                recorrer(q, filaSig, columnaSig, soluciones, iteracion);
+                recorrer(q, filaSig, columnaSig, iteracion);
             }
 
             // Continuamos ubicando un sensor horizontal.
@@ -863,7 +914,7 @@ void recorrer(const Piso& p, unsigned fila, unsigned columna,
             {
                 Piso q(p);
                 ubicarSensor(q, filaSig, columnaSig, SensorHorizontal);
-                recorrer(q, filaSig, columnaSig, soluciones, iteracion);
+                recorrer(q, filaSig, columnaSig, iteracion);
             }
 
             // Continuamos ubicando un sensor cuádruple.
@@ -871,40 +922,16 @@ void recorrer(const Piso& p, unsigned fila, unsigned columna,
             {
                 Piso q(p);
                 ubicarSensor(q, filaSig, columnaSig, SensorCuadruple);
-                recorrer(q, filaSig, columnaSig, soluciones, iteracion);
+                recorrer(q, filaSig, columnaSig, iteracion);
             }
 
             // Continuamios dejando la posición intacta.
             #pragma omp section
             {
-                recorrer(p, filaSig, columnaSig, soluciones, iteracion);
+                recorrer(p, filaSig, columnaSig, iteracion);
             }
         }
     }
-}
-
-// Devuelve el costo de una solución
-int costo(const Piso& p) {
-    int costo = 0;
-
-    for(unsigned i = 0; i < p.filas(); i++) {
-        for(unsigned j = 0; j < p.columnas(); j++) {
-            switch(p.en(i, j)) {
-                case SensorVertical:
-                case SensorHorizontal:
-                costo += 4000;
-                break;
-
-                case SensorCuadruple:
-                costo += 6000;
-                break;
-
-                default: break;
-            }
-        }
-    }
-
-    return costo;
 }
 
 Piso resolver(const Piso& p) {
@@ -914,55 +941,25 @@ Piso resolver(const Piso& p) {
         cout << endl;
     #endif
 
-    vector<Piso> soluciones;
     int iteraciones = 0;
-    recorrer(p, UINT_MAX, UINT_MAX, soluciones, iteraciones);
+    limpiarMejorSolucion();
+    recorrer(p, UINT_MAX, UINT_MAX, iteraciones);
 
     #if DEBUG_LEVEL >= NORMAL
         cout << "Iteraciones realizadas: " << iteraciones << endl;
     #endif
 
-    if(soluciones.size() == 0) {
+    if(getCostoMejorSolucion() == UINT_MAX) {
         #if DEBUG_LEVEL >= NORMAL
             cout << "No se encontraron soluciones." << endl;
         #endif
-
-        return p;
     } else {
         #if DEBUG_LEVEL >= NORMAL
-            cout << "Se encontraron " << soluciones.size() << " soluciones." << endl;
+            cout << "Mejor solución hallada:" << endl;
+            getMejorSolucion().imprimir();
+            cout << "Costo: $" << getCostoMejorSolucion() << endl;
         #endif
-
-        #if DEBUG_LEVEL == FULL
-            cout << "Soluciones halladas:" << endl;
-            for(size_t i = 0; i < soluciones.size(); i++) soluciones[i].imprimir();
-        #endif
-
-        for(size_t i = 0; i < soluciones.size(); i++)
-            for(size_t j = 0; j < soluciones.size(); j++)
-                if(i != j && soluciones[i] == soluciones[j]) {
-                    cout << "Las soluciones " << i << " y " << j << " están repetidas:" << endl;
-                    soluciones[i].imprimir();
-                }
-
-        int mejorPiso = 0;
-        int mejorCosto = costo(soluciones[mejorPiso]);
-
-        for(size_t i = 0; i < soluciones.size(); i++) {
-            int otroCosto = costo(soluciones[i]);
-
-            if(otroCosto < mejorCosto) {
-                mejorCosto = otroCosto;
-                mejorPiso = i;
-            }
-        }
-
-        #if DEBUG_LEVEL >= NORMAL
-            cout << "Mejor solución:" << endl;
-            soluciones[mejorPiso].imprimir();
-            cout << "Costo: $" << mejorCosto << endl;
-        #endif
-
-        return soluciones[mejorPiso];
     }
+
+    return getMejorSolucion();
 }
