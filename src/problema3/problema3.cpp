@@ -724,7 +724,12 @@ bool esSolucion(const Piso& p) {
             // Si la posición actual requiere sensado, cuento los
             // sensores actuando sobre esta y verifico que sea
             // la cantidad correcta.
-            if(requiereSensado(p, i, j)) {
+
+            //Si es libre, quiere decir que no está Sensado
+            if(esLibre(p, i, j)) return false;
+
+            //if(requiereSensado(p, i, j)) {
+            if(p.get(i,j) == Importante) {
                 int sensores = 0;
 
                 // Miro hacia arriba.
