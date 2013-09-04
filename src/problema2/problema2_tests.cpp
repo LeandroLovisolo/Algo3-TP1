@@ -1,3 +1,9 @@
+#include <ctime>
+#include <fstream>
+#include <cmath>
+#include <algorithm>
+#include <climits>
+
 #include "gtest/gtest.h"
 #include "problema2.h"
 
@@ -51,6 +57,19 @@ TEST(problema2, SolucionMultiple) {
 
     EXPECT_EQ(3, solucion.size());
     EXPECT_TRUE(solucion1 || solucion2);
+}
+
+double performance(int iteraciones, vector<Curso> cursos) {
+    struct timespec st,en;
+    unsigned long res = UINT_MAX;
+    for (int i = 0; i < iteraciones; ++i) {
+        clock_gettime(CLOCK_THREAD_CPUTIME_ID ,&st);
+        problema2(cursos);
+        clock_gettime(CLOCK_THREAD_CPUTIME_ID ,&en);
+        unsigned long diff = en.tv_nsec - st.tv_nsec;
+        res = min(res,diff);
+    }
+    return res;
 }
 
 GTEST_API_ int main(int argc, char **argv) {
