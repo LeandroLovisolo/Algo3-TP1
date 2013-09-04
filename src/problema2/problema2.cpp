@@ -4,10 +4,6 @@
 
 using namespace std;
 
-bool comparar(Curso c, Curso d) {
-    return fin(c) < fin(d);
-}
-
 vector<Curso> problema2(vector<Curso> cursos) {
     // Caso trivial.
     if(cursos.size() < 2) {
@@ -15,7 +11,7 @@ vector<Curso> problema2(vector<Curso> cursos) {
     } 
 
     // Ordenamos los cursos por fecha de finalización en forma creciente.
-    sort(cursos.begin(), cursos.end(), comparar);
+    sort(cursos.begin(), cursos.end(), [] (Curso c, Curso d) { return fin(c) < fin(d); });
 
     // Solución inicial. Incluye el curso que termina primero.
     vector<Curso> solucion;

@@ -395,7 +395,7 @@ Piso *problema3(Piso &piso) {
 #define FULL   2
 
 // Nivel elegido
-#define DEBUG_LEVEL NORMAL
+#define DEBUG_LEVEL NONE
 
 // Tipos de poda
 #define ORIGINAL    0

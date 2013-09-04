@@ -8,10 +8,10 @@
 GTEST_DIR = lib/gtest-1.6.0
 
 # Flags del preprocesador C++.
-CPPFLAGS += -I$(GTEST_DIR)/include
+CPPFLAGS += -I$(GTEST_DIR)/include -Isrc
 
 # Flags del compilador C++.
-CXXFLAGS += -g -Wall -Wextra -std=c++0x # -fopenmp
+CXXFLAGS += -g -Wall -Wextra -std=c++0x -fopenmp
 
 # Comando para generar código objeto (.o)
 OBJ       = $(CXX) $(CPPFLAGS) $(CXXFLAGS) -c
@@ -26,9 +26,9 @@ BIN_TEST  = $(BIN_MAIN) -lpthread
 TEST_DEPS = gtest-all.o
 
 # Binarios generados
-BINS      = problema1 problema1_tests \
-            problema2 problema2_tests \
-            problema3 problema3_tests
+BINS      = problema1 problema1_tests problema1_perf \
+            problema2 problema2_tests problema2_perf\
+            problema3 problema3_tests problema3_perf
 
 ###############################################################################
 # Targets generales                                                           #
@@ -62,6 +62,12 @@ problema1_tests: $(TEST_DEPS) problema1.o problema1_tests.o
 problema1_tests.o: src/problema1/problema1.h src/problema1/problema1_tests.cpp
 	$(OBJ) src/problema1/problema1_tests.cpp
 
+problema1_perf: $(TEST_DEPS) problema1.o problema1_perf.o
+	$(BIN_TEST)
+
+problema1_perf.o: src/problema1/problema1.h src/problema1/problema1_perf.cpp src/medir.h
+	$(OBJ) src/problema1/problema1_perf.cpp
+
 ###############################################################################
 # Problema 2                                                                  #
 ###############################################################################
@@ -81,6 +87,12 @@ problema2_tests: $(TEST_DEPS) problema2.o problema2_tests.o
 problema2_tests.o: src/problema2/problema2.h src/problema2/problema2_tests.cpp
 	$(OBJ) src/problema2/problema2_tests.cpp
 
+problema2_perf: $(TEST_DEPS) problema2.o problema2_perf.o
+	$(BIN_TEST)
+
+problema2_perf.o: src/problema2/problema2.h src/problema2/problema2_perf.cpp src/medir.h
+	$(OBJ) src/problema2/problema2_perf.cpp
+
 ###############################################################################
 # Problema 3                                                                  #
 ###############################################################################
@@ -99,6 +111,12 @@ problema3_tests: $(TEST_DEPS) problema3.o problema3_tests.o
 
 problema3_tests.o: src/problema3/problema3.h src/problema3/problema3_tests.cpp
 	$(OBJ) src/problema3/problema3_tests.cpp
+
+problema3_perf: $(TEST_DEPS) problema3.o problema3_perf.o
+	$(BIN_TEST)
+
+problema3_perf.o: src/problema3/problema3.h src/problema3/problema3_perf.cpp src/medir.h
+	$(OBJ) src/problema3/problema3_perf.cpp
 
 ###############################################################################
 # Informe                                                                     #
