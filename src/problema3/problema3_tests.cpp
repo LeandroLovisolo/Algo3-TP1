@@ -1,5 +1,10 @@
-#include <iostream>
 #include <ctime>
+#include <fstream>
+#include <cmath>
+#include <algorithm>
+#include <climits>
+
+#include <iostream>
 
 #include "gtest/gtest.h"
 #include "problema3.h"
@@ -338,6 +343,19 @@ TEST(problema3, MiEjemplo) {
     //              "    *  #");
 
     // resolver(p);
+}
+
+double performance(int iteraciones, Piso &piso) {
+    struct timespec st,en;
+    unsigned long res = UINT_MAX;
+    for (int i = 0; i < iteraciones; ++i) {
+        clock_gettime(CLOCK_THREAD_CPUTIME_ID ,&st);
+        problema3(piso);
+        clock_gettime(CLOCK_THREAD_CPUTIME_ID ,&en);
+        unsigned long diff = en.tv_nsec - st.tv_nsec;
+        res = min(res,diff);
+    }
+    return res;
 }
 
 GTEST_API_ int main(int argc, char **argv) {
