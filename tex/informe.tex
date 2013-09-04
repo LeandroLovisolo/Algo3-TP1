@@ -222,6 +222,10 @@ Para cumplir con los requerimientos de complejidad temporal, utilizamos una cola
 
 \subsection{Complejidad}
 
+Para realizar el algoritmo se utilizó la estructura de datos priority\_queue que pertenece a la \textit{STL}.
+
+Las operaciones operaciones utilizadas fueron \textit{top()} que corresponde a \textit{siguiente()} con complejidad \textit{O(1)} y \textit{push()} y \textit{pop()} que corresponden a \textit{encolar()} y \textit{desencolar()} con complejidad \textit{O(log(n))}.
+
 El algoritmo corre en tiempo $O(n*log(n))$, donde $n$ es la cantidad de paquetes.
 
 Demostración: para cada uno de los $n$ paquetes, se realizan 1 ó 2 operaciones $O(log(n))$ sobre la cola de prioridad. Luego deducimos la complejidad total $n * O(log(n)) = O(n * log(n))$.
@@ -247,6 +251,10 @@ Elegimos los siguientes casos para verificar la correctitud del programa:
 \end{enumerate}
 
 \subsubsection{Performance}
+
+Previo a los experimentos realizados suponiamos que el peor caso iba a ser cuando el tamaño de los paquetes sea igual al límite de los camiones, pero al realizarlos pudimos concluir que ese caso es el peor para Pascual, ya que tiene que utilizar una mayor cantidad de camiones y que el peor caso es cuando los paquetes están ordenados en forma decreciente, ya que se utiliza un min-heap como estructura y el camión a insertar tiene el peso mínimo
+deberá reordenarse hasta llegar a la cabecera del heap realizando la mayor cantidad de operaciones posibles para la insersión.
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
