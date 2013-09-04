@@ -250,11 +250,74 @@ Elegimos los siguientes casos para verificar la correctitud del programa:
 	\item Entrada en la cual algún camión no pueda contener el peso del nuevo paquete y deba pedir un nuevo camión. Esto verifica el caso final (\textbf{else}), debiendo incluir un nuevo camión.
 \end{enumerate}
 
+
 \subsubsection{Performance}
 
 Previo a los experimentos realizados suponiamos que el peor caso iba a ser cuando el tamaño de los paquetes sea igual al límite de los camiones, pero al realizarlos pudimos concluir que ese caso es el peor para Pascual, ya que tiene que utilizar una mayor cantidad de camiones y que el peor caso es cuando los paquetes están ordenados en forma decreciente, ya que se utiliza un min-heap como estructura y el camión a insertar tiene el peso mínimo
 deberá reordenarse hasta llegar a la cabecera del heap realizando la mayor cantidad de operaciones posibles para la insersión.
 
+
+\subsubsection{Peor caso}
+
+\begin{figure}[H]
+  \centering
+  \include{problema1-peor-caso}
+  \caption{Peor caso}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \include{problema1-peor-caso-logn}
+  \caption{Peor caso ($log(n)$)}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \include{problema1-peor-caso-n}
+  \caption{Peor caso ($n$)}
+\end{figure}
+
+
+\subsubsection{Mejor caso}
+
+\begin{figure}[H]
+  \centering
+  \include{problema1-mejor-caso}
+  \caption{Mejor caso}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \include{problema1-mejor-caso-logn}
+  \caption{Mejor caso ($log(n)$)}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \include{problema1-mejor-caso-n}
+  \caption{Mejor caso ($n$)}
+\end{figure}
+
+
+\subsubsection{Caso promedio}
+
+\begin{figure}[H]
+  \centering
+  \include{problema1-caso-promedio}
+  \caption{Caso promedio}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \include{problema1-caso-promedio-logn}
+  \caption{Caso promedio ($log(n)$)}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \include{problema1-caso-promedio-n}
+  \caption{Caso promedio ($n$)}
+\end{figure}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -370,6 +433,70 @@ El teorema a continuación muestra que la suposición anterior es de hecho ciert
 \end{proof}
 
 
+\subsubsection{Peor caso}
+
+\begin{figure}[H]
+  \centering
+  \include{problema2-peor-caso}
+  \caption{Peor caso}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \include{problema2-peor-caso-logn}
+  \caption{Peor caso ($log(n)$)}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \include{problema2-peor-caso-n}
+  \caption{Peor caso ($n$)}
+\end{figure}
+
+
+\subsubsection{Mejor caso}
+
+\begin{figure}[H]
+  \centering
+  \include{problema2-mejor-caso}
+  \caption{Mejor caso}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \include{problema2-mejor-caso-logn}
+  \caption{Mejor caso ($log(n)$)}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \include{problema2-mejor-caso-n}
+  \caption{Mejor caso ($n$)}
+\end{figure}
+
+
+\subsubsection{Caso promedio}
+
+\begin{figure}[H]
+  \centering
+  \include{problema2-caso-promedio}
+  \caption{Caso promedio}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \include{problema2-caso-promedio-logn}
+  \caption{Caso promedio ($log(n)$)}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \include{problema2-caso-promedio-n}
+  \caption{Caso promedio ($n$)}
+\end{figure}
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Problema 3: Una noche en el museo                                         %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -395,19 +522,41 @@ Se pide realizar el algoritmo mediante la técnica de Backtracking.
 Ejemplo:
 \begin{figure}[H]
   \centering
-\includegraphics[width=0.20\textwidth]{../ejemplo_problema3/grilla.png}
-\includegraphics[width=0.20\textwidth]{../ejemplo_problema3/grilla-sol16000.png}
-\includegraphics[width=0.20\textwidth]{../ejemplo_problema3/grilla-sol14000.png}
-\includegraphics[width=0.20\textwidth]{../ejemplo_problema3/grillaSinSol.png}
+\includegraphics[width=0.20\textwidth]{ejemplo_problema3/grilla.png}
+\includegraphics[width=0.20\textwidth]{ejemplo_problema3/grilla-sol16000.png}
+\includegraphics[width=0.20\textwidth]{ejemplo_problema3/grilla-sol14000.png}
+\includegraphics[width=0.20\textwidth]{ejemplo_problema3/grillaSinSol.png}
   \caption{Instacia del problema, dos soluciones distintas con un costo de \$14.000 y \$16.000 respectivamente y una solución no válida} 
   \label{fig:1}
 \end{figure}
 
-\subsection{Solucion}
-\subsection{Complejidad}
-\subsection{Experimentos computacionales}
-\subsubsection{Correctitud}
-\subsubsection{Performance}
+
+\subsubsection{Peor caso}
+
+\begin{figure}[H]
+  \centering
+  \include{problema3-peor-caso}
+  \caption{Peor caso}
+\end{figure}
+
+
+\subsubsection{Mejor caso}
+
+\begin{figure}[H]
+  \centering
+  \include{problema3-mejor-caso}
+  \caption{Mejor caso}
+\end{figure}
+
+
+\subsubsection{Caso promedio}
+
+\begin{figure}[H]
+  \centering
+  \include{problema3-caso-promedio}
+  \caption{Caso promedio}
+\end{figure}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Conclusiones                                                              %%

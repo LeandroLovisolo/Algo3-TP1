@@ -1,0 +1,215 @@
+#!/usr/bin/octave -qf
+
+source('octave/graficar.m');
+
+args = argv();
+
+if(size(args) != 1)
+    printf('Uso: ./graficar <gráfico>\n');
+    printf('Ver documentación en los comentarios al inicio del script.\n');
+    exit(-1);
+end
+
+grafico = args{1};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Problema 1: Peor caso                                                        %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+if(strcmp(grafico, 'problema1-peor-caso'))
+    graficar('perf/problema1/peor-caso.csv',
+             'Peor caso',
+             'milisegundos',
+             '1',
+             'n*log(n)',
+             0.0007);
+elseif(strcmp(grafico, 'problema1-peor-caso-logn'))
+    graficar('perf/problema1/peor-caso.csv',
+             'Peor caso ($log(n)$)',
+             'microsegundos',
+             'n',
+             'log(n)',
+             0.7);
+elseif(strcmp(grafico, 'problema1-peor-caso-n'))
+    graficar('perf/problema1/peor-caso.csv',
+             'Peor caso ($n$)',
+             'milisegundos',
+             'log(n)',
+             'n',
+             0.0007);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Problema 1: Mejor caso                                                       %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+elseif(strcmp(grafico, 'problema1-mejor-caso'))
+    graficar('perf/problema1/mejor-caso.csv',
+             'Mejor caso',
+             'milisegundos',
+             '1',
+             'n*log(n)',
+             0.00006);
+elseif(strcmp(grafico, 'problema1-mejor-caso-logn'))
+    graficar('perf/problema1/mejor-caso.csv',
+             'Mejor caso ($log(n)$)',
+             'microsegundos',
+             'n',
+             'log(n)',
+             0.06);
+elseif(strcmp(grafico, 'problema1-mejor-caso-n'))
+    graficar('perf/problema1/mejor-caso.csv',
+             'Mejor caso ($n$)',
+             'milisegundos',
+             'log(n)',
+             'n',
+             0.00006);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Problema 1: Caso promedio                                                    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+elseif(strcmp(grafico, 'problema1-caso-promedio'))
+    graficar('perf/problema1/caso-promedio.csv',
+             'Caso promedio',
+             'milisegundos',
+             '1',
+             'n*log(n)',
+             0.0006,
+             100);
+elseif(strcmp(grafico, 'problema1-caso-promedio-logn'))
+    graficar('perf/problema1/caso-promedio.csv',
+             'Caso promedio ($log(n)$)',
+             'microsegundos',
+             'n',
+             'log(n)',
+             0.6,
+             100);
+elseif(strcmp(grafico, 'problema1-caso-promedio-n'))
+    graficar('perf/problema1/caso-promedio.csv',
+             'Caso promedio ($n$)',
+             'milisegundos',
+             'log(n)',
+             'n',
+             0.0006,
+             100);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Problema 2: Peor caso                                                        %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+elseif(strcmp(grafico, 'problema2-peor-caso'))
+    graficar('perf/problema2/peor-caso.csv',
+             'Peor caso',
+             'milisegundos',
+             '1',
+             'n*log(n)',
+             0.0004);
+elseif(strcmp(grafico, 'problema2-peor-caso-logn'))
+    graficar('perf/problema2/peor-caso.csv',
+             'Peor caso ($log(n)$)',
+             'microsegundos',
+             'n',
+             'log(n)',
+             0.4);
+elseif(strcmp(grafico, 'problema2-peor-caso-n'))
+    graficar('perf/problema2/peor-caso.csv',
+             'Peor caso ($n$)',
+             'milisegundos',
+             'log(n)',
+             'n',
+             0.0004);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Problema 2: Mejor caso                                                       %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+elseif(strcmp(grafico, 'problema2-mejor-caso'))
+    graficar('perf/problema2/mejor-caso.csv',
+             'Mejor caso',
+             'milisegundos',
+             '1',
+             'n*log(n)',
+             0.00012);
+elseif(strcmp(grafico, 'problema2-mejor-caso-logn'))
+    graficar('perf/problema2/mejor-caso.csv',
+             'Mejor caso ($log(n)$)',
+             'microsegundos',
+             'n',
+             'log(n)',
+             0.12);
+elseif(strcmp(grafico, 'problema2-mejor-caso-n'))
+    graficar('perf/problema2/mejor-caso.csv',
+             'Mejor caso ($n$)',
+             'milisegundos',
+             'log(n)',
+             'n',
+             0.00012);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Problema 2: Caso promedio                                                    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+elseif(strcmp(grafico, 'problema2-caso-promedio'))
+    graficar('perf/problema2/caso-promedio.csv',
+             'Caso promedio',
+             'milisegundos',
+             '1',
+             'n*log(n)',
+             0.00015,
+             100);
+elseif(strcmp(grafico, 'problema2-caso-promedio-logn'))
+    graficar('perf/problema2/caso-promedio.csv',
+             'Caso promedio ($log(n)$)',
+             'microsegundos',
+             'n',
+             'log(n)',
+             0.15,
+             100);
+elseif(strcmp(grafico, 'problema2-caso-promedio-n'))
+    graficar('perf/problema2/caso-promedio.csv',
+             'Caso promedio ($n$)',
+             'milisegundos',
+             'log(n)',
+             'n',
+             0.00015,
+             100);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Problema 3: Peor caso                                                        %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+elseif(strcmp(grafico, 'problema3-peor-caso'))
+    graficar('perf/problema3/peor-caso.csv',
+             'Peor caso',
+             'milisegundos',
+             '1');
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Problema 3: Mejor caso                                                       %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+elseif(strcmp(grafico, 'problema3-mejor-caso'))
+    graficar('perf/problema3/mejor-caso.csv',
+             'Mejor caso',
+             'milisegundos',
+             '1');
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Problema 3: Caso promedio                                                    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+elseif(strcmp(grafico, 'problema3-caso-promedio'))
+    graficar('perf/problema3/caso-promedio.csv',
+             'Caso promedio',
+             'milisegundos',
+             '1');
+
+else
+    printf('Gráfico inválido.\n');
+    exit(-1);
+end
+
+cd('tex');
+print(grafico, '-S800,550', '-dtex');
+
+printf(cstrcat('El gráfico ', grafico, ' fue generado exitosamente.\n'));

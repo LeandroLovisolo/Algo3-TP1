@@ -122,7 +122,155 @@ problema3_perf.o: src/problema3/problema3.h src/problema3/problema3_perf.cpp src
 # Informe                                                                     #
 ###############################################################################
 
+.PHONY: graficos
+
 informe.pdf: tex/*.tex
 	cd tex; pdflatex -interactive=nonstopmode -halt-on-error informe.tex
 	cd tex; pdflatex -interactive=nonstopmode -halt-on-error informe.tex
 	cp tex/informe.pdf .
+
+graficos: graficos-problema1 graficos-problema2 graficos-problema3
+
+###############################################################################
+# Gráficos problema 1                                                         #
+###############################################################################
+
+.PHONY: graficos-problema1 \
+	    graficos-problema1-peor-caso \
+	    graficos-problema1-mejor-caso \
+	    graficos-problema1-caso-promedio \
+	    grafico-problema1-peor-caso \
+	    grafico-problema1-peor-caso-logn \
+	    grafico-problema1-peor-caso-n \
+	    grafico-problema1-mejor-caso \
+	    grafico-problema1-mejor-caso-logn \
+	    grafico-problema1-mejor-caso-n \
+	    grafico-problema1-caso-promedio \
+	    grafico-problema1-caso-promedio-logn \
+	    grafico-problema1-caso-promedio-n
+
+graficos-problema1: graficos-problema1-peor-caso \
+	                graficos-problema1-mejor-caso \
+	                graficos-problema1-caso-promedio
+
+graficos-problema1-peor-caso: grafico-problema1-peor-caso \
+	                          grafico-problema1-peor-caso-logn \
+	                          grafico-problema1-peor-caso-n
+
+graficos-problema1-mejor-caso: grafico-problema1-mejor-caso \
+	                           grafico-problema1-mejor-caso-logn \
+	                           grafico-problema1-mejor-caso-n
+
+graficos-problema1-caso-promedio: grafico-problema1-caso-promedio \
+	                              grafico-problema1-caso-promedio-logn \
+	                              grafico-problema1-caso-promedio-n
+
+grafico-problema1-peor-caso:
+	octave/graficar problema1-peor-caso
+
+grafico-problema1-peor-caso-logn:
+	octave/graficar problema1-peor-caso-logn
+
+grafico-problema1-peor-caso-n:
+	octave/graficar problema1-peor-caso-n
+
+grafico-problema1-mejor-caso:
+	octave/graficar problema1-mejor-caso
+
+grafico-problema1-mejor-caso-logn:
+	octave/graficar problema1-mejor-caso-logn
+
+grafico-problema1-mejor-caso-n:
+	octave/graficar problema1-mejor-caso-n
+
+grafico-problema1-caso-promedio:
+	octave/graficar problema1-caso-promedio
+
+grafico-problema1-caso-promedio-logn:
+	octave/graficar problema1-caso-promedio-logn
+
+grafico-problema1-caso-promedio-n:
+	octave/graficar problema1-caso-promedio-n
+
+###############################################################################
+# Gráficos problema 2                                                         #
+###############################################################################
+
+.PHONY: graficos-problema2 \
+	    graficos-problema2-peor-caso \
+	    graficos-problema2-mejor-caso \
+	    graficos-problema2-caso-promedio \
+	    grafico-problema2-peor-caso \
+	    grafico-problema2-peor-caso-logn \
+	    grafico-problema2-peor-caso-n \
+	    grafico-problema2-mejor-caso \
+	    grafico-problema2-mejor-caso-logn \
+	    grafico-problema2-mejor-caso-n \
+	    grafico-problema2-caso-promedio \
+	    grafico-problema2-caso-promedio-logn \
+	    grafico-problema2-caso-promedio-n
+
+graficos-problema2: graficos-problema2-peor-caso \
+	                graficos-problema2-mejor-caso \
+	                graficos-problema2-caso-promedio
+
+graficos-problema2-peor-caso: grafico-problema2-peor-caso \
+	                          grafico-problema2-peor-caso-logn \
+	                          grafico-problema2-peor-caso-n
+
+graficos-problema2-mejor-caso: grafico-problema2-mejor-caso \
+	                           grafico-problema2-mejor-caso-logn \
+	                           grafico-problema2-mejor-caso-n
+
+graficos-problema2-caso-promedio: grafico-problema2-caso-promedio \
+	                              grafico-problema2-caso-promedio-logn \
+	                              grafico-problema2-caso-promedio-n
+
+grafico-problema2-peor-caso:
+	octave/graficar problema2-peor-caso
+
+grafico-problema2-peor-caso-logn:
+	octave/graficar problema2-peor-caso-logn
+
+grafico-problema2-peor-caso-n:
+	octave/graficar problema2-peor-caso-n
+
+grafico-problema2-mejor-caso:
+	octave/graficar problema2-mejor-caso
+
+grafico-problema2-mejor-caso-logn:
+	octave/graficar problema2-mejor-caso-logn
+
+grafico-problema2-mejor-caso-n:
+	octave/graficar problema2-mejor-caso-n
+
+grafico-problema2-caso-promedio:
+	octave/graficar problema2-caso-promedio
+
+grafico-problema2-caso-promedio-logn:
+	octave/graficar problema2-caso-promedio-logn
+
+grafico-problema2-caso-promedio-n:
+	octave/graficar problema2-caso-promedio-n
+
+###############################################################################
+# Gráficos problema 3                                                         #
+###############################################################################
+
+.PHONY: graficos-problema3 \
+	    grafico-problema3-peor-caso \
+	    grafico-problema3-mejor-caso \
+	    grafico-problema3-caso-promedio \
+
+graficos-problema3: grafico-problema3-peor-caso \
+	                grafico-problema3-mejor-caso \
+	                grafico-problema3-caso-promedio
+
+grafico-problema3-peor-caso:
+	octave/graficar problema3-peor-caso
+
+grafico-problema3-mejor-caso:
+	octave/graficar problema3-mejor-caso
+
+grafico-problema3-caso-promedio:
+	octave/graficar problema3-caso-promedio
