@@ -245,7 +245,7 @@ Las operaciones operaciones utilizadas fueron \textit{top()} que corresponde a \
 
 El algoritmo corre en tiempo $O(n*log(n))$, donde $n$ es la cantidad de paquetes.
 
-Demostración: para cada uno de los $n$ paquetes, se realizan 1 ó 2 operaciones $O(log(n))$ sobre la cola de prioridad. Luego deducimos la complejidad total $n * O(log(n)) = O(n * log(n))$.
+\textbf{Demostración:} para cada uno de los $n$ paquetes, se realizan 1 ó 2 operaciones $O(log(n))$ sobre la cola de prioridad. Luego deducimos la complejidad total $n * O(log(n)) = O(n * log(n))$.
 
 
 \subsection{Correctitud}
@@ -373,7 +373,7 @@ En el pseudocódigo a continuación, $C$ denota el conjunto con la oferta de $n$
                    en forma creciente.}                         \Ode{n * log(n)}
             \State{$S = \{(i_1, j_1)\}$}                        \Ode{1}
             \State{$k = 1$}                                     \Ode{1}
-            \For{$j = 2$ \To $|C|$}                             \Ode{n}
+            \For{$j = 2$ \To $|C|$}                            
                 \If{$i_j > f_k$}                                \Ode{1}
                     \State{$S = S \cup \{ (i_j, f_j) \}$}       \Ode{1}
                     \State{$k = j$}                             \Ode{1}
@@ -389,7 +389,7 @@ En el pseudocódigo a continuación, $C$ denota el conjunto con la oferta de $n$
 
 El algoritmo corre en tiempo $O(n*log(n))$, donde $n$ es la cantidad de cursos.
 
-Demostración: para el caso no trivial ($n > 1$) se ordenan los cursos en $O(n * log(n))$, luego se recorre cada curso y se decide si se lo incluye en la solución o no, con costo $n * O(1)$. La complejidad total resulta $O(n * log(n)) + n * O(1) = O(n * log(n) + n) = O(n * log(n))$. Para el caso trivial, se devuelve el conjunto de cursos intacto en tiempo constante.
+\textbf{Demostración:} para el caso no trivial ($n > 1$) se ordenan los cursos en $O(n * log(n))$, luego se recorre cada curso y se decide si se lo incluye en la solución o no, con costo $n * O(1)$. La complejidad total resulta $O(n * log(n)) + n * O(1) = O(n * log(n) + n) = O(n * log(n))$. Para el caso trivial, se devuelve el conjunto de cursos intacto en tiempo constante.
 
 
 \subsection{Correctitud}
@@ -425,7 +425,9 @@ El teorema a continuación muestra que la suposición anterior es de hecho ciert
 \subsection{Experimentos computacionales}
 
 \subsubsection{Performance}
-
+Justificación de la elección de peor o mejor caso y hablar de cómo se generaron los casos aleatorios.
+PEOR Y MEJOR CASO DEPENDIENDO DEL ALGORITMO DE ORDENAMIENTO.
+Si se utiliza heap sort, peor y mejor caso iguales.
 
 \subsubsection{Peor caso}
 
@@ -484,7 +486,7 @@ Dado un piso se debe cumplir:
 
 Se pide realizar el algoritmo mediante la técnica de Backtracking.
 
-Ejemplo:
+\textbf{Ejemplo:}
 \begin{figure}[H]
   \centering
 \includegraphics[width=0.20\textwidth]{ejemplo_problema3/grilla.png}
@@ -495,6 +497,19 @@ Ejemplo:
   \label{fig:1}
 \end{figure}
 
+\subsection{Solucion}
+Dado que la solución está implementada con el método de backtracking, ideamos las siguientes podas para mejorar el tiempo de ejecución de este.
+\begin{itemize}
+	\item Si existe una solución anterior, podar los caminos que lleven a una solución de mayor costo.
+	\item Para cada sensor, verificar que este no esté siendo sensado por otro sensor, ni que el sensor esté sensando a otro.
+	\item Para cada casillero que esté libre o sea importante, verificar si estos estan siendo sensados. Si no estan siendo sensados, verificar si es posible colocar un nuevo sensor que los sense correctamente.
+\end{itemize}
+
+
+\subsection{Experimentos computacionales}
+
+\subsubsection{Performance}
+Justificación de la elección del mejor, peor caso y descripción de casos aleatorios.
 
 \subsubsection{Peor caso}
 
