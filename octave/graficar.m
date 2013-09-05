@@ -1,49 +1,65 @@
-% Parámetros:
+% Recibe como parámetro una estructura con los siguientes campos:
+%
 %   csv                Path al archivo CSV con la muestra a graficar.
 %   titulo             El título del gráfico.
-%   unidad             Unidad de tiempo. Valores posibles:
+%   unidad (opcional)  Unidad de tiempo. Valores posibles:
 %    - 'milisegundos'
 %    - 'microsegundos'
-%   divisor            Expresión que divide las mediciones. Valores posibles:
+%   escala (opcional)  Escala a usar para el eje y. Valores posibles:
+%    - 'lineal'
+%    - 'logaritmica'
+%   divisor (opcional) Expresión que divide las mediciones. Valores posibles:
 %    - '1'             Sin división.
 %    - 'n'             Divide las mediciones por n.
 %    - 'log(n)'        Divide las mediciones por log(n).
-%   ajuste             Curva de ajuste. Valores posibles:
+%   ajuste (opcional)  Curva de ajuste. Valores posibles:
 %    - 'none'          Sin curva de ajuste.
 %    - 'n'
 %    - 'log(n)'
 %    - 'n*log(n)'
-%   coef               Coeficiente de la curva de ajuste.
-%   inicio             Medición inicial a partir de la cual graficar.
+%   coef (opcional)    Coeficiente de la curva de ajuste.
+%   inicio (opcional)  Medición inicial a partir de la cual graficar.
+%   ticks_x (opcional) Usar las etiquetas en el CSV (primera  columna) para
+%                      etiquetar el eje x en vez del tamaño del problema.
 
-function graficar(csv,
-                  titulo,
-                  unidad  = 'milisegundos',
-                  divisor = '1',
-                  ajuste  = 'none',
-                  coef    = 1,
-                  inicio  = 1)
+function graficar(s)
 
-data = csvread(csv);
-n    = (inicio : rows(data))'; % data(inicio:end, 1);
-t_n  = data(inicio:end, 2);
+% Parámetros por defecto.
+if(!isfield(s, 'unidad'));  s.unidad  = 'milisegundos'; end
+if(!isfield(s, 'escala'));  s.escala  = 'lineal';       end
+if(!isfield(s, 'divisor')); s.divisor = '1';            end
+if(!isfield(s, 'ajuste'));  s.ajuste  = 'none';         end
+if(!isfield(s, 'coef'));    s.coef    = 1;              end
+if(!isfield(s, 'inicio'));  s.inicio  = 1;              end
+if(!isfield(s, 'ticks_x')); s.ticks_x = false;          end
 
-if(strcmp(unidad, 'milisegundos'))
-    % no hacer nada
-elseif(strcmp(unidad, 'microsegundos'))
+% Lee las etiquetas de cada medición y las mediciones
+% en label_ y t_n, respectivamente.
+[label_n t_n] = textread(s.csv, '%s %f');
+
+% Tamaños de los problemas medidos.
+n = (s.inicio : rows(t_n))';
+
+% Descartamos las mediciones por fuera del intervalo que se quiere graficar.
+label_n = label_n(s.inicio:end);
+t_n     = t_n(s.inicio:end);
+
+if(strcmp(s.unidad, 'milisegundos'))
+    % No hacer nada.
+elseif(strcmp(s.unidad, 'microsegundos'))
     t_n = t_n * 1000;
 else
     error('Parámetro "unidad" inválido.');
     exit(-1);
 end
 
-if(strcmp(divisor, '1'))
+if(strcmp(s.divisor, '1'))
     expr    = t_n;
     leyenda = ['$t_n$'];
-elseif(strcmp(divisor, 'n'))
+elseif(strcmp(s.divisor, 'n'))
     expr    = t_n ./ n;
     leyenda = ['$t_n / n$'];
-elseif(strcmp(divisor, 'log(n)'))
+elseif(strcmp(s.divisor, 'log(n)'))
     expr    = t_n ./ log(n);
     leyenda = ['$t_n / log(n)$'];
 else
@@ -53,18 +69,32 @@ end
 
 figure;
 hold on;
-plot(n, expr);
 
-if(strcmp(ajuste, 'none'))
-    % no hacer nada
-elseif(strcmp(ajuste, 'n'))
-    expr_ajuste   = coef * n;
+if(s.ticks_x)
+    xticks = [1:ceil(length(label_n)/4):length(label_n) length(label_n)];
+    set(gca, 'xtick', xticks);
+    set(gca, 'xticklabel', label_n'(xticks));
+end
+
+if(strcmp(s.escala, 'lineal'))
+    plot(n, expr);
+elseif(strcmp(s.escala, 'logaritmica'))
+    semilogy(expr);
+else
+    error('Parámetro "escala" inválido.');
+    exit(-1);
+end
+
+if(strcmp(s.ajuste, 'none'))
+    % No hacer nada.
+elseif(strcmp(s.ajuste, 'n'))
+    expr_ajuste   = s.coef * n;
     leyenda = [leyenda; '$n$'];
-elseif(strcmp(ajuste, 'log(n)'))
-    expr_ajuste    = coef * log(n);
+elseif(strcmp(s.ajuste, 'log(n)'))
+    expr_ajuste    = s.coef * log(n);
     leyenda = [leyenda; '$log(n)$'];
-elseif(strcmp(ajuste, 'n*log(n)'))
-    expr_ajuste    = coef * n .* log(n);
+elseif(strcmp(s.ajuste, 'n*log(n)'))
+    expr_ajuste    = s.coef * n .* log(n);
     leyenda = [leyenda; '$n * log(n)$'];
 else
     error('Parámetro "ajuste" inválido.');
@@ -79,15 +109,15 @@ legend(leyenda);
 legend('boxon');
 legend('location', 'northwest');
 
-title(titulo);
+title(s.titulo);
 
-xlabel('$n$ (tamaño del problema)');
-if(strcmp(unidad, 'milisegundos'))
-    ylabel('Tiempo de ejecución [$mS$]');
+xlabel('$n$ (tama\~no del problema)');
+if(strcmp(s.unidad, 'milisegundos'))
+    ylabel('Tiempo de ejecuci\''on [$mS$]');
 else
-    ylabel('Tiempo de ejecución [$\mu S$]');
+    ylabel('Tiempo de ejecuci\''on [$\mu S$]');
 end
 
-xlim([inicio rows(data)]);
+xlim([s.inicio rows(t_n)]);
 
 hold off;

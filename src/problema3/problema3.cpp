@@ -456,11 +456,11 @@ bool esCompatible(const Piso& p, unsigned fila, unsigned columna) {
 
     // Macro para informar el motivo cuando un piso no es compatible.
     #if DEBUG_LEVEL == FULL
-        #define pisoInvalido(f1, c1, f2, c2) \
+        #define pisoNoCompatible(f1, c1, f2, c2) \
             cout << "Piso no compatible. El sensor en (" << f2 << ", " << c2 << ") " \
                  << "está en conflicto con (" << f1 << ", " << c1 << ")." << endl;
     #else
-        #define pisoInvalido(f1, c1, f2, c2) { }
+        #define pisoNoCompatible(f1, c1, f2, c2) { }
     #endif
 
     // Si la posición contiene un sensor,
@@ -472,7 +472,7 @@ bool esCompatible(const Piso& p, unsigned fila, unsigned columna) {
         for(int k = fila - 1; k >= 0; k--) {
             if(esPared(p, k, columna)) break;
             if(esSensor(p, k, columna) && noSonCompatibles(p, fila, columna, k, columna)) {
-                pisoInvalido(fila, columna, k, columna);
+                pisoNoCompatible(fila, columna, k, columna);
                 return false;                
             }
         }
@@ -481,7 +481,7 @@ bool esCompatible(const Piso& p, unsigned fila, unsigned columna) {
         for(int k = fila + 1; k < (int) p.filas(); k++) {
             if(esPared(p, k, columna)) break;
             if(esSensor(p, k, columna) && noSonCompatibles(p, fila, columna, k, columna)) {
-                pisoInvalido(fila, columna, k, columna);
+                pisoNoCompatible(fila, columna, k, columna);
                 return false;                
             }
         }
@@ -490,7 +490,7 @@ bool esCompatible(const Piso& p, unsigned fila, unsigned columna) {
         for(int k = columna - 1; k >= 0; k--) {
             if(esPared(p, fila, k)) break;
             if(esSensor(p, fila, k) && noSonCompatibles(p, fila, columna, fila, k)) {
-                pisoInvalido(fila, columna, fila, k);
+                pisoNoCompatible(fila, columna, fila, k);
                 return false;                
             }            
         }
@@ -499,7 +499,7 @@ bool esCompatible(const Piso& p, unsigned fila, unsigned columna) {
         for(int k = columna + 1; k < (int) p.columnas(); k++) {
             if(esPared(p, fila, k)) break;
             if(esSensor(p, fila, k) && noSonCompatibles(p, fila, columna, fila, k)) {
-                pisoInvalido(fila, columna, fila, k);
+                pisoNoCompatible(fila, columna, fila, k);
                 return false;                
             }
         }
@@ -519,14 +519,14 @@ bool esCandidatoASolucion(const Piso& p, unsigned fila, unsigned columna) {
 
     // Macro para informar el motivo cuando un piso no es compatible.
     #if DEBUG_LEVEL == FULL
-        #define pisoInvalido(f0, c0, f1, c1, f2, c2) \
+        #define pisoNoCandidatoASolucion(f0, c0, f1, c1, f2, c2) \
             cout << "El piso no es candidato a solución. Los sensores en " \
                  << "(" << f1 << ", " << c1 << ") y " \
                  << "(" << f2 << ", " << c2 << ")" << endl \
                  << "producen que la posición " \
                  << "(" << f0 << ", " << c0 << ") sea imposible de sensar." << endl;
     #else
-        #define pisoInvalido(f0, c0, f1, c1, f2, c2) { }
+        #define pisoNoCandidatoASolucion(f0, c0, f1, c1, f2, c2) { }
     #endif
 
     // Si es un sensor vertical, recorro su fila y me aseguro que no haya
@@ -542,7 +542,7 @@ bool esCandidatoASolucion(const Piso& p, unsigned fila, unsigned columna) {
             for(int q = fila - 1; q >= 0; q--) {
                 if(esPared(p, q, k)) break;
                 if(p.get(q, k) == SensorHorizontal) {
-                    pisoInvalido(fila, k, fila, columna, q, k);
+                    pisoNoCandidatoASolucion(fila, k, fila, columna, q, k);
                     return false;
                 }
             }
@@ -551,7 +551,7 @@ bool esCandidatoASolucion(const Piso& p, unsigned fila, unsigned columna) {
             for(int q = fila + 1; q < (int) p.filas(); q++) {
                 if(esPared(p, q, k)) break;
                 if(p.get(q, k) == SensorHorizontal) {
-                    pisoInvalido(fila, k, fila, columna, q, k);
+                    pisoNoCandidatoASolucion(fila, k, fila, columna, q, k);
                     return false;
                 }
             }
@@ -566,7 +566,7 @@ bool esCandidatoASolucion(const Piso& p, unsigned fila, unsigned columna) {
             for(int q = fila - 1; q >= 0; q--) {
                 if(esPared(p, q, k)) break;
                 if(p.get(q, k) == SensorHorizontal) {
-                    pisoInvalido(fila, k, fila, columna, q, k);
+                    pisoNoCandidatoASolucion(fila, k, fila, columna, q, k);
                     return false;
                 }
             }
@@ -575,7 +575,7 @@ bool esCandidatoASolucion(const Piso& p, unsigned fila, unsigned columna) {
             for(int q = fila + 1; q < (int) p.filas(); q++) {
                 if(esPared(p, q, k)) break;
                 if(p.get(q, k) == SensorHorizontal) {
-                    pisoInvalido(fila, k, fila, columna, q, k);
+                    pisoNoCandidatoASolucion(fila, k, fila, columna, q, k);
                     return false;
                 }
             }
@@ -595,7 +595,7 @@ bool esCandidatoASolucion(const Piso& p, unsigned fila, unsigned columna) {
             for(int q = columna - 1; q >= 0; q--) {
                 if(esPared(p, k, q)) break;
                 if(p.get(k, q) == SensorVertical) {
-                    pisoInvalido(k, columna, fila, columna, k, q);
+                    pisoNoCandidatoASolucion(k, columna, fila, columna, k, q);
                     return false;
                 }
             }
@@ -604,7 +604,7 @@ bool esCandidatoASolucion(const Piso& p, unsigned fila, unsigned columna) {
             for(int q = columna + 1; q < (int) p.columnas(); q++) {
                 if(esPared(p, k, q)) break;
                 if(p.get(k, q) == SensorVertical) {
-                    pisoInvalido(k, columna, fila, columna, k, q);
+                    pisoNoCandidatoASolucion(k, columna, fila, columna, k, q);
                     return false;
                 }
             }
@@ -619,7 +619,7 @@ bool esCandidatoASolucion(const Piso& p, unsigned fila, unsigned columna) {
             for(int q = columna - 1; q >= 0; q--) {
                 if(esPared(p, k, q)) break;
                 if(p.get(k, q) == SensorVertical) {
-                    pisoInvalido(k, columna, fila, columna, k, q);
+                    pisoNoCandidatoASolucion(k, columna, fila, columna, k, q);
                     return false;
                 }
             }
@@ -628,7 +628,7 @@ bool esCandidatoASolucion(const Piso& p, unsigned fila, unsigned columna) {
             for(int q = columna + 1; q < (int) p.columnas(); q++) {
                 if(esPared(p, k, q)) break;
                 if(p.get(k, q) == SensorVertical) {
-                    pisoInvalido(k, columna, fila, columna, k, q);
+                    pisoNoCandidatoASolucion(k, columna, fila, columna, k, q);
                     return false;
                 }
             }

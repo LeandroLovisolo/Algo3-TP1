@@ -24,7 +24,7 @@ unsigned columnas(int n) {
 }
 
 string indice(int n) {
-    return to_string(filas(n)) + " x " + to_string(columnas(n));
+    return to_string(filas(n)) + "x" + to_string(columnas(n));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -89,7 +89,8 @@ TEST(problema3, PerformanceCasoPromedio) {
 
               return p;
           },
-          [&] (const Piso& piso) { resolver(piso); });
+          [&] (const Piso& piso) { resolver(piso); },
+          indice);
 }
 
 GTEST_API_ int main(int argc, char **argv) {
