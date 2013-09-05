@@ -22,18 +22,20 @@
 %   inicio (opcional)  Medición inicial a partir de la cual graficar.
 %   ticks_x (opcional) Usar las etiquetas en el CSV (primera  columna) para
 %                      etiquetar el eje x en vez del tamaño del problema.
+%   xlabel (opcional)  Etiqueta para el eje x.
 
 function graficar(s)
 
 % Parámetros por defecto.
-if(!isfield(s, 'unidad'));  s.unidad  = 'milisegundos'; end
-if(!isfield(s, 'escala'));  s.escala  = 'lineal';       end
-if(!isfield(s, 'divisor')); s.divisor = '1';            end
-if(!isfield(s, 'ajuste'));  s.ajuste  = 'none';         end
-if(!isfield(s, 'coef'));    s.coef    = 1;              end
-if(!isfield(s, 'ylim'));    s.ylim    = 'none';         end    
-if(!isfield(s, 'inicio'));  s.inicio  = 1;              end
-if(!isfield(s, 'ticks_x')); s.ticks_x = false;          end
+if(!isfield(s, 'unidad'));  s.unidad  = 'milisegundos';                end
+if(!isfield(s, 'escala'));  s.escala  = 'lineal';                      end
+if(!isfield(s, 'divisor')); s.divisor = '1';                           end
+if(!isfield(s, 'ajuste'));  s.ajuste  = 'none';                        end
+if(!isfield(s, 'coef'));    s.coef    = 1;                             end
+if(!isfield(s, 'ylim'));    s.ylim    = 'none';                        end    
+if(!isfield(s, 'inicio'));  s.inicio  = 1;                             end
+if(!isfield(s, 'ticks_x')); s.ticks_x = false;                         end
+if(!isfield(s, 'xlabel'));  s.xlabel  = '$n$ (tama\~no del problema)'; end
 
 % Lee las etiquetas de cada medición y las mediciones
 % en label_ y t_n, respectivamente.
@@ -113,11 +115,12 @@ legend('location', 'northwest');
 
 title(s.titulo);
 
-xlabel('$n$ (tama\~no del problema)');
+xlabel(s.xlabel);
+
 if(strcmp(s.unidad, 'milisegundos'))
-    ylabel('Tiempo de ejecuci\''on [$mS$]');
+    ylabel('Tiempo [$mS$]');
 else
-    ylabel('Tiempo de ejecuci\''on [$\mu S$]');
+    ylabel('Tiempo [$\mu S$]');
 end
 
 xlim([s.inicio rows(t_n)]);
