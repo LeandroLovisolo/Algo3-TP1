@@ -58,26 +58,26 @@ elseif(strcmp(grafico, 'problema1-mejor-caso-n'))
                     'coef',    0.00006));
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Problema 1: Caso promedio                                                    %
+% Problema 1: Instancias aleatorias                                                    %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-elseif(strcmp(grafico, 'problema1-caso-promedio'))
-    graficar(struct('csv',    'perf/problema1/caso-promedio.csv',
-                    'titulo', 'Caso promedio',
+elseif(strcmp(grafico, 'problema1-instancias-aleatorias'))
+    graficar(struct('csv',    'perf/problema1/instancias-aleatorias.csv',
+                    'titulo', 'Instancias aleatorias',
                     'ajuste', 'n*log(n)',
                     'coef',   0.0006,
                     'inicio', 100));
-elseif(strcmp(grafico, 'problema1-caso-promedio-logn'))
-    graficar(struct('csv',     'perf/problema1/caso-promedio.csv',
-                    'titulo',  'Caso promedio ($log(n)$)',
+elseif(strcmp(grafico, 'problema1-instancias-aleatorias-logn'))
+    graficar(struct('csv',     'perf/problema1/instancias-aleatorias.csv',
+                    'titulo',  'Instancias aleatorias ($log(n)$)',
                     'unidad',  'microsegundos',
                     'divisor', 'n',
                     'ajuste',  'log(n)',
                     'coef',    0.6,
                     'inicio',  100));
-elseif(strcmp(grafico, 'problema1-caso-promedio-n'))
-    graficar(struct('csv',     'perf/problema1/caso-promedio.csv',
-                    'titulo',  'Caso promedio ($n$)',
+elseif(strcmp(grafico, 'problema1-instancias-aleatorias-n'))
+    graficar(struct('csv',     'perf/problema1/instancias-aleatorias.csv',
+                    'titulo',  'Instancias aleatorias ($n$)',
                     'divisor', 'log(n)',
                     'ajuste',  'n',
                     'coef',    0.0006,
@@ -130,26 +130,26 @@ elseif(strcmp(grafico, 'problema2-mejor-caso-n'))
                     'coef',    0.00012));
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Problema 2: Caso promedio                                                    %
+% Problema 2: Instancias aleatorias                                                    %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-elseif(strcmp(grafico, 'problema2-caso-promedio'))
-    graficar(struct('csv',     'perf/problema2/caso-promedio.csv',
-                    'titulo',  'Caso promedio',
+elseif(strcmp(grafico, 'problema2-instancias-aleatorias'))
+    graficar(struct('csv',     'perf/problema2/instancias-aleatorias.csv',
+                    'titulo',  'Instancias aleatorias',
                     'ajuste',  'n*log(n)',
                     'coef',    0.00015,
                     'inicio',  100));
-elseif(strcmp(grafico, 'problema2-caso-promedio-logn'))
-    graficar(struct('csv',     'perf/problema2/caso-promedio.csv',
-                    'titulo',  'Caso promedio ($log(n)$)',
+elseif(strcmp(grafico, 'problema2-instancias-aleatorias-logn'))
+    graficar(struct('csv',     'perf/problema2/instancias-aleatorias.csv',
+                    'titulo',  'Instancias aleatorias ($log(n)$)',
                     'unidad',  'microsegundos',
                     'divisor', 'n',
                     'ajuste',  'log(n)',
                     'coef',    0.15,
                     'inicio',  100));
-elseif(strcmp(grafico, 'problema2-caso-promedio-n'))
-    graficar(struct('csv',     'perf/problema2/caso-promedio.csv',
-                    'titulo',  'Caso promedio ($n$)',
+elseif(strcmp(grafico, 'problema2-instancias-aleatorias-n'))
+    graficar(struct('csv',     'perf/problema2/instancias-aleatorias.csv',
+                    'titulo',  'Instancias aleatorias ($n$)',
                     'divisor', 'log(n)',
                     'ajuste',  'n',
                     'coef',    0.00015,
@@ -175,12 +175,12 @@ elseif(strcmp(grafico, 'problema3-mejor-caso'))
                     'ticks_x', true));
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Problema 3: Caso promedio                                                    %
+% Problema 3: Instancias aleatorias                                                    %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-elseif(strcmp(grafico, 'problema3-caso-promedio'))
-    graficar(struct('csv',     'perf/problema3/caso-promedio.csv',
-                    'titulo',  'Caso promedio',
+elseif(strcmp(grafico, 'problema3-instancias-aleatorias'))
+    graficar(struct('csv',     'perf/problema3/instancias-aleatorias.csv',
+                    'titulo',  'Instancias aleatorias',
                     'escala',  'logaritmica',
                     'ticks_x', true));
 

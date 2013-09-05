@@ -42,11 +42,11 @@ vector<Curso> cursosAleatorios(int cantidad) {
     return cursos;
 }
 
-TEST(problema2, PerformanceCasoPromedio) {
+TEST(problema2, PerformanceInstanciasAleatorias) {
     vector<Curso> cursos;
     int veces_que_se_uso = 0;
 
-    medir(string("perf/problema2/caso-promedio.csv"),
+    medir(string("perf/problema2/instancias-aleatorias.csv"),
           1000,
           100,
           [&] (int n) {

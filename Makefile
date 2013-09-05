@@ -138,20 +138,20 @@ graficos: graficos-problema1 graficos-problema2 graficos-problema3
 .PHONY: graficos-problema1 \
 	    graficos-problema1-peor-caso \
 	    graficos-problema1-mejor-caso \
-	    graficos-problema1-caso-promedio \
+	    graficos-problema1-instancias-aleatorias \
 	    grafico-problema1-peor-caso \
 	    grafico-problema1-peor-caso-logn \
 	    grafico-problema1-peor-caso-n \
 	    grafico-problema1-mejor-caso \
 	    grafico-problema1-mejor-caso-logn \
 	    grafico-problema1-mejor-caso-n \
-	    grafico-problema1-caso-promedio \
-	    grafico-problema1-caso-promedio-logn \
-	    grafico-problema1-caso-promedio-n
+	    grafico-problema1-instancias-aleatorias \
+	    grafico-problema1-instancias-aleatorias-logn \
+	    grafico-problema1-instancias-aleatorias-n
 
 graficos-problema1: graficos-problema1-peor-caso \
 	                graficos-problema1-mejor-caso \
-	                graficos-problema1-caso-promedio
+	                graficos-problema1-instancias-aleatorias
 
 graficos-problema1-peor-caso: grafico-problema1-peor-caso \
 	                          grafico-problema1-peor-caso-logn \
@@ -161,9 +161,9 @@ graficos-problema1-mejor-caso: grafico-problema1-mejor-caso \
 	                           grafico-problema1-mejor-caso-logn \
 	                           grafico-problema1-mejor-caso-n
 
-graficos-problema1-caso-promedio: grafico-problema1-caso-promedio \
-	                              grafico-problema1-caso-promedio-logn \
-	                              grafico-problema1-caso-promedio-n
+graficos-problema1-instancias-aleatorias: grafico-problema1-instancias-aleatorias \
+	                                      grafico-problema1-instancias-aleatorias-logn \
+	                                      grafico-problema1-instancias-aleatorias-n
 
 grafico-problema1-peor-caso:
 	octave/graficar problema1-peor-caso
@@ -183,14 +183,14 @@ grafico-problema1-mejor-caso-logn:
 grafico-problema1-mejor-caso-n:
 	octave/graficar problema1-mejor-caso-n
 
-grafico-problema1-caso-promedio:
-	octave/graficar problema1-caso-promedio
+grafico-problema1-instancias-aleatorias:
+	octave/graficar problema1-instancias-aleatorias
 
-grafico-problema1-caso-promedio-logn:
-	octave/graficar problema1-caso-promedio-logn
+grafico-problema1-instancias-aleatorias-logn:
+	octave/graficar problema1-instancias-aleatorias-logn
 
-grafico-problema1-caso-promedio-n:
-	octave/graficar problema1-caso-promedio-n
+grafico-problema1-instancias-aleatorias-n:
+	octave/graficar problema1-instancias-aleatorias-n
 
 ###############################################################################
 # Gráficos problema 2                                                         #
@@ -199,20 +199,20 @@ grafico-problema1-caso-promedio-n:
 .PHONY: graficos-problema2 \
 	    graficos-problema2-peor-caso \
 	    graficos-problema2-mejor-caso \
-	    graficos-problema2-caso-promedio \
+	    graficos-problema2-instancias-aleatorias \
 	    grafico-problema2-peor-caso \
 	    grafico-problema2-peor-caso-logn \
 	    grafico-problema2-peor-caso-n \
 	    grafico-problema2-mejor-caso \
 	    grafico-problema2-mejor-caso-logn \
 	    grafico-problema2-mejor-caso-n \
-	    grafico-problema2-caso-promedio \
-	    grafico-problema2-caso-promedio-logn \
-	    grafico-problema2-caso-promedio-n
+	    grafico-problema2-instancias-aleatorias \
+	    grafico-problema2-instancias-aleatorias-logn \
+	    grafico-problema2-instancias-aleatorias-n
 
 graficos-problema2: graficos-problema2-peor-caso \
 	                graficos-problema2-mejor-caso \
-	                graficos-problema2-caso-promedio
+	                graficos-problema2-instancias-aleatorias
 
 graficos-problema2-peor-caso: grafico-problema2-peor-caso \
 	                          grafico-problema2-peor-caso-logn \
@@ -222,9 +222,9 @@ graficos-problema2-mejor-caso: grafico-problema2-mejor-caso \
 	                           grafico-problema2-mejor-caso-logn \
 	                           grafico-problema2-mejor-caso-n
 
-graficos-problema2-caso-promedio: grafico-problema2-caso-promedio \
-	                              grafico-problema2-caso-promedio-logn \
-	                              grafico-problema2-caso-promedio-n
+graficos-problema2-instancias-aleatorias: grafico-problema2-instancias-aleatorias \
+	                                      grafico-problema2-instancias-aleatorias-logn \
+	                                      grafico-problema2-instancias-aleatorias-n
 
 grafico-problema2-peor-caso:
 	octave/graficar problema2-peor-caso
@@ -244,14 +244,14 @@ grafico-problema2-mejor-caso-logn:
 grafico-problema2-mejor-caso-n:
 	octave/graficar problema2-mejor-caso-n
 
-grafico-problema2-caso-promedio:
-	octave/graficar problema2-caso-promedio
+grafico-problema2-instancias-aleatorias:
+	octave/graficar problema2-instancias-aleatorias
 
-grafico-problema2-caso-promedio-logn:
-	octave/graficar problema2-caso-promedio-logn
+grafico-problema2-instancias-aleatorias-logn:
+	octave/graficar problema2-instancias-aleatorias-logn
 
-grafico-problema2-caso-promedio-n:
-	octave/graficar problema2-caso-promedio-n
+grafico-problema2-instancias-aleatorias-n:
+	octave/graficar problema2-instancias-aleatorias-n
 
 ###############################################################################
 # Gráficos problema 3                                                         #
@@ -260,11 +260,11 @@ grafico-problema2-caso-promedio-n:
 .PHONY: graficos-problema3 \
 	    grafico-problema3-peor-caso \
 	    grafico-problema3-mejor-caso \
-	    grafico-problema3-caso-promedio \
+	    grafico-problema3-instancias-aleatorias \
 
 graficos-problema3: grafico-problema3-peor-caso \
 	                grafico-problema3-mejor-caso \
-	                grafico-problema3-caso-promedio
+	                grafico-problema3-instancias-aleatorias
 
 grafico-problema3-peor-caso:
 	octave/graficar problema3-peor-caso
@@ -272,5 +272,5 @@ grafico-problema3-peor-caso:
 grafico-problema3-mejor-caso:
 	octave/graficar problema3-mejor-caso
 
-grafico-problema3-caso-promedio:
-	octave/graficar problema3-caso-promedio
+grafico-problema3-instancias-aleatorias:
+	octave/graficar problema3-instancias-aleatorias

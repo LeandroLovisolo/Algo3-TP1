@@ -63,8 +63,8 @@ TEST(problema3, PerformanceMejorCaso) {
           indice);
 }
 
-TEST(problema3, PerformanceCasoPromedio) {
-    medir(string("perf/problema3/caso-promedio.csv"),
+TEST(problema3, PerformanceInstanciasAleatorias) {
+    medir(string("perf/problema3/instancias-aleatorias.csv"),
           10,
           10,
           [&] (int n) {

@@ -42,10 +42,10 @@ vector<int> paquetesAleatorios(int cantidad, int peso_maximo) {
     return paquetes;
 }
 
-TEST(problema1, PerformanceCasoPromedio) {
+TEST(problema1, PerformanceInstanciasAleatorias) {
     int limite = 1000;
 
-    medir(string("perf/problema1/caso-promedio.csv"),
+    medir(string("perf/problema1/instancias-aleatorias.csv"),
           1000,
           20,
           [&] (int n) { return paquetesAleatorios(limite, n); },
