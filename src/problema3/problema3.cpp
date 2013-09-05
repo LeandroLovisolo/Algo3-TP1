@@ -36,6 +36,20 @@ Piso::Piso(const Piso &otro)
     _costo = otro._costo;
 }
 
+vector<laser> Piso::getLasers() const {
+    vector<laser> resultado;
+    for(unsigned i = 0; i < filas(); ++i) {
+        for(unsigned j = 0; j < columnas(); ++j) {
+            if(get(i,j) == SensorVertical ||
+                get(i,j) == SensorHorizontal ||
+                get(i,j) == SensorCuadruple) {
+                resultado.push_back(laser(i,j, get(i,j)));
+            }
+        }
+    }
+    return resultado;
+}
+
 bool Piso::operator==(const Piso& otro) const {
     if(_filas != otro._filas || _columnas != otro._columnas) return false;
     for(unsigned i = 0; i < _filas * _columnas; i++)
@@ -374,14 +388,8 @@ bool checkPiso(const Piso &piso) {
     return true;
 }
 
-Piso *problema3(Piso &piso) {
-    if(checkPiso(piso)) {
-        cout << "Resulto valido" << endl;
-    }
-    else {
-        cout << "Resulto invalido" << endl;
-    }
-    return new Piso(piso);
+Piso problema3(const Piso &piso) {
+   return resolver(piso);
 }
 
 
