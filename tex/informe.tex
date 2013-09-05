@@ -251,11 +251,11 @@ Demostración: para cada uno de los $n$ paquetes, se realizan 1 ó 2 operaciones
 \subsection{Correctitud}
 Sea m el paquete número m de la secuencia de paquetes recibida, con m-1 paquetes ubicados en camiones anteriormente, quiero ver si al ubicar el paquete m el algoritmo cumple con la metodología de ordenar paquetes de Pascual.
 
-Al utilizar una \textbf{cola de prioridad} para almacenar los camiones, es posible asegurar que siempre se tendrá el camión menos cargado en cada llamada a \textbf{Siguiente}, corroborando el correcto funcionamiento de la consigna, la cuál describe que las comparaciones para elegir el destino del paquete se hacen con el camión de menor peso. 
+Al utilizar una \textbf{cola de prioridad} para almacenar los camiones, es posible asegurar que siempre se tendrá el camión menos cargado en cada llamada a \textbf{siguiente()}, corroborando el correcto funcionamiento de la consigna, la cuál describe que las comparaciones para elegir el destino del paquete se hacen con el camión de menor peso. 
 
-Si la suma del peso del camión en la cabecera y el nuevo paquete m no superan el límite, se procede a desencolar del heap el camión, se le carga el nuevo paquete aumentando su peso y se lo encola nuevamente en el heap el cuál se encargará de dejar el nuevo camión con menos peso en la cabecera.
+Si la suma del peso del camión menor cargado (conseguido con \textbf{siguiente()}) y el nuevo paquete m no superan el límite, se procede a desencolar del heap el camión. Se le carga el nuevo paquete aumentando su peso y se lo encola nuevamente en el heap.Este se encargará de dejar el nuevo camión disponible mediante \textbf{siguiente()}.
 
-Si es requerido un nuevo camión, se crea uno nuevo con el peso del paquete m y se lo encola en el heap, nuevamente el heap se encargará de colocar el camión de menor peso en la cabecera.
+Si es requerido un nuevo camión, se crea uno nuevo con el peso del paquete m y se lo encola en el heap, nuevamente el heap se encargará de colocar el camión de menor peso de tal manera de estar disponible con \textbf{siguiente()}.
 
 \subsection{Experimentos computacionales}
 \subsubsection{Verificación de correctitud}
@@ -273,6 +273,7 @@ Elegimos los siguientes casos para verificar la correctitud del programa:
 Previo a los experimentos realizados suponiamos que el peor caso iba a ser cuando el tamaño de los paquetes sea igual al límite de los camiones, pero al realizarlos pudimos concluir que ese caso es el peor para Pascual, ya que tiene que utilizar una mayor cantidad de camiones y que el peor caso es cuando los paquetes están ordenados en forma decreciente, ya que se utiliza un min-heap como estructura y el camión a insertar tiene el peso mínimo
 deberá reordenarse hasta llegar a la cabecera del heap realizando la mayor cantidad de operaciones posibles para la insersión.
 
+Concluimos también en que tener una sucecesión de paquetes, los cuales entren todos en un solo camión, determina el mejor caso. Esto se debe a que sólo es necesaria la primera inserción en el heap, que como este es vacío es O(1) y luego no se utilizan otras operaciones sobre el heap que no sean O(1) (siguiente()) ya que sólo se carga un solo camión. Lo que lleva a tener una complejidad de $\Omega(n)$.
 
 \subsubsection{Peor caso}
 
@@ -420,6 +421,10 @@ El teorema a continuación muestra que la suposición anterior es de hecho ciert
 
     Como $|S'| = |S|$, concluímos que $S'$ es un subconjunto de $C$ tal que sus cursos no se solapan entre sí y su cardinalidad es máxima, y $(i_1, f_1)$ está incluido en $S'$, como queríamos ver.
 \end{proof}
+
+\subsection{Experimentos computacionales}
+
+\subsubsection{Performance}
 
 
 \subsubsection{Peor caso}
