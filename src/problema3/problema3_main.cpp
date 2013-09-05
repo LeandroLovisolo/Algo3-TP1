@@ -16,24 +16,40 @@ int main() {
 	}
 	cin >> m;
 	int casilla;
-	Piso mapa(n,m);
+	Piso piso(n,m);
 	for (int i = 0; i < n; ++i) {
 		for(int j = 0; j < m; ++j) {
 			if(!cin.eof()) {
 				cin >> casilla;
-				mapa.set(i, j, (Casilla) casilla);
+				piso.set(i, j, (Casilla) casilla);
 			}
 		}
 	}
-	Piso* test = problema3(mapa);
-	delete test;
-	/* Test de lenctura
-	for (int i = 0; i < n; ++i) {
-		for(int j = 0; j < m; ++j) {
-			cout << mapa.get(i,j);
+	Piso solucion = problema3(piso);
+	//Veo si hay una solución
+	if(solucion.filas() != 0 && solucion.columnas() != 0) {
+		vector<laser> lasersUtilizados = solucion.getLasers();
+		cout << lasersUtilizados.size() << " " << solucion.costo() << endl;
+		for(unsigned i = 0; i < lasersUtilizados.size(); ++i) {
+			switch(lasersUtilizados[i]._tipo) {
+				case SensorCuadruple:
+					cout << 1;
+					break;
+				case SensorHorizontal:
+					cout << 2;
+					break;
+				case SensorVertical:
+					cout << 3;
+					break;
+				default:
+					break;
+			}
+			cout << " " << lasersUtilizados[i]._fila;
+			cout << " " << lasersUtilizados[i]._columna << endl;
 		}
-		cout << endl;
 	}
-	*/
+	else {
+		cout << -1 << endl;
+	}
 	return 0;
 }
