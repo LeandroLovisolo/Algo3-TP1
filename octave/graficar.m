@@ -18,6 +18,7 @@
 %    - 'log(n)'
 %    - 'n*log(n)'
 %   coef (opcional)    Coeficiente de la curva de ajuste.
+%   ylim (opcional)    Valor máximo a plottear en el eje y.
 %   inicio (opcional)  Medición inicial a partir de la cual graficar.
 %   ticks_x (opcional) Usar las etiquetas en el CSV (primera  columna) para
 %                      etiquetar el eje x en vez del tamaño del problema.
@@ -30,6 +31,7 @@ if(!isfield(s, 'escala'));  s.escala  = 'lineal';       end
 if(!isfield(s, 'divisor')); s.divisor = '1';            end
 if(!isfield(s, 'ajuste'));  s.ajuste  = 'none';         end
 if(!isfield(s, 'coef'));    s.coef    = 1;              end
+if(!isfield(s, 'ylim'));    s.ylim    = 'none';         end    
 if(!isfield(s, 'inicio'));  s.inicio  = 1;              end
 if(!isfield(s, 'ticks_x')); s.ticks_x = false;          end
 
@@ -119,5 +121,9 @@ else
 end
 
 xlim([s.inicio rows(t_n)]);
+
+if(!strcmp(s.ylim, 'none'))
+    ylim([0 s.ylim]);
+end
 
 hold off;

@@ -65,8 +65,7 @@ elseif(strcmp(grafico, 'problema1-instancias-aleatorias'))
     graficar(struct('csv',    'perf/problema1/instancias-aleatorias.csv',
                     'titulo', 'Instancias aleatorias',
                     'ajuste', 'n*log(n)',
-                    'coef',   0.0006,
-                    'inicio', 100));
+                    'coef',   0.0006));
 elseif(strcmp(grafico, 'problema1-instancias-aleatorias-logn'))
     graficar(struct('csv',     'perf/problema1/instancias-aleatorias.csv',
                     'titulo',  'Instancias aleatorias ($log(n)$)',
@@ -74,14 +73,13 @@ elseif(strcmp(grafico, 'problema1-instancias-aleatorias-logn'))
                     'divisor', 'n',
                     'ajuste',  'log(n)',
                     'coef',    0.6,
-                    'inicio',  100));
+                    'ylim',    10));
 elseif(strcmp(grafico, 'problema1-instancias-aleatorias-n'))
     graficar(struct('csv',     'perf/problema1/instancias-aleatorias.csv',
                     'titulo',  'Instancias aleatorias ($n$)',
                     'divisor', 'log(n)',
                     'ajuste',  'n',
-                    'coef',    0.0006,
-                    'inicio',  100));
+                    'coef',    0.0006));
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Problema 2: Peor caso                                                        %
@@ -137,23 +135,20 @@ elseif(strcmp(grafico, 'problema2-instancias-aleatorias'))
     graficar(struct('csv',     'perf/problema2/instancias-aleatorias.csv',
                     'titulo',  'Instancias aleatorias',
                     'ajuste',  'n*log(n)',
-                    'coef',    0.00015,
-                    'inicio',  100));
+                    'coef',    0.00015));
 elseif(strcmp(grafico, 'problema2-instancias-aleatorias-logn'))
     graficar(struct('csv',     'perf/problema2/instancias-aleatorias.csv',
                     'titulo',  'Instancias aleatorias ($log(n)$)',
                     'unidad',  'microsegundos',
                     'divisor', 'n',
                     'ajuste',  'log(n)',
-                    'coef',    0.15,
-                    'inicio',  100));
+                    'coef',    0.15));
 elseif(strcmp(grafico, 'problema2-instancias-aleatorias-n'))
     graficar(struct('csv',     'perf/problema2/instancias-aleatorias.csv',
                     'titulo',  'Instancias aleatorias ($n$)',
                     'divisor', 'log(n)',
                     'ajuste',  'n',
-                    'coef',    0.00015,
-                    'inicio',  100));
+                    'coef',    0.00015));
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Problema 3: Peor caso                                                        %
@@ -190,4 +185,4 @@ else
 end
 
 cd('tex');
-print(grafico, '-S800,550', '-dtex');
+print(grafico, '-S950,450', '-dtex');

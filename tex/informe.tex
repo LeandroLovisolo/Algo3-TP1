@@ -1,8 +1,8 @@
-\documentclass[a4paper,10pt,twoside]{article}
+\documentclass[a4paper, 10pt, twoside]{article}
 
 \usepackage[top=1in, bottom=1in, left=1in, right=1in]{geometry}
 \usepackage[utf8]{inputenc}
-\usepackage[spanish,es-ucroman,es-noquoting]{babel}
+\usepackage[spanish, es-ucroman, es-noquoting]{babel}
 \usepackage{setspace}
 \usepackage{fancyhdr}
 \usepackage{lastpage}
@@ -74,6 +74,21 @@
 \renewcommand{\appendixtocname}{Apéndices}
 \renewcommand{\appendixpagename}{Apéndices}
 %%%%%%%%%% Miscelánea - Fin %%%%%%%%%%
+
+
+%%%%%%%%%% Gráficos - Inicio %%%%%%%%%%
+% Macro para incluir tres gráficos (dentro de una figura) de manera que
+% entren todos en una sola página.
+\newcommand{\tresgraficos}[3]{
+    \newcommand{\separacion}{-2.2em}
+    \vspace{\separacion}
+    \include{#1}
+    \vspace{\separacion}
+    \include{#2}
+    \vspace{\separacion}
+    \include{#3}
+}
+%%%%%%%%%% Gráficos - Fin %%%%%%%%%%
 
 
 \begin{document}
@@ -263,20 +278,10 @@ deberá reordenarse hasta llegar a la cabecera del heap realizando la mayor cant
 
 \begin{figure}[H]
   \centering
-  \include{problema1-peor-caso}
+  \tresgraficos{problema1-peor-caso}
+               {problema1-peor-caso-logn}
+               {problema1-peor-caso-n}               
   \caption{Peor caso}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \include{problema1-peor-caso-logn}
-  \caption{Peor caso ($log(n)$)}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \include{problema1-peor-caso-n}
-  \caption{Peor caso ($n$)}
 \end{figure}
 
 
@@ -284,20 +289,10 @@ deberá reordenarse hasta llegar a la cabecera del heap realizando la mayor cant
 
 \begin{figure}[H]
   \centering
-  \include{problema1-mejor-caso}
+  \tresgraficos{problema1-mejor-caso}
+               {problema1-mejor-caso-logn}
+               {problema1-mejor-caso-n}
   \caption{Mejor caso}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \include{problema1-mejor-caso-logn}
-  \caption{Mejor caso ($log(n)$)}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \include{problema1-mejor-caso-n}
-  \caption{Mejor caso ($n$)}
 \end{figure}
 
 
@@ -305,20 +300,10 @@ deberá reordenarse hasta llegar a la cabecera del heap realizando la mayor cant
 
 \begin{figure}[H]
   \centering
-  \include{problema1-instancias-aleatorias}
+  \tresgraficos{problema1-instancias-aleatorias}
+               {problema1-instancias-aleatorias-logn}
+               {problema1-instancias-aleatorias-n}
   \caption{Instancias aleatorias}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \include{problema1-instancias-aleatorias-logn}
-  \caption{Instancias aleatorias ($log(n)$)}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \include{problema1-instancias-aleatorias-n}
-  \caption{Instancias aleatorias ($n$)}
 \end{figure}
 
 
@@ -441,20 +426,10 @@ El teorema a continuación muestra que la suposición anterior es de hecho ciert
 
 \begin{figure}[H]
   \centering
-  \include{problema2-peor-caso}
+  \tresgraficos{problema2-peor-caso}
+               {problema2-peor-caso-logn}
+               {problema2-peor-caso-n}               
   \caption{Peor caso}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \include{problema2-peor-caso-logn}
-  \caption{Peor caso ($log(n)$)}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \include{problema2-peor-caso-n}
-  \caption{Peor caso ($n$)}
 \end{figure}
 
 
@@ -462,20 +437,10 @@ El teorema a continuación muestra que la suposición anterior es de hecho ciert
 
 \begin{figure}[H]
   \centering
-  \include{problema2-mejor-caso}
+  \tresgraficos{problema2-mejor-caso}
+               {problema2-mejor-caso-logn}
+               {problema2-mejor-caso-n}
   \caption{Mejor caso}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \include{problema2-mejor-caso-logn}
-  \caption{Mejor caso ($log(n)$)}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \include{problema2-mejor-caso-n}
-  \caption{Mejor caso ($n$)}
 \end{figure}
 
 
@@ -483,22 +448,11 @@ El teorema a continuación muestra que la suposición anterior es de hecho ciert
 
 \begin{figure}[H]
   \centering
-  \include{problema2-instancias-aleatorias}
+  \tresgraficos{problema2-instancias-aleatorias}
+               {problema2-instancias-aleatorias-logn}
+               {problema2-instancias-aleatorias-n}
   \caption{Instancias aleatorias}
 \end{figure}
-
-\begin{figure}[H]
-  \centering
-  \include{problema2-instancias-aleatorias-logn}
-  \caption{Instancias aleatorias ($log(n)$)}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \include{problema2-instancias-aleatorias-n}
-  \caption{Instancias aleatorias ($n$)}
-\end{figure}
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
