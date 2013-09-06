@@ -947,6 +947,18 @@ Para probar que nuestro algoritmo es correcto, debe valer lo siguiente:
 
 \subsection{Experimentos computacionales}
 
+\subsubsection{Verficiación de correctitud}
+
+Elegimos los siguientes casos de prueba para verificar la correctitud del programa:
+
+\begin{enumerate}
+\item Entrada sin solución, verifica que el algoritmo reconozca instancias no resolubles, por ejemplo, un piso de 3x3 donde en el centro se encuentra un sensor importante y en los demás lugares paredes.
+\item Entrada con solución única, verifica que encuentra soluciones únicas correctamente.
+\item Entrada con soluciones múltiples, verifica que el algoritmo elija la solución óptima de las posibles.
+\end{enumerate}
+
+\subsubsection{Performance}
+
 Medimos experimentalmente la performance del algoritmo para instancias aleatorias, del mejor y peor caso.
 
 Las instancias aleatorias se generan a partir de pisos de tamaño $1 \times 1, 1 \times 2, 2 \times 2, 2 \times 3, \ldots, 5 \times 5$, tales que todas las posiciones son de tipo \Pared, salvo 1 al azar para el primer piso, 2 al azar para el segundo, y así sucesivamente.
