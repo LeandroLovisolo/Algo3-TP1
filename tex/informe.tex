@@ -684,9 +684,11 @@ Dado un piso $P$ sin sensores, recorremos el árbol de combinaciones de sensores
 
 Las podas a continuación se realizan siempre para cada piso $Q$ generado en el paso \ref{generar-pisos}, donde $q_{ij}$ es la posición que se modificó (o se dejó intacta en el caso \ref{posicion-libre}) luego de copiar el piso $P$ original.
 
+Si $q_{ij} \in \{ \SensorV, \SensorH, \SensorC \}$:
+
 \begin{enumerate}
     \item{
-        Si $q_{ij} \in \{ \SensorV, \SensorH, \SensorC \}$, podamos si su señal impacta otro sensor o viceversa; es decir, si $\textsc{Impacta-Otro-Sensor}(q_{ij}) = \True$.
+        Podamos si su señal impacta otro sensor o viceversa; es decir, si $\textsc{Impacta-Otro-Sensor}(q_{ij}) = \True$.
 
         \begin{pseudo}
             \Procedure{Impacta-Otro-Sensor}{$q_{ij}$}                       \Ode{m + n}
@@ -735,7 +737,7 @@ Las podas a continuación se realizan siempre para cada piso $Q$ generado en el 
         \end{pseudo}
     }
     \item{
-        Si $q_{ij} \in \{ \SensorV, \SensorH \}$, podamos si produce que una posición libre en su misma fila o columna sea imposible de sensar.
+        Si no es sensor cuádruple, podamos si produce que una posición libre en su misma fila o columna sea imposible de sensar.
 
         Esto ocurre cuando existe un sensor vertical y un sensor horizontal en la misma fila y columna de una posición libre, respectivamente, y no hay una pared entre los sensores y esa posición.
 
@@ -785,10 +787,11 @@ Las podas a continuación se realizan siempre para cada piso $Q$ generado en el 
         \end{pseudo}
     }
     \item{
-        Si $q_{ij} \in \{ \SensorV, \SensorH, \SensorC \}$, podamos si el costo del piso supera o iguala el de la mejor solución $S$ hallada hasta el momento; es decir, si $\textsc{Costo}(Q) \geq \textsc{Costo}(S)$.
+        Podamos si el costo del piso supera o iguala el de la mejor solución $S$ hallada hasta el momento; es decir, si $\textsc{Costo}(Q) \geq \textsc{Costo}(S)$.
     }
+
     \item{
-        Si $q_{ij} = \Libre$, podamos si $q_{ij}$ es imposible de sensar.
+        Siendo $q_{ij} = \texttt{Libre}$ , podamos si $q_{ij}$ es imposible de sensar.
 
         Esto ocurre cuando no existe otra posición libre en su misma fila o columna sin una pared entre ambas, tal que se pueda poner un sensor apuntando a la misma, sin que su señal impacte otros sensores o viceversa.
 
@@ -828,7 +831,7 @@ Pendiente.
 Para demostrar la correctitud del algoritmo, se debe demostrar lo siguiente:
 \begin{enumerate}
   \item Probar que recorremos todo el espacio de pisos posibles.
-    \item Probar que solo podamos las ramas que conducen a pisos que no son solución.
+    \item Probar que solo podamos ramas que conducen a pisos que no son solución.
     \item Probar que los pisos obtenidos son solución.
     \item Probar que la solución devuelta es la óptima.
 \end{enumerate}
@@ -849,20 +852,25 @@ Dado un piso, para el primer casillero libre, siguiendo con el orden en que se l
 \end{pseudo}
 
 
-\subsubsection{Se podan las ramas que conducen a pisos que no son soluciones}
+\subsubsection{Se podan ramas que conducen a pisos que no son soluciones}
 
 Las podas se realizan mediante la llamada a \textbf{podar()} desde \textbf{recorrer()}.
 Para probar que estas realizan un trabajo correcto, estas deben seguir las normas del tablero.
 
-\textbf{Utilizando la poda 1)}, eliminamos las ramas de soluciones que tengan sensores incompatibles entre si, es decir, sensores que se esten sensando al mismo tiempo.
+\textbf{Utilizando la poda 1)}, eliminamos las ramas que llevan a pisos que tengan sensores incompatibles entre si, es decir, sensores que se esten sensando al mismo tiempo.
+
+\textbf{Utilizando la poda 2)}, eliminamos las ramas que llevan a pisos en los cuales el sensor puesto llevará a que un casillero \Libre sea imposible de sensar, eliminando ramas de pisos que no lleven a soluciones correctas.
 
 \textbf{Utilizando la poda 3)}, eliminamos las soluciones de un costo mayor a la actualmente encontrada. Este procedimiento produce soluciones correctas y mínimas (sin obviar otras soluciones mínimas posibles) ya que, teniendo un costo de una solución, pueden ocurrir los siguientes casos:
+
 
 \begin{itemize}
 \item La inserción de un nuevo sensor incrementará el costo de la solución, haciendo que esta sea peor.
 \item Si esta fuera igual, podría llegar a una solución, mínima también, pero ya tenemos una de igual costo, por lo que su recorrido es innecesario.
 \item La rama de soluciones por la que se está buscando una solución sigue siendo menor a la solución encontrada anteriormente, llevando a una potencial mejor solución en el caso de que exista.
 \end{itemize}
+
+\textbf{Utilizando la poda 4)}, eliminamos la rama de soluciones que consideren al casillero actual como \Libre y que este no pueda ser sensado por ningún sensor, ya que, de serlo, estaría en conflicto con otro.
 
 \subsubsection{Los pisos obtenidos son soluciones}
 
