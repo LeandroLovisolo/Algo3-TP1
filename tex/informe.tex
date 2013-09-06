@@ -200,7 +200,7 @@ El camión 1 recibe el primer paquete de 80. Al intentar luego colocar el paquet
 
 \textbf{Entrada}: límite: 100, paquetes: 0.\\
 \textbf{Salida}: 0. \\
-Al no haber paquetes no se utilizan comiones, sin importar el límite del mismo.
+Al no haber paquetes no se utilizan camiones, sin importar el límite del mismo.
 
 \subsection{Solución}
 
@@ -257,7 +257,7 @@ Sea m el paquete número m de la secuencia de paquetes recibida, con m-1 paquete
 
 Al utilizar una \textbf{cola de prioridad} para almacenar los camiones, es posible asegurar que siempre se tendrá el camión menos cargado en cada llamada a \textbf{siguiente()}, corroborando el correcto funcionamiento de la consigna, la cuál describe que las comparaciones para elegir el destino del paquete se hacen con el camión de menor peso. 
 
-Si la suma del peso del camión menor cargado (conseguido con \textbf{siguiente()}) y el nuevo paquete m no superan el límite, se procede a desencolar del heap el camión. Se le carga el nuevo paquete aumentando su peso y se lo encola nuevamente en el heap.Este se encargará de dejar el nuevo camión disponible mediante \textbf{siguiente()}.
+Si la suma del peso del camión menor cargado (conseguido con \textbf{siguiente()}) y el nuevo paquete m no superan el límite, se procede a desencolar del heap el camión. Se le carga el nuevo paquete aumentando su peso y se lo encola nuevamente en el heap.Este se encargará de dejar el nuevo camión de menor carga disponible mediante \textbf{siguiente()}.
 
 Si es requerido un nuevo camión, se crea uno nuevo con el peso del paquete m y se lo encola en el heap, nuevamente el heap se encargará de colocar el camión de menor peso de tal manera de estar disponible con \textbf{siguiente()}.
 
@@ -265,7 +265,7 @@ Si es requerido un nuevo camión, se crea uno nuevo con el peso del paquete m y 
 \subsubsection{Verificación de correctitud}
 Elegimos los siguientes casos para verificar la correctitud del programa:
 \begin{enumerate}
-	\item Entrada vacía, verifica el comportamiento del algoritmo ante la posibilida de no recibir ningún paquete en la entrada.
+	\item Entrada vacía, verifica el comportamiento del algoritmo ante la posibilidad de no recibir ningún paquete en la entrada.
 	\item Entrada con un único paquete, verifica el primer caso, el de tener el \textbf{min-heap} vacío.
 	\item Entrada en la cual en algún camión se deba insertar más de un paquete. Esto verifica el caso del \textbf{else if} descripto en el pseudocódigo.
 	\item Entrada en la cual algún camión no pueda contener el peso del nuevo paquete y deba pedir un nuevo camión. Esto verifica el caso final (\textbf{else}), debiendo incluir un nuevo camión.
@@ -274,10 +274,10 @@ Elegimos los siguientes casos para verificar la correctitud del programa:
 
 \subsubsection{Performance}
 
-Previo a los experimentos realizados suponiamos que el peor caso iba a ser cuando el tamaño de los paquetes sea igual al límite de los camiones, pero al realizarlos pudimos concluir que ese caso es el peor para Pascual, ya que tiene que utilizar una mayor cantidad de camiones y que el peor caso es cuando los paquetes están ordenados en forma decreciente, ya que se utiliza un min-heap como estructura y el camión a insertar tiene el peso mínimo
-deberá reordenarse hasta llegar a la cabecera del heap realizando la mayor cantidad de operaciones posibles para la insersión.
+Previo a los experimentos realizados suponíamos que el peor caso sería cuando el tamaño de los paquetes sea igual al límite de los camiones, pero al realizarlos pudimos concluir que ese caso es el peor para Pascual, ya que tiene que utilizar una mayor cantidad de camiones y que el peor caso es cuando los paquetes están ordenados en forma decreciente, ya que se utiliza un min-heap como estructura y el camión a insertar tiene el peso mínimo
+deberá reordenarse hasta llegar a la cabecera del heap realizando la mayor cantidad de operaciones posibles para la inserción.
 
-Concluimos también en que tener una sucecesión de paquetes, los cuales entren todos en un solo camión, determina el mejor caso. Esto se debe a que sólo es necesaria la primera inserción en el heap, que como este es vacío es O(1) y luego no se utilizan otras operaciones sobre el heap que no sean O(1) (siguiente()) ya que sólo se carga un solo camión. Lo que lleva a tener una complejidad de $\Omega(n)$.
+Concluimos también en que tener una sucesión de paquetes, los cuales entren todos en un solo camión, determina el mejor caso. Esto se debe a que sólo es necesaria la primera inserción en el heap, que como este es vacío es O(1) y luego no se utilizan otras operaciones sobre el heap que no sean O(1) (siguiente()) ya que sólo se carga un solo camión. Lo que lleva a tener una complejidad de $\Omega(n)$.
 
 \subsubsection{Peor caso}
 
@@ -686,6 +686,8 @@ Dado un piso $P$ sin sensores, recorremos el árbol de combinaciones de sensores
 
 Las podas a continuación se realizan siempre para cada piso $Q$ generado en el paso \ref{generar-pisos}, donde $q_{ij}$ es la posición que se modificó (o se dejó intacta en el caso \ref{posicion-libre}) luego de copiar el piso $P$ original.
 
+Si $q_{ij} \in \{ \SensorV, \SensorH, \SensorC \}$:
+
 \begin{enumerate}
     \item{
         \label{poda-sensores-incompatibles}
@@ -793,9 +795,9 @@ Las podas a continuación se realizan siempre para cada piso $Q$ generado en el 
         Si $q_{ij} \in \{ \SensorV, \SensorH, \SensorC \}$, podamos si el costo del piso supera o iguala el de la mejor solución $S$ hallada hasta el momento; es decir, si $\textsc{Costo}(Q) \geq \textsc{Costo}(S)$.
         \Ode{m \times n}
     }
+
     \item{
         \label{poda-posicion-insensable}
-
         Si $q_{ij} = \Libre$, podamos si $q_{ij}$ es imposible de sensar.
 
         Esto ocurre cuando no existe otra posición libre en su misma fila o columna sin una pared entre ambas, tal que se pueda poner un sensor apuntando a la misma, sin que su señal impacte otros sensores o viceversa.
@@ -822,6 +824,8 @@ Las podas a continuación se realizan siempre para cada piso $Q$ generado en el 
             \EndFor
             \State Podamos $Q$ si $podar = \True$.
         \end{pseudo}
+
+        Nota: el costo total de esta poda es $O(m^2 \times n) + O(m \times n^2) = O(m \times n \times (m + n))$.
     }
 \end{enumerate}
 
@@ -869,7 +873,7 @@ El algoritmo corre en tiempo $O(4^p \times m \times n \times (m + n))$, donde $m
 Para demostrar la correctitud del algoritmo, se debe demostrar lo siguiente:
 \begin{enumerate}
   \item Probar que recorremos todo el espacio de pisos posibles.
-    \item Probar que solo podamos las ramas que conducen a pisos que no son solución.
+    \item Probar que solo podamos ramas que conducen a pisos que no son solución.
     \item Probar que los pisos obtenidos son solución.
     \item Probar que la solución devuelta es la óptima.
 \end{enumerate}
@@ -890,20 +894,25 @@ Dado un piso, para el primer casillero libre, siguiendo con el orden en que se l
 \end{pseudo}
 
 
-\subsubsection{Se podan las ramas que conducen a pisos que no son soluciones}
+\subsubsection{Se podan ramas que conducen a pisos que no son soluciones}
 
 Las podas se realizan mediante la llamada a \textbf{podar()} desde \textbf{recorrer()}.
 Para probar que estas realizan un trabajo correcto, estas deben seguir las normas del tablero.
 
-\textbf{Utilizando la poda 1)}, eliminamos las ramas de soluciones que tengan sensores incompatibles entre si, es decir, sensores que se esten sensando al mismo tiempo.
+\textbf{Utilizando la poda 1)}, eliminamos las ramas que llevan a pisos que tengan sensores incompatibles entre si, es decir, sensores que se esten sensando al mismo tiempo.
+
+\textbf{Utilizando la poda 2)}, eliminamos las ramas que llevan a pisos en los cuales el sensor puesto llevará a que un casillero \Libre sea imposible de sensar, eliminando ramas de pisos que no lleven a soluciones correctas.
 
 \textbf{Utilizando la poda 3)}, eliminamos las soluciones de un costo mayor a la actualmente encontrada. Este procedimiento produce soluciones correctas y mínimas (sin obviar otras soluciones mínimas posibles) ya que, teniendo un costo de una solución, pueden ocurrir los siguientes casos:
+
 
 \begin{itemize}
 \item La inserción de un nuevo sensor incrementará el costo de la solución, haciendo que esta sea peor.
 \item Si esta fuera igual, podría llegar a una solución, mínima también, pero ya tenemos una de igual costo, por lo que su recorrido es innecesario.
 \item La rama de soluciones por la que se está buscando una solución sigue siendo menor a la solución encontrada anteriormente, llevando a una potencial mejor solución en el caso de que exista.
 \end{itemize}
+
+\textbf{Utilizando la poda 4)}, eliminamos la rama de soluciones que consideren al casillero actual como \Libre y que este no pueda ser sensado por ningún sensor, ya que, de serlo, estaría en conflicto con otro.
 
 \subsubsection{Los pisos obtenidos son soluciones}
 
