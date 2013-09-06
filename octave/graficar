@@ -57,7 +57,7 @@ elseif(strcmp(grafico, 'problema1-mejor-caso-n'))
                     'coef',    0.00006));
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Problema 1: Instancias aleatorias                                                    %
+% Problema 1: Instancias aleatorias                                            %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 elseif(strcmp(grafico, 'problema1-instancias-aleatorias'))
@@ -127,7 +127,7 @@ elseif(strcmp(grafico, 'problema2-mejor-caso-n'))
                     'coef',    0.00012));
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Problema 2: Instancias aleatorias                                                    %
+% Problema 2: Instancias aleatorias                                            %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 elseif(strcmp(grafico, 'problema2-instancias-aleatorias'))
@@ -171,7 +171,7 @@ elseif(strcmp(grafico, 'problema3-mejor-caso'))
                     'xlabel',  '$n \times m$ (tama\~no del problema)'));
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Problema 3: Instancias aleatorias                                                    %
+% Problema 3: Instancias aleatorias                                            %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 elseif(strcmp(grafico, 'problema3-instancias-aleatorias'))
