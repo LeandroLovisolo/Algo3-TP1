@@ -200,7 +200,7 @@ El camión 1 recibe el primer paquete de 80. Al intentar luego colocar el paquet
 
 \textbf{Entrada}: límite: 100, paquetes: 0.\\
 \textbf{Salida}: 0. \\
-Al no haber paquetes no se utilizan comiones, sin importar el límite del mismo.
+Al no haber paquetes no se utilizan camiones, sin importar el límite del mismo.
 
 \subsection{Solución}
 
@@ -265,7 +265,7 @@ Si es requerido un nuevo camión, se crea uno nuevo con el peso del paquete m y 
 \subsubsection{Verificación de correctitud}
 Elegimos los siguientes casos para verificar la correctitud del programa:
 \begin{enumerate}
-	\item Entrada vacía, verifica el comportamiento del algoritmo ante la posibilida de no recibir ningún paquete en la entrada.
+	\item Entrada vacía, verifica el comportamiento del algoritmo ante la posibilidad de no recibir ningún paquete en la entrada.
 	\item Entrada con un único paquete, verifica el primer caso, el de tener el \textbf{min-heap} vacío.
 	\item Entrada en la cual en algún camión se deba insertar más de un paquete. Esto verifica el caso del \textbf{else if} descripto en el pseudocódigo.
 	\item Entrada en la cual algún camión no pueda contener el peso del nuevo paquete y deba pedir un nuevo camión. Esto verifica el caso final (\textbf{else}), debiendo incluir un nuevo camión.
@@ -274,10 +274,10 @@ Elegimos los siguientes casos para verificar la correctitud del programa:
 
 \subsubsection{Performance}
 
-Previo a los experimentos realizados suponiamos que el peor caso iba a ser cuando el tamaño de los paquetes sea igual al límite de los camiones, pero al realizarlos pudimos concluir que ese caso es el peor para Pascual, ya que tiene que utilizar una mayor cantidad de camiones y que el peor caso es cuando los paquetes están ordenados en forma decreciente, ya que se utiliza un min-heap como estructura y el camión a insertar tiene el peso mínimo
-deberá reordenarse hasta llegar a la cabecera del heap realizando la mayor cantidad de operaciones posibles para la insersión.
+Previo a los experimentos realizados suponíamos que el peor caso sería cuando el tamaño de los paquetes sea igual al límite de los camiones, pero al realizarlos pudimos concluir que ese caso es el peor para Pascual, ya que tiene que utilizar una mayor cantidad de camiones y que el peor caso es cuando los paquetes están ordenados en forma decreciente, ya que se utiliza un min-heap como estructura y el camión a insertar tiene el peso mínimo
+deberá reordenarse hasta llegar a la cabecera del heap realizando la mayor cantidad de operaciones posibles para la inserción.
 
-Concluimos también en que tener una sucecesión de paquetes, los cuales entren todos en un solo camión, determina el mejor caso. Esto se debe a que sólo es necesaria la primera inserción en el heap, que como este es vacío es O(1) y luego no se utilizan otras operaciones sobre el heap que no sean O(1) (siguiente()) ya que sólo se carga un solo camión. Lo que lleva a tener una complejidad de $\Omega(n)$.
+Concluimos también en que tener una sucesión de paquetes, los cuales entren todos en un solo camión, determina el mejor caso. Esto se debe a que sólo es necesaria la primera inserción en el heap, que como este es vacío es O(1) y luego no se utilizan otras operaciones sobre el heap que no sean O(1) (siguiente()) ya que sólo se carga un solo camión. Lo que lleva a tener una complejidad de $\Omega(n)$.
 
 \subsubsection{Peor caso}
 
