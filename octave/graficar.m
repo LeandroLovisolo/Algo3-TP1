@@ -59,13 +59,13 @@ end
 
 if(strcmp(s.divisor, '1'))
     expr    = t_n;
-    leyenda = ['$t_n$'];
+    leyenda = ['$T(n)$'];
 elseif(strcmp(s.divisor, 'n'))
     expr    = t_n ./ n;
-    leyenda = ['$t_n / n$'];
+    leyenda = ['$T(n) / n$'];
 elseif(strcmp(s.divisor, 'log(n)'))
     expr    = t_n ./ log(n);
-    leyenda = ['$t_n / log(n)$'];
+    leyenda = ['$T(n) / log(n)$'];
 else
     error('Parámetro "divisor" inválido.');
     exit(-1);
@@ -93,13 +93,13 @@ if(strcmp(s.ajuste, 'none'))
     % No hacer nada.
 elseif(strcmp(s.ajuste, 'n'))
     expr_ajuste   = s.coef * n;
-    leyenda = [leyenda; '$n$'];
+    leyenda = [leyenda; '$O(n)$'];
 elseif(strcmp(s.ajuste, 'log(n)'))
     expr_ajuste    = s.coef * log(n);
-    leyenda = [leyenda; '$log(n)$'];
+    leyenda = [leyenda; '$O(log(n))$'];
 elseif(strcmp(s.ajuste, 'n*log(n)'))
     expr_ajuste    = s.coef * n .* log(n);
-    leyenda = [leyenda; '$n * log(n)$'];
+    leyenda = [leyenda; '$O(n * log(n))$'];
 else
     error('Parámetro "ajuste" inválido.');
     exit(-1);
