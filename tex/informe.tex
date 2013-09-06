@@ -953,8 +953,8 @@ Elegimos los siguientes casos de prueba para verificar la correctitud del progra
 
 \begin{enumerate}
 \item Entrada sin solución, verifica que el algoritmo reconozca instancias no resolubles, por ejemplo, un piso de 3x3 donde en el centro se encuentra un sensor importante y en los demás lugares paredes.
-\item Entrada con solución única, verifica que encuentra soluciones únicas correctamente.
-\item Entrada con soluciones múltiples, verifica que el algoritmo elija la solución óptima de las posibles.
+\item Entrada con solución única, verifica que encuentra soluciones únicas correctamente. Por ejemplo, un piso cuadrado de 2x2 donde tres casilleros son pared.
+\item Entrada con soluciones múltiples, verifica que el algoritmo elija la solución óptima de las posibles. Utilizamos como ejemplo el ejemplo del enunciado.
 \end{enumerate}
 
 \subsubsection{Performance}
@@ -1004,15 +1004,7 @@ Como peor caso tomamos los pisos de tamaño idéntico a los de las instancias al
 
 \section{Conclusiones}
 
-Observamos que para los tres problemas estudiados, las cotas de complejidad teórica se condicen con los experimentos computacionales realizados.
-
-Extraemos las siguientes conclusiones para los tres problemas:
-
-\begin{itemize}
-    \item{Las mediciones de tiempo de mejor caso, peor caso e instancias aleatorias respetan las cotas de complejidad temporal correspondientes.}
-    \item{El tiempo de ejecución del mejor caso es inferior al del peor caso para instancias a partir de cierto tamaño.}
-    \item{El tiempo de ejecución para instancias aleatorias es superior al del mejor caso e inferior al del peor caso para problemas a partir de cierto tamaño.}
-\end{itemize}
+Pendiente.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
