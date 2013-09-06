@@ -523,12 +523,12 @@ Dado un piso $P$ sin sensores, recorremos el árbol de combinaciones de sensores
         Buscamos la primera posición libre $(i, j)$ recorriendo el piso de izquierda a derecha y de arriba a abajo, partiendo de la esquina superior izquierda.
 
         \begin{pseudo}
-            \State $i \leftarrow 1$, $j \leftarrow 1$
-            \While{$i \leq m \land p_{ij} \neq \Libre$}
-                \If{$j < n$}
-                    \State $j \leftarrow j + 1$
-                \Else
-                    \State $i \leftarrow i + 1$, $j \leftarrow 1$
+            \State $i \leftarrow 1$, $j \leftarrow 1$             \Ode{1}
+            \While{$i \leq m \land p_{ij} \neq \Libre$}           \Ode{m \times n}
+                \If{$j < n$}                                      \Ode{1}
+                    \State $j \leftarrow j + 1$                   \Ode{1}
+                \Else                                             \Ode{1}
+                    \State $i \leftarrow i + 1$, $j \leftarrow 1$ \Ode{1}
                 \EndIf
             \EndWhile
         \end{pseudo}
@@ -540,17 +540,17 @@ Dado un piso $P$ sin sensores, recorremos el árbol de combinaciones de sensores
         Generamos 4 pisos nuevos, copiando el piso $P$ y:
         \begin{enumerate}
             \item{
-                Poniendo un sensor vertical en $(i, j)$.
+                Poniendo un sensor vertical en $(i, j)$. \Ode{m \times n}
             }
             \item{
-                Poniendo un sensor horizontal en $(i, j)$.
+                Poniendo un sensor horizontal en $(i, j)$. \Ode{m \times n}
             }
             \item{
-                Poniendo un sensor cuádruple en $(i, j)$.
+                Poniendo un sensor cuádruple en $(i, j)$. \Ode{m \times n}
             }
             \item{
                 \label{posicion-libre}
-                Dejando libre la posición $(i, j)$ (es decir, este nuevo piso es idéntico al piso $P$.)
+                Dejando libre la posición $(i, j)$ (es decir, este nuevo piso es idéntico al piso $P$.) \Ode{m \times n}
             }
         \end{enumerate}
     }
@@ -558,41 +558,41 @@ Dado un piso $P$ sin sensores, recorremos el árbol de combinaciones de sensores
         Para cada piso $Q$ generado en el paso anterior, marcamos como sensadas todas las posiciones libres afectadas por el nuevo sensor (no aplica para el caso \ref{posicion-libre}.)
 
         \begin{pseudo}
-            \If{$q_{ij} \in \{ \SensorV, \SensorC \}$}
-                \For{$i'$ \In $\textsc{Columna-Visible}(q_{ij})$}
-                    \State $q_{i'j} \leftarrow \Sensado$ \textbf{if} $q_{i'j} = \Libre$
+            \If{$q_{ij} \in \{ \SensorV, \SensorC \}$}                                   \Ode{m}
+                \For{$i'$ \In $\textsc{Columna-Visible}(q_{ij})$}                        \Ode{m}
+                    \State $q_{i'j} \leftarrow \Sensado$ \textbf{if} $q_{i'j} = \Libre$  \Ode{1}
                 \EndFor
             \EndIf
-            \If{$q_{ij} \in \{ \SensorH, \SensorC \}$}
-                \For{$j'$ \In $\textsc{Fila-Visible}(q_{ij})$}
-                    \State $q_{ij'} \leftarrow \Sensado$ \textbf{if} $q_{ij'} = \Libre$
+            \If{$q_{ij} \in \{ \SensorH, \SensorC \}$}                                   \Ode{n}
+                \For{$j'$ \In $\textsc{Fila-Visible}(q_{ij})$}                           \Ode{n}
+                    \State $q_{ij'} \leftarrow \Sensado$ \textbf{if} $q_{ij'} = \Libre$  \Ode{1}
                 \EndFor
             \EndIf
         \end{pseudo}
 
         \begin{pseudo}
-            \Procedure{Fila-Visible}{$q_{ij}$}
-                \State $C \leftarrow \{ j \}$
-                \For{$rango$ \In $\{ (j, \ldots, 1), (j, \ldots, n)  \}$}
-                    \For{$j'$ \In $rango$}
-                        \State \textbf{break if} $q_{ij'} = \Pared$
-                        \State $C \leftarrow C \cup \{ j' \}$
+            \Procedure{Fila-Visible}{$q_{ij}$}                            \Ode{n}
+                \State $C \leftarrow \{ j \}$                             \Ode{n}
+                \For{$rango$ \In $\{ (j, \ldots, 1), (j, \ldots, n)  \}$} \Ode{2*n}
+                    \For{$j'$ \In $rango$}                                \Ode{n}
+                        \State \textbf{break if} $q_{ij'} = \Pared$       \Ode{1}
+                        \State $C \leftarrow C \cup \{ j' \}$             \Ode{1}
                     \EndFor
                 \EndFor
-                \State \Return{$C$}
+                \State \Return{$C$}                                       \Ode{1}
             \EndProcedure
         \end{pseudo}
 
         \begin{pseudo}
-            \Procedure{Columna-Visible}{$q_{ij}$}
-                \State $F \leftarrow \{ i \}$
-                \For{$rango$ \In $\{ (i, \ldots, 1), (i, \ldots, m)  \}$}
-                    \For{$i'$ \In $rango$}
-                        \State \textbf{break if} $q_{i'j} = \Pared$
-                        \State $F \leftarrow F \cup \{ i' \}$
+            \Procedure{Columna-Visible}{$q_{ij}$}                         \Ode{m}
+                \State $F \leftarrow \{ i \}$                             \Ode{1}
+                \For{$rango$ \In $\{ (i, \ldots, 1), (i, \ldots, m)  \}$} \Ode{2*m}
+                    \For{$i'$ \In $rango$}                                \Ode{m}
+                        \State \textbf{break if} $q_{i'j} = \Pared$       \Ode{1}
+                        \State $F \leftarrow F \cup \{ i' \}$             \Ode{1}
                     \EndFor
                 \EndFor
-                \State \Return{$F$}
+                \State \Return{$F$}                                       \Ode{1}
             \EndProcedure
         \end{pseudo}
     }
@@ -604,7 +604,7 @@ Dado un piso $P$ sin sensores, recorremos el árbol de combinaciones de sensores
         Para cada piso $Q$ que no fue descartado en el paso anterior:
         \begin{enumerate}
             \item{
-                Buscamos la siguiente posición libre $(i', j')$ de la misma manera que en el paso \ref{buscar-posicion-libre}, pero partiendo de $(i, j+1)$ en vez de la esquina superior izquierda, ó $(i+1, 1)$ si $j=n$.
+                Buscamos la siguiente posición libre $(i', j')$ de la misma manera que en el paso \ref{buscar-posicion-libre}, pero partiendo de $(i, j+1)$ en vez de la esquina superior izquierda, ó $(i+1, 1)$ si $j=n$. \Ode{m \times n}
             }
             \item{
                 Si encontramos una posición libre, repetimos los pasos $\ref{generar-pisos}, \ldots, \ref{paso-recursivo}$ utilizando $Q$ en lugar de $P$, y $(i', j')$ en lugar de $(i, j)$.
@@ -613,33 +613,35 @@ Dado un piso $P$ sin sensores, recorremos el árbol de combinaciones de sensores
                 En caso contrario, decidimos si el piso es solución.
 
                 \begin{pseudo}
-                    \State $esSolucion \leftarrow \True$
-                    \For{$i$ \In $1, \ldots, m$, $j$ \In $1, \ldots, n$}
-                        \If{$q_{ij} = \Libre$ $\lor$
-                            $(q_{ij} = \Importante$ $\land$
-                            $\textsc{\#-Sensores-Actuando-Sobre}(q_{ij}) < 2)$}
-                            \State $esSolucion \leftarrow \False$
+                    \State $esSolucion \leftarrow \True$                                       \Ode{1}
+                    \For{$i$ \In $1, \ldots, m$, $j$ \In $1, \ldots, n$}                       \Ode{m \times n \times (m + n)}
+                        \If{$q_{ij} = \Importante$}                                            \Ode{m + n}
+                            \State $s \leftarrow \textsc{\#-Sensores-Actuando-Sobre}(q_{ij})$  \Ode{m + n}
+                        \EndIf
+
+                        \If{$q_{ij} = \Libre$ $\lor$ $(q_{ij} = \Importante$ $\land$ $s < 2)$} \Ode{1}
+                            \State $esSolucion \leftarrow \False$                              \Ode{1}
                             \State \textbf{break}
                         \EndIf
                     \EndFor
                 \end{pseudo}
 
                 \begin{pseudo}
-                    \Procedure{\#-Sensores-Actuando-Sobre}{$q_{ij}$}
-                        \State $k \leftarrow 0$
-                        \For{$i'$ \In $\textsc{Columna-Visible}(q_{ij})$}
-                            \If{$q_{i'j} \in \{ \SensorV, \SensorC \}$}
-                                \State $k \leftarrow k + 1$
+                    \Procedure{\#-Sensores-Actuando-Sobre}{$q_{ij}$}      \Ode{m + n}
+                        \State $s \leftarrow 0$                           \Ode{1}
+                        \For{$i'$ \In $\textsc{Columna-Visible}(q_{ij})$} \Ode{m}
+                            \If{$q_{i'j} \in \{ \SensorV, \SensorC \}$}   \Ode{1}
+                                \State $s \leftarrow s + 1$               \Ode{1}
                                 \State \textbf{break}
                             \EndIf
                         \EndFor
-                        \For{$j'$ \In $\textsc{Fila-Visible}(q_{ij})$}
-                            \If{$q_{ij'} \in \{ \SensorH, \SensorC \}$}
-                                \State $k \leftarrow k + 1$
+                        \For{$j'$ \In $\textsc{Fila-Visible}(q_{ij})$}    \Ode{n}
+                            \If{$q_{ij'} \in \{ \SensorH, \SensorC \}$}   \Ode{1}
+                                \State $s \leftarrow s + 1$               \Ode{1}
                                 \State \textbf{break}
                             \EndIf
                         \EndFor
-                        \State \Return{$k$}
+                        \State \Return{$s$}                               \Ode{1}
                     \EndProcedure
                 \end{pseudo}
 
@@ -650,22 +652,22 @@ Dado un piso $P$ sin sensores, recorremos el árbol de combinaciones de sensores
 
                 \begin{pseudo}
                     \If{$esSolucion$}
-                        \If{$S = \textbf{nil}$ $\lor$ $\textsc{Costo}(Q) < \textsc{Costo}(S)$}
-                            \State $S \leftarrow Q$
+                        \If{$S = \textbf{nil}$ $\lor$ $\textsc{Costo}(Q) < \textsc{Costo}(S)$} \Ode{m \times n}
+                            \State $S \leftarrow Q$ (referencia)                               \Ode{1}
                         \EndIf
                     \EndIf
                 \end{pseudo}
 
                 \begin{pseudo}
-                    \Procedure{Costo}{$Q$}
-                        \State $c \leftarrow 0$
-                        \For{$i$ \In $1, \ldots, m$, $j$ \In $1, \ldots, n$}
+                    \Procedure{Costo}{$Q$}                                            \Ode{m \times n}
+                        \State $c \leftarrow 0$                                       \Ode{1}
+                        \For{$i$ \In $1, \ldots, m$, $j$ \In $1, \ldots, n$}          \Ode{m \times n}
                             \State $c \leftarrow c + 4000$
-                                \textbf{if} $q_{ij} \in \{ \SensorV, \SensorH \}$
+                                    \textbf{if} $q_{ij} \in \{ \SensorV, \SensorH \}$ \Ode{1}
                             \State $c \leftarrow c + 6000$
-                                \textbf{if} $q_{ij} = \SensorC$
+                                \textbf{if} $q_{ij} = \SensorC$                       \Ode{1}
                         \EndFor
-                        \State \Return{$c$}                 
+                        \State \Return{$c$}                                           \Ode{1}
                     \EndProcedure
                 \end{pseudo}                
             }
@@ -689,46 +691,48 @@ Si $q_{ij} \in \{ \SensorV, \SensorH, \SensorC \}$:
         Podamos si su señal impacta otro sensor o viceversa; es decir, si $\textsc{Impacta-Otro-Sensor}(q_{ij}) = \True$.
 
         \begin{pseudo}
-            \Procedure{Impacta-Otro-Sensor}{$q_{ij}$}
-                \For{$i'$ \In $\textsc{Columna-Visible}(q_{ij})$}
-                    \If{$\textsc{Sensores-Incompatibles}(q_{ij}, q_{i'j})$}
-                        \State \Return{\True}
+            \Procedure{Impacta-Otro-Sensor}{$q_{ij}$}                       \Ode{m + n}
+                \For{$i'$ \In $\textsc{Columna-Visible}(q_{ij})$}           \Ode{m}
+                    \If{$\textsc{Sensores-Incompatibles}(q_{ij}, q_{i'j})$} \Ode{1}
+                        \State \Return{\True}                               \Ode{1}
                     \EndIf
                 \EndFor
-                \For{$j'$ \In $\textsc{Fila-Visible}(q_{ij})$}
-                    \If{$\textsc{Sensores-Incompatibles}(q_{ij}, q_{ij'})$}
-                        \State \Return{\True}
+                \For{$j'$ \In $\textsc{Fila-Visible}(q_{ij})$}              \Ode{n}
+                    \If{$\textsc{Sensores-Incompatibles}(q_{ij}, q_{ij'})$} \Ode{1}
+                        \State \Return{\True}                               \Ode{1}
                     \EndIf
                 \EndFor
-                \State \Return{\False}
+                \State \Return{\False}                                      \Ode{1}
             \EndProcedure
         \end{pseudo}
 
         \begin{pseudo}
-            \Procedure{Sensores-Incompatibles}{$q_{ij}, q_{i'j'}$}
-                \If{$i = i'$}
-                    \If{$\textsc{Sensa-Horizontalmente}(q_{ij}) \lor \textsc{Sensa-Horizontalmente}(q_{i'j'})$}
-                        \State \Return{\True}
+            \Procedure{Sensores-Incompatibles}{$q_{ij}, q_{i'j'}$}     \Ode{1}
+                \If{$i = i'$}                                          \Ode{1}
+                    \If{$\textsc{Sensa-Horizontalmente}(q_{ij}) \lor
+                            \textsc{Sensa-Horizontalmente}(q_{i'j'})$} \Ode{1}
+                        \State \Return{\True}                          \Ode{1}
                     \EndIf
                 \EndIf
-                \If{$j = j'$}
-                    \If{$\textsc{Sensa-Verticalmente}(q_{ij}) \lor \textsc{Sensa-Verticalmente}(q_{i'j'})$}
-                        \State \Return{\True}
+                \If{$j = j'$}                                          \Ode{1}
+                    \If{$\textsc{Sensa-Verticalmente}(q_{ij}) \lor
+                            \textsc{Sensa-Verticalmente}(q_{i'j'})$}   \Ode{1}
+                        \State \Return{\True}                          \Ode{1}
                     \EndIf
                 \EndIf
-                \State \Return{\False}
+                \State \Return{\False}                                 \Ode{1}
             \EndProcedure
         \end{pseudo}
 
         \begin{pseudo}
-            \Procedure{Sensa-Verticalmente}{$q_{ij}$}
-                \State \Return{$q_{ij} \in \{ \SensorV, \SensorC \}$}
+            \Procedure{Sensa-Verticalmente}{$q_{ij}$}                 \Ode{1}
+                \State \Return{$q_{ij} \in \{ \SensorV, \SensorC \}$} \Ode{1}
             \EndProcedure
         \end{pseudo}
 
         \begin{pseudo}
-            \Procedure{Sensa-Horizontalmente}{$q_{ij}$}
-                \State \Return{$q_{ij} \in \{ \SensorH, \SensorC \}$}
+            \Procedure{Sensa-Horizontalmente}{$q_{ij}$}               \Ode{1}
+                \State \Return{$q_{ij} \in \{ \SensorH, \SensorC \}$} \Ode{1}
             \EndProcedure
         \end{pseudo}
     }
@@ -738,19 +742,21 @@ Si $q_{ij} \in \{ \SensorV, \SensorH, \SensorC \}$:
         Esto ocurre cuando existe un sensor vertical y un sensor horizontal en la misma fila y columna de una posición libre, respectivamente, y no hay una pared entre los sensores y esa posición.
 
         \begin{pseudo}
-            \State $podar \leftarrow \False$
-            \If{$q_{ij} = \SensorV$}
-                \For{$j'$ \In $\textsc{Fila-Visible}(q_{ij})$}
-                    \If{$q_{ij'} = \Libre \land \textsc{Hay-Un-Sensor-Horizontal-En-Su-Columna}(q_{ij'})$}
-                        \State $podar \leftarrow \True$
+            \State $podar \leftarrow \False$                                           \Ode{1}
+            \If{$q_{ij} = \SensorV$}                                                   \Ode{m \times n}
+                \For{$j'$ \In $\textsc{Fila-Visible}(q_{ij})$}                         \Ode{m \times n}
+                    \If{$q_{ij'} = \Libre \land
+                            \textsc{Hay-Un-Sensor-Horizontal-En-Su-Columna}(q_{ij'})$} \Ode{m}
+                        \State $podar \leftarrow \True$                                \Ode{1}
                         \State \textbf{break}
                     \EndIf
                 \EndFor
             \EndIf
-            \If{$q_{ij} = \SensorH$}
-                \For{$i'$ \In $\textsc{Columna-Visible}(q_{ij})$}
-                    \If{$q_{i'j} = \Libre \land \textsc{Hay-Un-Sensor-Vertical-En-Su-Fila}(q_{i'j})$}
-                        \State $podar \leftarrow \True$
+            \If{$q_{ij} = \SensorH$}                                                   \Ode{1}
+                \For{$i'$ \In $\textsc{Columna-Visible}(q_{ij})$}                      \Ode{m \times n}
+                    \If{$q_{i'j} = \Libre \land
+                            \textsc{Hay-Un-Sensor-Vertical-En-Su-Fila}(q_{i'j})$}      \Ode{n}
+                        \State $podar \leftarrow \True$                                \Ode{1}
                         \State \textbf{break}
                     \EndIf
                 \EndFor
@@ -759,24 +765,24 @@ Si $q_{ij} \in \{ \SensorV, \SensorH, \SensorC \}$:
         \end{pseudo}
 
         \begin{pseudo}
-            \Procedure{Hay-Un-Sensor-Horizontal-En-Su-Columna}{$q_{ij}$}
-                \For{$i'$ \In $\textsc{Columna-Visible}(q_{ij})$}
-                    \If{$q_{i'j} = \SensorH$}
-                        \State \Return{\True}
+            \Procedure{Hay-Un-Sensor-Horizontal-En-Su-Columna}{$q_{ij}$} \Ode{m}
+                \For{$i'$ \In $\textsc{Columna-Visible}(q_{ij})$}        \Ode{m}
+                    \If{$q_{i'j} = \SensorH$}                            \Ode{1}
+                        \State \Return{\True}                            \Ode{1}
                     \EndIf
                 \EndFor
-                \State \Return{\False}  
+                \State \Return{\False}                                   \Ode{1}
             \EndProcedure
         \end{pseudo}
 
         \begin{pseudo}
-            \Procedure{Hay-Un-Sensor-Vertical-En-Su-Fila}{$q_{ij}$}
-                \For{$j'$ \In $\textsc{Fila-Visible}(q_{ij})$}
-                    \If{$q_{ij'} = \SensorV$}
-                        \State \Return{\True}
+            \Procedure{Hay-Un-Sensor-Vertical-En-Su-Fila}{$q_{ij}$} \Ode{n}
+                \For{$j'$ \In $\textsc{Fila-Visible}(q_{ij})$}      \Ode{n}
+                    \If{$q_{ij'} = \SensorV$}                       \Ode{1}
+                        \State \Return{\True}                       \Ode{1}
                     \EndIf
                 \EndFor
-                \State \Return{\False}
+                \State \Return{\False}                              \Ode{1}
             \EndProcedure
         \end{pseudo}
     }
@@ -794,26 +800,26 @@ Si $q_{ij} = \Libre$:
         Esto ocurre cuando no existe otra posición libre en su misma fila o columna sin una pared entre ambas, tal que se pueda poner un sensor apuntando a la misma, sin que su señal impacte otros sensores o viceversa.
 
         \begin{pseudo}
-            \State $podar \leftarrow \True$
-            \For{$i'$ \In $\textsc{Columna-Visible}(q_{ij})$}
-                \If{$q_{i'j} = \Libre$}
-                    \State $R \leftarrow Q$
-                    \State $r_{i'j} \leftarrow \SensorV$
-                    \If{$\textsc{Impacta-Otro-Sensor}(r_{i'j}) = \False$}
-                        \State $podar \leftarrow \False$
+            \State $podar \leftarrow \True$                               \Ode{1}
+            \For{$i'$ \In $\textsc{Columna-Visible}(q_{ij})$}             \Ode{m^2 \times n}
+                \If{$q_{i'j} = \Libre$}                                   \Ode{m \times n}
+                    \State $R \leftarrow Q$ (copia)                       \Ode{m \times n}
+                    \State $r_{i'j} \leftarrow \SensorV$                  \Ode{1}
+                    \If{$\textsc{Impacta-Otro-Sensor}(r_{i'j}) = \False$} \Ode{m + n}
+                        \State $podar \leftarrow \False$                  \Ode{1}
                     \EndIf
                 \EndIf
             \EndFor
-            \For{$j'$ \In $\textsc{Fila-Visible}(q_{ij})$}
-                \If{$q_{ij'} = \Libre$}
-                    \State $R \leftarrow Q$
-                    \State $r_{ij'} \leftarrow \SensorV$
-                    \If{$\textsc{Impacta-Otro-Sensor}(r_{ij'}) = \False$}
-                        \State $podar \leftarrow \False$
+            \For{$j'$ \In $\textsc{Fila-Visible}(q_{ij})$}                \Ode{m \times n^2}
+                \If{$q_{ij'} = \Libre$}                                   \Ode{m \times n}
+                    \State $R \leftarrow Q$ (copia)                       \Ode{m \times n}
+                    \State $r_{ij'} \leftarrow \SensorV$                  \Ode{1}
+                    \If{$\textsc{Impacta-Otro-Sensor}(r_{ij'}) = \False$} \Ode{m + n}
+                        \State $podar \leftarrow \False$                  \Ode{1}
                     \EndIf
                 \EndIf
             \EndFor
-            \State Podamos $Q$ si $podar = \True$.            
+            \State Podamos $Q$ si $podar = \True$.
         \end{pseudo}
     }
 \end{itemize}
