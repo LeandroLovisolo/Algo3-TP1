@@ -279,6 +279,8 @@ deberá reordenarse hasta llegar a la cabecera del heap realizando la mayor cant
 
 Concluimos también en que tener una sucesión de paquetes, los cuales entren todos en un solo camión, determina el mejor caso. Esto se debe a que sólo es necesaria la primera inserción en el heap, que como este es vacío es O(1) y luego no se utilizan otras operaciones sobre el heap que no sean O(1) (siguiente()) ya que sólo se carga un solo camión. Lo que lleva a tener una complejidad de $\Omega(n)$.
 
+Para los experimentos aleatorios se generaron n paquetes, donde el peso de cada uno se generó mediante un entero aleatorio con valor entre 0 y el límite de peso de los camiones, con distribución uniforme. 
+
 \subsubsection{Peor caso}
 
 \begin{figure}[H]
