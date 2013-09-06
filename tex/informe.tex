@@ -247,9 +247,9 @@ Para realizar el algoritmo se utilizó la estructura de datos priority\_queue qu
 
 Las operaciones operaciones utilizadas fueron \textit{top()} que corresponde a \textit{siguiente()} con complejidad \textit{O(1)} y \textit{push()} y \textit{pop()} que corresponden a \textit{encolar()} y \textit{desencolar()} con complejidad \textit{O(log(n))}.
 
-El algoritmo corre en tiempo $O(n*log(n))$, donde $n$ es la cantidad de paquetes.
+El algoritmo corre en tiempo $O(n \times log(n))$, donde $n$ es la cantidad de paquetes.
 
-\textbf{Demostración:} para cada uno de los $n$ paquetes, se realizan 1 ó 2 operaciones $O(log(n))$ sobre la cola de prioridad. Luego deducimos la complejidad total $n * O(log(n)) = O(n * log(n))$.
+\textbf{Demostración:} para cada uno de los $n$ paquetes, se realizan 1 ó 2 operaciones $O(log(n))$ sobre la cola de prioridad. Luego deducimos la complejidad total $n \times O(log(n)) = O(n \times log(n))$.
 
 
 \subsection{Correctitud}
@@ -374,7 +374,7 @@ En el pseudocódigo a continuación, $C$ denota el conjunto con la oferta de $n$
             \State{\Return{$C$}}                                \Ode{1}
         \Else
             \State{Ordenar $C$ por fecha de finalización
-                   en forma creciente.}                         \Ode{n * log(n)}
+                   en forma creciente.}                         \Ode{n \times log(n)}
             \State{$S = \{(i_1, j_1)\}$}                        \Ode{1}
             \State{$k = 1$}                                     \Ode{1}
             \For{$j = 2$ \To $|C|$}                            
@@ -391,10 +391,10 @@ En el pseudocódigo a continuación, $C$ denota el conjunto con la oferta de $n$
 
 \subsection{Complejidad}
 
-El algoritmo corre en tiempo $O(n*log(n))$, donde $n$ es la cantidad de cursos.
+El algoritmo corre en tiempo $O(n \times log(n))$, donde $n$ es la cantidad de cursos.
 
 \begin{proof}
-    Para el caso no trivial ($n > 1$) se ordenan los cursos en $O(n * log(n))$, luego se recorre cada curso y se decide si se lo incluye en la solución o no, con costo $n * O(1)$. La complejidad total resulta $O(n * log(n)) + n * O(1) = O(n * log(n) + n) = O(n * log(n))$. Para el caso trivial, se devuelve el conjunto de cursos intacto en tiempo constante.
+    Para el caso no trivial ($n > 1$) se ordenan los cursos en $O(n \times log(n))$, luego se recorre cada curso y se decide si se lo incluye en la solución o no, con costo $n \times O(1)$. La complejidad total resulta $O(n \times log(n)) + n \times O(1) = O(n \times log(n) + n) = O(n \times log(n))$. Para el caso trivial, se devuelve el conjunto de cursos intacto en tiempo constante.
 \end{proof}
 
 
@@ -575,7 +575,7 @@ Dado un piso $P$ sin sensores, recorremos el árbol de combinaciones de sensores
         \begin{pseudo}
             \Procedure{Fila-Visible}{$q_{ij}$}                            \Ode{n}
                 \State $C \leftarrow \{ j \}$                             \Ode{n}
-                \For{$rango$ \In $\{ (j, \ldots, 1), (j, \ldots, n)  \}$} \Ode{2*n}
+                \For{$rango$ \In $\{ (j, \ldots, 1), (j, \ldots, n)  \}$} \Ode{2 \times n}
                     \For{$j'$ \In $rango$}                                \Ode{n}
                         \State \textbf{break if} $q_{ij'} = \Pared$       \Ode{1}
                         \State $C \leftarrow C \cup \{ j' \}$             \Ode{1}
@@ -588,7 +588,7 @@ Dado un piso $P$ sin sensores, recorremos el árbol de combinaciones de sensores
         \begin{pseudo}
             \Procedure{Columna-Visible}{$q_{ij}$}                         \Ode{m}
                 \State $F \leftarrow \{ i \}$                             \Ode{1}
-                \For{$rango$ \In $\{ (i, \ldots, 1), (i, \ldots, m)  \}$} \Ode{2*m}
+                \For{$rango$ \In $\{ (i, \ldots, 1), (i, \ldots, m)  \}$} \Ode{2 \times m}
                     \For{$i'$ \In $rango$}                                \Ode{m}
                         \State \textbf{break if} $q_{i'j} = \Pared$       \Ode{1}
                         \State $F \leftarrow F \cup \{ i' \}$             \Ode{1}
@@ -612,6 +612,7 @@ Dado un piso $P$ sin sensores, recorremos el árbol de combinaciones de sensores
                 Si encontramos una posición libre, repetimos los pasos $\ref{generar-pisos}, \ldots, \ref{paso-recursivo}$ utilizando $Q$ en lugar de $P$, y $(i', j')$ en lugar de $(i, j)$.
             }
             \item{
+                \label{decidir-si-es-solucion}
                 En caso contrario, decidimos si el piso es solución.
 
                 \begin{pseudo}
@@ -870,59 +871,60 @@ El algoritmo corre en tiempo $O(4^p \times m \times n \times (m + n))$, donde $m
 
 \subsection{Correctitud}
 
-Para demostrar la correctitud del algoritmo, se debe demostrar lo siguiente:
+Para probar que nuestro algoritmo es correcto, debe valer lo siguiente:
+
 \begin{enumerate}
-  \item Probar que recorremos todo el espacio de pisos posibles.
-    \item Probar que solo podamos ramas que conducen a pisos que no son solución.
-    \item Probar que los pisos obtenidos son solución.
-    \item Probar que la solución devuelta es la óptima.
+    \item{El algoritmo evalúa todo el espacio de pisos posibles.}
+    \item{Sólo podamos ramas que conduzcan a soluciones subóptimas, o a pisos que no son solución.}
+    \item{Se evalúan todas las soluciones que superan los criterios de poda.}
+    \item{La solución devuelta es la óptima.}
 \end{enumerate}
 
-\subsubsection{Se recorre todo el espacio de pisos posibles}
 
-El procedimiento mediante el cuál se recorre recursivamente el árbol de decisiones es \textbf{recorrer()}.
+\subsubsection{El algoritmo evalúa todo el espacio de pisos posibles}
 
-Dado un piso, para el primer casillero libre, siguiendo con el orden en que se lo recorre, se generan 4 instacias posibles (sensor horizontal, sensor vertical, sensor cuádruple y casillero libre), luego para cada una de las instancias se realiza el mismo procedimiento hasta cubrir todo el piso, de esta forma se recorre la totalidad de los posibles pisos existentes, que en el peor caso serian $4^{nxm}$.\\
+\begin{proof}
+    El algoritmo recibe un piso con $p$ posiciones libres, el cual está asociado a un espacio de $4^p$ combinaciones de sensores posibles. Toma la primera posición libre y evalúa los 4 pisos resultantes de ubicar en esa posición cada uno de los tres sensores posibles o de dejarla intacta.
 
+    Cada uno de estos pisos genera $4^{p-1}$ subproblemas posibles. En el supuesto caso que no se podara ninguno, esto generaría 4 pisos con $4^{p-1}$ subproblemas cada uno; es decir, un total de $4 \times 4^{p-1}$ subproblemas, que es igual a la cantidad de subproblemas original: $4^p$.
 
-\textbf{Pseudocódigo de las llamadas recurivas para los distintos tipos de casillero}
+    Aplicando este razonamiento para cada subproblema, recorremos recursivamente el árbol de subproblemas, evaluando subárboles cada vez más chicos, hasta eventualmente alcanzar los $4^p$ subproblemas hoja (o una cantidad menor en caso de haber realizado podas.)
 
-\begin{pseudo}
-  \State Piso q $\leftarrow$ Copia(piso)
-    \State ubicarSensor(q, fila, columna, TipoDeSensor)
-  \State recorrer(q, fila, columna, iteracion)
-\end{pseudo}
+    Si bien el algoritmo no necesariamente recorre los $4^p$ pisos posibles, este \textbf{evalúa} las $4^p$ posibilidades distintas al tomar una decisión sobre si proceder por cada rama del árbol o no.
+\end{proof}
 
 
-\subsubsection{Se podan ramas que conducen a pisos que no son soluciones}
+\subsubsection{Sólo podamos ramas que conduzcan a soluciones subóptimas, o a pisos que no son solución}
 
-Las podas se realizan mediante la llamada a \textbf{podar()} desde \textbf{recorrer()}.
-Para probar que estas realizan un trabajo correcto, estas deben seguir las normas del tablero.
+\begin{proof}
+    La poda \ref{poda-sensores-incompatibles} descarta un piso si la señal del nuevo sensor impacta otro sensor o viceversa. Si esto ocurre, el piso no es solución, pues es una condición prohibida por definición. A su vez, cualquier subproblema dentro de esta rama tampoco es solución, pues sólo se modifican las posiciones libres y los dos sensores incompatibles permanecen en conflicto.
 
-\textbf{Utilizando la poda 1)}, eliminamos las ramas que llevan a pisos que tengan sensores incompatibles entre si, es decir, sensores que se esten sensando al mismo tiempo.
+    La poda \ref{poda-produce-posiciones-insensables} descarta un piso si el nuevo sensor produce que alguna posición $(i, j)$ sea imposible de sensar; es decir, que todas las posiciones candidatas a contener un sensor que apunte a $(i, j)$ ya estén afectadas por algún sensor, o que poner un sensor que apunte a $(i, j)$ en alguna de esas posiciones inevitablemente impacte otro sensor ya existente. Si esto ocurriera, el piso no es solución, ya que por definición una solución no puede poseer posiciones libres sin sensar. A su vez, cualquier subproblema dentro de esta rama tampoco es solución, pues la única forma de eliminar este problema es quitando algún sensor, y en los subproblemas de la rama sólo modifican las posiciones libres.
 
-\textbf{Utilizando la poda 2)}, eliminamos las ramas que llevan a pisos en los cuales el sensor puesto llevará a que un casillero \Libre sea imposible de sensar, eliminando ramas de pisos que no lleven a soluciones correctas.
+    La poda \ref{poda-costo} descarta un piso si su costo supera o iguala el de la mejor solución hallada hasta el momento. Esto es correcto pues los subproblemas dentro de esta rama generan soluciones subóptimas o de costo igual al de la mejor solución hallada hasta el momento, ya que en los subproblemas sólo se modifican las posiciones libres y para reducir el costo habría que quitar en vez de agregar sensores.
 
-\textbf{Utilizando la poda 3)}, eliminamos las soluciones de un costo mayor a la actualmente encontrada. Este procedimiento produce soluciones correctas y mínimas (sin obviar otras soluciones mínimas posibles) ya que, teniendo un costo de una solución, pueden ocurrir los siguientes casos:
+    La poda \ref{poda-posicion-insensable} descarta un piso cuando se deja libre una posición imposible de sensar. La justificación es idéntica a la de la poda \ref{poda-produce-posiciones-insensables}.
+\end{proof}
 
 
-\begin{itemize}
-\item La inserción de un nuevo sensor incrementará el costo de la solución, haciendo que esta sea peor.
-\item Si esta fuera igual, podría llegar a una solución, mínima también, pero ya tenemos una de igual costo, por lo que su recorrido es innecesario.
-\item La rama de soluciones por la que se está buscando una solución sigue siendo menor a la solución encontrada anteriormente, llevando a una potencial mejor solución en el caso de que exista.
-\end{itemize}
+\subsubsection{Se evalúan todas las soluciones que superan los criterios de poda.}
 
-\textbf{Utilizando la poda 4)}, eliminamos la rama de soluciones que consideren al casillero actual como \Libre y que este no pueda ser sensado por ningún sensor, ya que, de serlo, estaría en conflicto con otro.
+\begin{proof}
+    Una vez llegado a un piso hoja del árbol de subproblemas, sabemos que éste no tiene sensores cuya señal afecte otros sensores, pues en caso contrario habría sido descartado por la poda \ref{poda-sensores-incompatibles}.
 
-\subsubsection{Los pisos obtenidos son soluciones}
+    Para que sea solución, debe ocurrir además que no exista ninguna posición libre sin sensar, y que las posiciones importantes estén doblemente sensadas. El algoritmo verifica estas condiciones en el paso \ref{decidir-si-es-solucion}.
 
-Al haberse recorrido todos los casilleros se chequea que el resultado sea una solucion y esto ocurre si todos los casilleros libres estan estan sensados y si los cosilleros importantes estan doblemente sensados.
-
-Debido a que una solución es una hoja del árbol de soluciones posibles, este debe de haber pasado antes por las podas, verificando también la correctiud de los sensores.
+    En caso de ser solución, se evalúa la misma calculando su costo y comparándolo con el de la mejor solución hallada hasta el momento.
+\end{proof}
 
 
 \subsubsection{La solución devuelta es la óptima}
-Debido a que se utiliza como poda no recorrer las ramas que llevan a soluciones de mayor costo al costo de la solución de menor costo obtenida, la solución a la cuál se llega siempre tendrá solución óptima, es decir, su solución siempre tendrá costo mínimo.
+
+\begin{proof}
+    Cada vez que se halla una solución, el algoritmo compara su costo con el de la mejor solución hallada hasta el momento. Si su costo es inferior, reemplaza por éste la mejor solución hallada hasta el momento. Al terminar de evaluar todas las soluciones, el algoritmo devuelve la mejor hallada.
+
+    Si hubiera una mejor solución que la devuelta por el algoritmo, es porque esta solución no fue evaluada, y esto ocurre sólo si la solución fue descartada por alguna poda, lo cual es absurdo pues ya demostramos que las ramas podadas no conducen a soluciones, o bien conducen a soluciones subóptimas.
+\end{proof}
 
 
 \subsection{Experimentos computacionales}
