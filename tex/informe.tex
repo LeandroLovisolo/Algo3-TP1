@@ -500,63 +500,82 @@ Se pide realizar el algoritmo mediante la técnica de Backtracking.
 
 \subsection{Solución}
 
-Representamos el piso como una matriz de $m$ filas $\times$ $n$ columnas, donde cada coordenada puede tener uno de los siguientes valores: \texttt{Libre}, \texttt{Sensado}, \texttt{Importante}, \texttt{Pared}, \texttt{SensorVertical}, \texttt{SensorHorizontal}, \texttt{SensorCuádruple}.
+Representamos un piso $P$ como una matriz de $m$ filas por $n$ columnas, donde cada coordenada puede tener uno de los siguientes valores: \texttt{Libre}, \texttt{Sensado}, \texttt{Importante}, \texttt{Pared}, \texttt{SensorVertical}, \texttt{SensorHorizontal}, \texttt{SensorCuadruple}.
 
-Recorremos el árbol de pisos posibles de la siguiente manera:
+Dado un piso $P$ sin sensores, recorremos el árbol de combinaciones de sensores posibles de la siguiente manera:
 
 \begin{enumerate}
     \item{
         \label{buscar-posicion-libre}
-        Busco la primera posición libre recorriendo el piso de izquierda a derecha y de arriba a abajo, partiendo de la esquina superior izquierda. Si no se encontró una, salto al paso \ref{ultimo-paso}.
+        Busco la primera posición libre $(i, j)$ recorriendo el piso de izquierda a derecha y de arriba a abajo, partiendo de la esquina superior izquierda.
 
         \begin{pseudo}
-            
-            % filaSig = fila;
-            % columnaSig = columna;
-
-            % do {
-            %     filaSig    = columnaSig + 1 == p.columnas() ? filaSig + 1 : filaSig;
-            %     columnaSig = columnaSig + 1 == p.columnas() ? 0           : columnaSig + 1;
-            % } while(filaSig < p.filas() && p.get(filaSig, columnaSig) != Libre);
-
-
-            \State foo
+            \State $i \leftarrow 1$, $j \leftarrow 1$
+            \While{$i \leq m \land P_{ij} \neq \texttt{Libre}$}
+                \If{$j < n$}
+                    \State $j \leftarrow j + 1$
+                \Else
+                    \State $i \leftarrow i + 1$, $j \leftarrow 1$
+                \EndIf
+            \EndWhile
+            \State La posición libre hallada es $(i, j)$ si $i \leq m$, o ninguna en caso contrario.
         \end{pseudo}
+
+         Si no se encontró ninguna posición libre, salto al paso \ref{ultimo-paso}.
     }
     \item{
         \label{generar-pisos}
         Genero 4 pisos nuevos:
         \begin{enumerate}
             \item{
-                Poniendo un sensor vertical en esa posición.
+                Poniendo un sensor vertical en $(i, j)$.
             }
             \item{
-                Poniendo un sensor horizontal en esa posición.
+                Poniendo un sensor horizontal en $(i, j)$.
             }
             \item{
-                Poniendo un sensor cuádruple en esa posición.
+                Poniendo un sensor cuádruple en $(i, j)$.
             }
             \item{
                 \label{posicion-libre}
-                Dejando esa posición libre (es decir, este nuevo piso es idéntico al piso original.)
+                Dejando libre la posición $(i, j)$ (es decir, este nuevo piso es idéntico al piso original.)
             }
         \end{enumerate}
     }
     \item{
-        Marco como \textit{sensadas} todas las posiciones afectadas por el nuevo sensor (no aplica para el caso \ref{posicion-libre}.)
+        Para cada piso $Q$ generado en el paso anterior, marco como sensadas todas las posiciones libres afectadas por el nuevo sensor (no aplica para el caso \ref{posicion-libre}.)
+
+        \begin{pseudo}
+            \If{$Q_{ij} \in \{ \texttt{SensorVertical}, \texttt{SensorCuadruple} \}$}
+                \For{$rango$ \In $\{ (i, \ldots, 1), (i, \ldots, m)  \}$}
+                    \For{$i'$ \In $rango$}
+                        \State \textbf{break if} $Q_{i'j} = \texttt{Pared}$
+                        \State $Q_{i'j} \leftarrow \texttt{Sensado}$ \textbf{if} $Q_{i'j} = \texttt{Libre}$
+                    \EndFor
+                \EndFor
+            \EndIf
+            \If{$Q_{ij} \in \{ \texttt{SensorHorizontal}, \texttt{SensorCuadruple} \}$}
+                \For{$rango$ \In $\{ (j, \ldots, 1), (j, \ldots, n)  \}$}
+                    \For{$j'$ \In $rango$}
+                        \State \textbf{break if} $Q_{ij'} = \texttt{Pared}$
+                        \State $Q_{ij'} \leftarrow \texttt{Sensado}$ \textbf{if} $Q_{ij'} = \texttt{Libre}$
+                    \EndFor
+                \EndFor
+            \EndIf
+        \end{pseudo}
     }
     \item{
-        Realizo las podas sobre los nuevos pisos (ver \textit{Podas} más abajo.)
+        Para cada piso $Q$ resultante del paso anterior, descarto los que correspondan según el criterio de poda (ver \textit{Podas} más abajo.)
     }
     \item{
         \label{paso-recursivo}
-        Para cada uno de los 4 pisos que no fue descartado en el paso anterior:
+        Para cada uno de los pisos que no fue descartado en el paso anterior:
         \begin{enumerate}
             \item{
-                Busco la siguiente posición libre luego de la última posición libre hallada, de la misma manera que en el paso \ref{buscar-posicion-libre}.
+                Busco la siguiente posición libre $(i', j')$ de la misma manera que en el paso \ref{buscar-posicion-libre}, pero partiendo de $(i, j+1)$ en vez de la esquina superior izquierda, ó $(i+1, 1)$ si $j=n$.
             }
             \item{
-                Si se encontró una posición libre, repito los pasos \ref{generar-pisos}, $\ldots$, \ref{paso-recursivo}.
+                Si se encontró una posición libre, repito los pasos $\ref{generar-pisos}, \ldots, \ref{paso-recursivo}$ utilizando $(i', j')$ en lugar de $(i, j)$.
             }
             \item{
                 En caso contrario, decido si el piso es solución.
@@ -568,7 +587,7 @@ Recorremos el árbol de pisos posibles de la siguiente manera:
     }
     \item{
         \label{ultimo-paso}
-        Devolvemos la mejor solución hallada, o emitimos un mensaje en caso de no haberse hallado una.
+        Devolvemos la mejor solución hallada, o \textbf{nil} en caso de no haberse hallado una.
     }
 \end{enumerate}
 
