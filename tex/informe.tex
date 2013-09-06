@@ -500,14 +500,14 @@ Se pide realizar el algoritmo mediante la técnica de Backtracking.
 
 \subsection{Solución}
 
-Representamos un piso $P$ como una matriz de $m$ filas por $n$ columnas, donde cada $p_{ij} \in P$ puede tener uno de los siguientes valores: \texttt{Libre}, \texttt{Sensado}, \texttt{Importante}, \texttt{Pared}, \texttt{SensorVertical}, \texttt{SensorHorizontal}, \texttt{SensorCuadruple}.
+Representamos un piso $P$ como una matriz de $m$ filas por $n$ columnas, donde cada $p_{ij} \in P$ tiene cualquiera de los siguientes valores: \texttt{Libre}, \texttt{Sensado}, \texttt{Importante}, \texttt{Pared}, \texttt{SensorVertical}, \texttt{SensorHorizontal}, \texttt{SensorCuadruple}.
 
-Dado un piso $P$ sin sensores, recorremos el árbol de combinaciones de sensores posibles de la siguiente manera:
+Dado un piso $P$ sin sensores, recorremos el árbol de combinaciones de sensores posibles en búsqueda de una solución óptima de la siguiente manera:
 
 \begin{enumerate}
     \item{
         \label{buscar-posicion-libre}
-        Busco la primera posición libre $(i, j)$ recorriendo el piso de izquierda a derecha y de arriba a abajo, partiendo de la esquina superior izquierda.
+        Buscamos la primera posición libre $(i, j)$ recorriendo el piso de izquierda a derecha y de arriba a abajo, partiendo de la esquina superior izquierda.
 
         \begin{pseudo}
             \State $i \leftarrow 1$, $j \leftarrow 1$
@@ -518,14 +518,13 @@ Dado un piso $P$ sin sensores, recorremos el árbol de combinaciones de sensores
                     \State $i \leftarrow i + 1$, $j \leftarrow 1$
                 \EndIf
             \EndWhile
-            \State La posición libre hallada es $(i, j)$ si $i \leq m$, o ninguna en caso contrario.
         \end{pseudo}
 
-         Si no se encontró ninguna posición libre, salto al paso \ref{ultimo-paso}.
+         Si no encontramos ninguna posición libre (es decir, si $i > m$), saltamos al paso \ref{ultimo-paso}.
     }
     \item{
         \label{generar-pisos}
-        Genero 4 pisos nuevos:
+        Generamos 4 pisos nuevos:
         \begin{enumerate}
             \item{
                 Poniendo un sensor vertical en $(i, j)$.
@@ -543,7 +542,7 @@ Dado un piso $P$ sin sensores, recorremos el árbol de combinaciones de sensores
         \end{enumerate}
     }
     \item{
-        Para cada piso $Q$ generado en el paso anterior, marco como sensadas todas las posiciones libres afectadas por el nuevo sensor (no aplica para el caso \ref{posicion-libre}.)
+        Para cada piso $Q$ generado en el paso anterior, marcamos como sensadas todas las posiciones libres afectadas por el nuevo sensor (no aplica para el caso \ref{posicion-libre}.)
 
         \begin{pseudo}
             \If{$q_{ij} \in \{ \texttt{SensorVertical}, \texttt{SensorCuadruple} \}$}
@@ -565,20 +564,20 @@ Dado un piso $P$ sin sensores, recorremos el árbol de combinaciones de sensores
         \end{pseudo}
     }
     \item{
-        Para cada piso $Q$ resultante del paso anterior, descarto los que correspondan según el criterio de poda (ver \textit{Podas} más abajo.)
+        Para cada piso $Q$ resultante del paso anterior, descartamos los que correspondan según el criterio de poda (ver \textit{Podas} más abajo.)
     }
     \item{
         \label{paso-recursivo}
         Para cada piso $Q$ que no fue descartado en el paso anterior:
         \begin{enumerate}
             \item{
-                Busco la siguiente posición libre $(i', j')$ de la misma manera que en el paso \ref{buscar-posicion-libre}, pero partiendo de $(i, j+1)$ en vez de la esquina superior izquierda, ó $(i+1, 1)$ si $j=n$.
+                Buscamos la siguiente posición libre $(i', j')$ de la misma manera que en el paso \ref{buscar-posicion-libre}, pero partiendo de $(i, j+1)$ en vez de la esquina superior izquierda, ó $(i+1, 1)$ si $j=n$.
             }
             \item{
-                Si se encontró una posición libre, repito los pasos $\ref{generar-pisos}, \ldots, \ref{paso-recursivo}$ utilizando $(i', j')$ en lugar de $(i, j)$.
+                Si encontramos una posición libre, repetimos los pasos $\ref{generar-pisos}, \ldots, \ref{paso-recursivo}$ utilizando $(i', j')$ en lugar de $(i, j)$.
             }
             \item{
-                En caso contrario, decido si el piso es solución.
+                En caso contrario, decidimos si el piso es solución.
 
                 \begin{pseudo}
                     \State $esSolucion \leftarrow \textbf{true}$
@@ -620,7 +619,7 @@ Dado un piso $P$ sin sensores, recorremos el árbol de combinaciones de sensores
 
             }
             \item{
-                Si es solución y es más barata que la mejor solución $S$ hallada hasta el momento, o si aún no se halló ninguna solución, lo marcamos como mejor solución.
+                Si es solución y es más barata que la mejor solución $S$ hallada hasta el momento, o si aún no se halló ninguna solución, la marcamos como mejor solución.
 
                 \begin{pseudo}
                     \If{$esSolucion$}
@@ -647,11 +646,7 @@ Dado un piso $P$ sin sensores, recorremos el árbol de combinaciones de sensores
     }
     \item{
         \label{ultimo-paso}
-        Devolvemos la mejor solución hallada, o \textbf{nil} en caso de no haberse hallado una.
-
-        \begin{pseudo}
-            \State \Return{$S$}
-        \end{pseudo}
+        Devolvemos la mejor solución hallada $S$, que puede ser \textbf{nil} en caso de no haberse hallado una.
     }
 \end{enumerate}
 
