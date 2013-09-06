@@ -20,4 +20,4 @@ El trabajo práctico contiene un Makefile mediante el cuál se puede compilar to
 
 La carpeta perf contiene los datos obtenidos por las mediciones de pérformance. Estos fueron utilizados para realizar los gráficos.
 
-La carpeta octave contiene los scripts de octave necesarios para generar lso gráficos.
+La carpeta octave contiene los scripts de octave necesarios para generar los gráficos.
