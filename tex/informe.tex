@@ -935,8 +935,14 @@ Para probar que nuestro algoritmo es correcto, debe valer lo siguiente:
 
 \subsection{Experimentos computacionales}
 
-\subsubsection{Performance}
-Justificación de la elección del mejor, peor caso y descripción de casos aleatorios.
+Medimos experimentalmente la performance del algoritmo para instancias aleatorias, del mejor y peor caso.
+
+Las instancias aleatorias se generan a partir de pisos de tamaño $1 \times 1, 1 \times 2, 2 \times 2, 2 \times 3, \ldots, 5 \times 5$, tales que todas las posiciones son de tipo \Pared, salvo 1 al azar para el primer piso, 2 al azar para el segundo, y así sucesivamente.
+
+Como mejor caso tomamos las instancias de tamaño $1 \times 1, 2 \times 2, \ldots, 500 \times 500$, tales que todas sus posiciones son de tipo \Pared.
+
+Como peor caso tomamos los pisos de tamaño idéntico a los de las instancias aleatorias, con la diferencia de que todas las posiciones son de tipo \Libre.
+
 
 \subsubsection{Peor caso}
 
