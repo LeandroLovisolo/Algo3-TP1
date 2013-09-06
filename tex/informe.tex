@@ -393,7 +393,9 @@ En el pseudocódigo a continuación, $C$ denota el conjunto con la oferta de $n$
 
 El algoritmo corre en tiempo $O(n*log(n))$, donde $n$ es la cantidad de cursos.
 
-\textbf{Demostración:} para el caso no trivial ($n > 1$) se ordenan los cursos en $O(n * log(n))$, luego se recorre cada curso y se decide si se lo incluye en la solución o no, con costo $n * O(1)$. La complejidad total resulta $O(n * log(n)) + n * O(1) = O(n * log(n) + n) = O(n * log(n))$. Para el caso trivial, se devuelve el conjunto de cursos intacto en tiempo constante.
+\begin{proof}
+    Para el caso no trivial ($n > 1$) se ordenan los cursos en $O(n * log(n))$, luego se recorre cada curso y se decide si se lo incluye en la solución o no, con costo $n * O(1)$. La complejidad total resulta $O(n * log(n)) + n * O(1) = O(n * log(n) + n) = O(n * log(n))$. Para el caso trivial, se devuelve el conjunto de cursos intacto en tiempo constante.
+\end{proof}
 
 
 \subsection{Correctitud}
@@ -686,6 +688,7 @@ Las podas a continuación se realizan siempre para cada piso $Q$ generado en el 
 
 \begin{enumerate}
     \item{
+        \label{poda-sensores-incompatibles}
         Si $q_{ij} \in \{ \SensorV, \SensorH, \SensorC \}$, podamos si su señal impacta otro sensor o viceversa; es decir, si $\textsc{Impacta-Otro-Sensor}(q_{ij}) = \True$.
 
         \begin{pseudo}
@@ -735,6 +738,7 @@ Las podas a continuación se realizan siempre para cada piso $Q$ generado en el 
         \end{pseudo}
     }
     \item{
+        \label{poda-produce-posiciones-insensables}
         Si $q_{ij} \in \{ \SensorV, \SensorH \}$, podamos si produce que una posición libre en su misma fila o columna sea imposible de sensar.
 
         Esto ocurre cuando existe un sensor vertical y un sensor horizontal en la misma fila y columna de una posición libre, respectivamente, y no hay una pared entre los sensores y esa posición.
@@ -785,9 +789,13 @@ Las podas a continuación se realizan siempre para cada piso $Q$ generado en el 
         \end{pseudo}
     }
     \item{
+        \label{poda-costo}
         Si $q_{ij} \in \{ \SensorV, \SensorH, \SensorC \}$, podamos si el costo del piso supera o iguala el de la mejor solución $S$ hallada hasta el momento; es decir, si $\textsc{Costo}(Q) \geq \textsc{Costo}(S)$.
+        \Ode{m \times n}
     }
     \item{
+        \label{poda-posicion-insensable}
+
         Si $q_{ij} = \Libre$, podamos si $q_{ij}$ es imposible de sensar.
 
         Esto ocurre cuando no existe otra posición libre en su misma fila o columna sin una pared entre ambas, tal que se pueda poner un sensor apuntando a la misma, sin que su señal impacte otros sensores o viceversa.
@@ -820,7 +828,40 @@ Las podas a continuación se realizan siempre para cada piso $Q$ generado en el 
 
 \subsection{Complejidad}
 
-Pendiente.
+El algoritmo corre en tiempo $O(4^p \times m \times n \times (m + n))$, donde $m$ es la cantidad de filas del piso, $n$ es la cantidad de columnas del piso y $p$ es la cantidad de posiciones libres en el piso.
+
+\begin{proof}
+    El algoritmo compara entre $O(4^p)$ pisos posibles, pues para cada posición libre existen 4 posibilidades: dejarla libre o poner un sensor vertical, horizontal o cuádruple; y de no realizar de ninguna poda, esto generaría $4^p$ combinaciones posibles.
+
+    Para cada piso evaluado, se realizan la siguiente secuencia de operaciones:
+
+    \begin{itemize}
+        \item{Se genera una copia del piso original, con costo $O(m \times n)$.}
+        \item{Se ubica un sensor en la posición designada y se marcan como sensadas las posiciones afectadas por este, con costo $O(m + n)$. Alternativamente, se deja libre esa posición, con costo $O(1)$.}
+        \item{
+            Si se agregó un nuevo sensor:
+            \begin{itemize}
+                \item{Se evalúa la poda \ref{poda-sensores-incompatibles}, con costo $O(m + n)$.}
+                \item{Se evalúa la poda \ref{poda-produce-posiciones-insensables}, con costo $O(m \times n)$.}
+                \item{Se evalúa la poda \ref{poda-costo}, con costo $O(m \times n)$.}
+            \end{itemize}
+        }
+        \item{En caso contrario, se evalúa la poda \ref{poda-posicion-insensable}, con costo $O(m \times n \times (m + n))$.}
+        \item{Se busca la siguiente posición libre, con costo $O(m \times n)$.}
+        \item{Si se encontró una posición libre, terminamos de procesar el piso actual y continuamos con los 4 pisos resultantes de evaluar cada posibilidad para la posición libre hallada, con costo $O(1)$.}
+        \item{
+            Si no se encontró una posición libre:
+            \begin{itemize}
+                \item{Se verifica si el piso es solución, con costo $O(m \times n \times (m + n))$.}
+                \item{Si es solución, se verifica si es óptima, con costo $O(m \times n)$.}
+            \end{itemize}
+        }
+    \end{itemize}
+
+    El costo total por piso está acotado por $O(m \times n \times (m + n))$ pues es el costo de la poda más costosa. Las demás podas tienen costo menor, y por lo tanto respetan esta cota. El resto de las operaciones en la secuencia tiene costo menor o igual.
+
+    Finalmente, el costo total está dado por el producto entre la cantidad de pisos evaluados y el costo por piso, es decir $O(4^p) \times O(m \times n \times (m + n)$, que es equivalente a $O(4^p \times m \times n \times (m + n))$.
+\end{proof}
 
 
 \subsection{Correctitud}
