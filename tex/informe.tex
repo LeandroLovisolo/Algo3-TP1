@@ -659,29 +659,28 @@ Si $q_{ij} \in \{ \texttt{SensorVertical}, \texttt{SensorHorizontal}, \texttt{Se
 
 \begin{itemize}
     \item{
-        Podamos si su señal impacta otro sensor o viceversa.
+        Podamos si su señal impacta otro sensor o viceversa; es decir, si $\textsc{Impacta-Otro-Sensor}(q_{ij}) = \textbf{true}$.
 
         \begin{pseudo}
-            \State $podar \leftarrow \textbf{false}$
-            \For{$rango$ \In $\{ (i, \ldots, 1), (i, \ldots, m)  \}$}
-                \For{$i'$ \In $rango$}
-                    \State \textbf{break if} $q_{i'j} = \texttt{Pared}$
-                    \If{$\textsc{Sensores-Incompatibles}(q_{ij}, q_{i'j})$}
-                        \State $podar \leftarrow \textbf{true}$
-                        \State \textbf{break}
-                    \EndIf
+            \Procedure{Impacta-Otro-Sensor}{$q_{ij}$}
+                \For{$rango$ \In $\{ (i, \ldots, 1), (i, \ldots, m)  \}$}
+                    \For{$i'$ \In $rango$}
+                        \State \textbf{break if} $q_{i'j} = \texttt{Pared}$
+                        \If{$\textsc{Sensores-Incompatibles}(q_{ij}, q_{i'j})$}
+                            \State \Return{\textbf{true}}
+                        \EndIf
+                    \EndFor
                 \EndFor
-            \EndFor
-            \For{$rango$ \In $\{ (j, \ldots, 1), (j, \ldots, n)  \}$}
-                \For{$j'$ \In $rango$}
-                    \State \textbf{break if} $q_{ij'} = \texttt{Pared}$
-                    \If{$\textsc{Sensores-Incompatibles}(q_{ij}, q_{ij'})$}
-                        \State $podar \leftarrow \textbf{true}$
-                        \State \textbf{break}
-                    \EndIf
+                \For{$rango$ \In $\{ (j, \ldots, 1), (j, \ldots, n)  \}$}
+                    \For{$j'$ \In $rango$}
+                        \State \textbf{break if} $q_{ij'} = \texttt{Pared}$
+                        \If{$\textsc{Sensores-Incompatibles}(q_{ij}, q_{ij'})$}
+                            \State \Return{\textbf{true}}
+                        \EndIf
+                    \EndFor
                 \EndFor
-            \EndFor
-            \State Podamos $Q$ si $podar = \textbf{true}$.
+                \State \Return{\textbf{false}}
+            \EndProcedure
         \end{pseudo}
 
         \begin{pseudo}
@@ -716,9 +715,66 @@ Si $q_{ij} \in \{ \texttt{SensorVertical}, \texttt{SensorHorizontal}, \texttt{Se
         Si no es sensor cuádruple, podamos si produce que una posición libre en su misma fila o columna sea imposible de sensar.
 
         Esto ocurre cuando existe un sensor vertical y un sensor horizontal en la misma fila y columna de una posición libre, respectivamente, y no hay una pared entre los sensores y esa posición.
+
+        \begin{pseudo}
+            \State $podar \leftarrow \textbf{false}$
+            \If{$q_{ij} = \texttt{SensorVertical}$}
+                \For{$rango$ \In $\{ (j, \ldots, 1), (j, \ldots, n)  \}$}
+                    \For{$j'$ \In $rango$}
+                        \State \textbf{break if} $q_{ij'} = \texttt{Pared}$
+                        \If{$q_{ij'} = \texttt{Libre} \land
+                                \textsc{Hay-Un-Sensor-Horizontal-En-Su-Columna}(q_{ij'})$}
+                            \State $podar \leftarrow \textbf{true}$
+                            \State \textbf{break}
+                        \EndIf
+                    \EndFor
+                \EndFor
+            \EndIf
+            \If{$q_{ij} = \texttt{SensorHorizontal}$}
+                \For{$rango$ \In $\{ (i, \ldots, 1), (i, \ldots, m)  \}$}
+                    \For{$i'$ \In $rango$}
+                        \State \textbf{break if} $q_{i'j} = \texttt{Pared}$
+                        \If{$q_{i'j} = \texttt{Libre} \land
+                                \textsc{Hay-Un-Sensor-Vertical-En-Su-Fila}(q_{i'j})$}
+                            \State $podar \leftarrow \textbf{true}$
+                            \State \textbf{break}
+                        \EndIf
+                    \EndFor
+                \EndFor
+            \EndIf
+            \State Podamos $Q$ si $podar = \textbf{true}$.
+        \end{pseudo}
+
+        \begin{pseudo}
+            \Procedure{Hay-Un-Sensor-Horizontal-En-Su-Columna}{$q_{ij}$}
+                \For{$rango$ \In $\{ (i, \ldots, 1), (i, \ldots, m)  \}$}
+                    \For{$i'$ \In $rango$}
+                        \State \textbf{break if} $q_{i'j} = \texttt{Pared}$
+                        \If{$q_{i'j} = \texttt{SensorHorizontal}$}
+                            \State \Return{\textbf{true}}
+                        \EndIf
+                    \EndFor
+                \EndFor
+                \State \Return{\textbf{false}}  
+            \EndProcedure
+        \end{pseudo}
+
+        \begin{pseudo}
+            \Procedure{Hay-Un-Sensor-Vertical-En-Su-Fila}{$q_{ij}$}
+                \For{$rango$ \In $\{ (j, \ldots, 1), (j, \ldots, n)  \}$}
+                    \For{$j'$ \In $rango$}
+                        \State \textbf{break if} $q_{ij'} = \texttt{Pared}$
+                        \If{$q_{ij'} = \texttt{SensorVertical}$}
+                            \State \Return{\textbf{true}}
+                        \EndIf
+                    \EndFor
+                \EndFor
+                \State \Return{\textbf{false}}
+            \EndProcedure
+        \end{pseudo}
     }
     \item{
-        Podamos si el costo del piso supera el de la mejor solución hallada hasta el momento.
+        Podamos si el costo del piso supera o iguala el de la mejor solución $S$ hallada hasta el momento; es decir, si $\textsc{Costo}(Q) \geq \textsc{Costo}(S)$.
     }
 \end{itemize}
 
@@ -729,6 +785,35 @@ Si $q_{ij} = \texttt{Libre}$:
         Podamos si $q_{ij}$ es imposible de sensar.
 
         Esto ocurre cuando no existe otra posición libre en su misma fila o columna sin una pared entre ambas, tal que se pueda poner un sensor apuntando a la misma, sin que su señal impacte otros sensores o viceversa.
+
+        \begin{pseudo}
+            \State $podar \leftarrow \textbf{true}$
+            \For{$rango$ \In $\{ (i, \ldots, 1), (i, \ldots, m)  \}$}
+                \For{$i'$ \In $rango$}
+                    \State \textbf{break if} $q_{i'j} = \texttt{Pared}$
+                    \If{$q_{i'j} = \texttt{Libre}$}
+                        \State $R \leftarrow Q$
+                        \State $r_{i'j} \leftarrow \texttt{SensorVertical}$
+                        \If{$\textsc{Impacta-Otro-Sensor}(r_{i'j}) = \textbf{false}$}
+                            \State $podar \leftarrow \textbf{false}$
+                        \EndIf
+                    \EndIf
+                \EndFor
+            \EndFor
+            \For{$rango$ \In $\{ (j, \ldots, 1), (j, \ldots, n)  \}$}
+                \For{$j'$ \In $rango$}
+                    \State \textbf{break if} $q_{ij'} = \texttt{Pared}$
+                    \If{$q_{ij'} = \texttt{Libre}$}
+                        \State $R \leftarrow Q$
+                        \State $r_{ij'} \leftarrow \texttt{SensorVertical}$
+                        \If{$\textsc{Impacta-Otro-Sensor}(r_{ij'}) = \textbf{false}$}
+                            \State $podar \leftarrow \textbf{false}$
+                        \EndIf
+                    \EndIf
+                \EndFor
+            \EndFor
+            \State Podamos $Q$ si $podar = \textbf{true}$.            
+        \end{pseudo}
     }
 \end{itemize}
 
