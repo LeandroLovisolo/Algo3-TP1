@@ -18,6 +18,26 @@ TEST(problema2, UnCurso) {
     EXPECT_EQ(0, indice(solucion[0]));
 }
 
+TEST(problema2, CursoSeSolapa) {
+    vector<Curso> cursos;
+    cursos.push_back(Curso(1, 4, 0));
+    cursos.push_back(Curso(1, 3, 1));
+    vector<Curso> solucion = problema2(cursos);
+    EXPECT_EQ(1, solucion.size());
+    EXPECT_EQ(0, indice(solucion[1]));
+}
+
+TEST(problema2, CursoNoSeSolapa) {
+    vector<Curso> cursos;
+    cursos.push_back(Curso(1, 2, 0));
+    cursos.push_back(Curso(3, 4, 1));
+
+    vector<Curso> solucion = problema2(cursos);
+    EXPECT_EQ(2, solucion.size());
+    EXPECT_EQ(0, indice(solucion[0]));
+    EXPECT_EQ(1, indice(solucion[1]));
+}
+
 TEST(problema2, SolucionUnica) {
     vector<Curso> cursos;
     cursos.push_back(Curso(4, 4, 1));
