@@ -257,7 +257,7 @@ Sea m el paquete número m de la secuencia de paquetes recibida, con m-1 paquete
 
 Al utilizar una \textbf{cola de prioridad} para almacenar los camiones, es posible asegurar que siempre se tendrá el camión menos cargado en cada llamada a \textbf{siguiente()}, corroborando el correcto funcionamiento de la consigna, la cuál describe que las comparaciones para elegir el destino del paquete se hacen con el camión de menor peso. 
 
-Si la suma del peso del camión menor cargado (conseguido con \textbf{siguiente()}) y el nuevo paquete m no superan el límite, se procede a desencolar del heap el camión. Se le carga el nuevo paquete aumentando su peso y se lo encola nuevamente en el heap.Este se encargará de dejar el nuevo camión disponible mediante \textbf{siguiente()}.
+Si la suma del peso del camión menor cargado (conseguido con \textbf{siguiente()}) y el nuevo paquete m no superan el límite, se procede a desencolar del heap el camión. Se le carga el nuevo paquete aumentando su peso y se lo encola nuevamente en el heap.Este se encargará de dejar el nuevo camión de menor carga disponible mediante \textbf{siguiente()}.
 
 Si es requerido un nuevo camión, se crea uno nuevo con el peso del paquete m y se lo encola en el heap, nuevamente el heap se encargará de colocar el camión de menor peso de tal manera de estar disponible con \textbf{siguiente()}.
 
