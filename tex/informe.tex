@@ -497,12 +497,93 @@ Se pide realizar el algoritmo mediante la técnica de Backtracking.
   \label{fig:1}
 \end{figure}
 
-\subsection{Solucion}
-Dado que la solución está implementada con el método de backtracking, ideamos las siguientes podas para mejorar el tiempo de ejecución de este.
+
+\subsection{Solución}
+
+Recorremos el árbol de pisos posibles de la siguiente manera:
+
+\begin{enumerate}
+    \item{
+        \label{buscar-posicion-libre}
+        Busco la primera posición libre recorriendo el piso de izquierda a derecha y de arriba a abajo, partiendo de la esquina superior izquierda. Si no se encontró una, salto al paso \ref{ultimo-paso}.
+    }
+    \item{
+        \label{generar-pisos}
+        Genero 4 pisos nuevos:
+        \begin{enumerate}
+            \item{
+                Poniendo un sensor vertical en esa posición.
+            }
+            \item{
+                Poniendo un sensor horizontal en esa posición.
+            }
+            \item{
+                Poniendo un sensor cuádruple en esa posición.
+            }
+            \item{
+                \label{posicion-libre}
+                Dejando esa posición libre (es decir, este nuevo piso es idéntico al piso original.)
+            }
+        \end{enumerate}
+    }
+    \item{
+        Marco como \textit{sensadas} todas las posiciones afectadas por el nuevo sensor (no aplica para el caso \ref{posicion-libre}.)
+    }
+    \item{
+        Realizo las podas sobre los nuevos pisos (ver \textit{Podas} más abajo.)
+    }
+    \item{
+        \label{paso-recursivo}
+        Para cada uno de los 4 pisos que no fue descartado en el paso anterior:
+        \begin{enumerate}
+            \item{
+                Busco la siguiente posición libre luego de la última posición libre hallada, de la misma manera que en el paso \ref{buscar-posicion-libre}.
+            }
+            \item{
+                Si se encontró una posición libre, repito los pasos \ref{generar-pisos}, $\ldots$, \ref{paso-recursivo}.
+            }
+            \item{
+                En caso contrario, decido si el piso es solución.
+            }
+            \item{
+                Si es solución y no se había hallado otra solución hasta el momento, o si es más barata que la mejor solución hallada hasta el momento, lo marcamos como mejor solución.
+            }
+        \end{enumerate}
+    }
+    \item{
+        \label{ultimo-paso}
+        Devolvemos la mejor solución hallada, o emitimos un mensaje en caso de no haberse hallado una.
+    }
+\end{enumerate}
+
+
+\subsubsection{Podas}
+
+Las podas siempre se realizan sobre los pisos generados en el paso \ref{generar-pisos}.
+
 \begin{itemize}
-	\item Si existe una solución anterior, podar los caminos que lleven a una solución de mayor costo.
-	\item Para cada sensor, verificar que este no esté siendo sensado por otro sensor, ni que el sensor esté sensando a otro.
-	\item Para cada casillero que esté libre o sea importante, verificar si estos estan siendo sensados. Si no estan siendo sensados, verificar si es posible colocar un nuevo sensor que los sense correctamente.
+    \item{
+        Si el piso generado posee un nuevo sensor:
+
+        \begin{itemize}
+            \item{
+                Podamos si su señal impacta otro sensor o viceversa.
+            }
+            \item{
+                Si no es sensor cúadruple, podamos si produce que una posición libre en su misma fila o columna sea imposible de sensar.
+
+                Esto ocurre cuando existe un sensor vertical y un sensor horizontal en la misma fila y columna de una posición libre, respectivamente, y no hay una pared entre los sensores y esa posición.
+            }
+            \item{
+                Podamos si el costo del piso supera el de la mejor solución hallada hasta el momento.
+            }
+        \end{itemize}
+    }
+    \item{
+        Si el piso generado no posee un nuevo sensor, podamos si la posición que dejamos libre es imposible de sensar.
+
+        Es decir, si no existe otra posición libre en su misma fila o columna sin pared entre ambas tal que se pueda poner un sensor apuntando a esta, sin qu su sedñal impacte otros sensores o viceversa.
+    }
 \end{itemize}
 
 
