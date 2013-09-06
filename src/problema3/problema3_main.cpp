@@ -44,8 +44,8 @@ int main() {
 				default:
 					break;
 			}
-			cout << " " << lasersUtilizados[i]._fila;
-			cout << " " << lasersUtilizados[i]._columna << endl;
+			cout << " " << lasersUtilizados[i]._fila + 1;
+			cout << " " << lasersUtilizados[i]._columna + 1 << endl;
 		}
 	}
 	else {

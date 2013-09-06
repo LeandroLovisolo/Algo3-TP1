@@ -433,6 +433,18 @@ El teorema a continuación muestra que la suposición anterior es de hecho ciert
 
 \subsection{Experimentos computacionales}
 
+\subsubsection{Verificación de correctitud}
+
+Elegimos los siguientes casos de prueba para verificar la correctitud del programa:
+
+\begin{enumerate}
+\item Entrada vacía, verficia el comportamiento del algoritmo ante una entrada vacía.
+\item Entrada con un único curso, verifica el caso de tener como entrada y solución un único curso.
+\item Entrada en la cuál dos cursos se solapen, verifica el caso en el que el algoritmo deberá descartar el curso que solapa al otro.
+\item Entrada en la cuál existan cursos que no se solapen, verifica el caso en el que dos o más cursos puedan cohexistir en un cronograma.
+\end{enumerate}
+
+\subsubsection{Performance}
 Medimos experimentalmente la performance del algoritmo para instancias aleatorias, del mejor y peor caso; de tamaños $1, \ldots, 1000$.
 
 Dado que la operación de ordenamiento de los cursos domina la complejidad del problema, tomamos como mejor y peor caso los respectivos casos del algoritmo de ordenamiento; es decir, cuando el vector ya está ordenado y cuando el vector está en el orden inverso, respectivamente.

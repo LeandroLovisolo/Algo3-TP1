@@ -3,7 +3,7 @@
 
 #include <vector>
 
-enum Casilla { Libre, Pared, Importante, SensorVertical,
+enum Casilla { Pared, Libre, Importante, SensorVertical,
                SensorHorizontal, SensorCuadruple, Sensado };
 
 struct laser {
