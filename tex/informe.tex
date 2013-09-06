@@ -684,11 +684,9 @@ Dado un piso $P$ sin sensores, recorremos el árbol de combinaciones de sensores
 
 Las podas a continuación se realizan siempre para cada piso $Q$ generado en el paso \ref{generar-pisos}, donde $q_{ij}$ es la posición que se modificó (o se dejó intacta en el caso \ref{posicion-libre}) luego de copiar el piso $P$ original.
 
-Si $q_{ij} \in \{ \SensorV, \SensorH, \SensorC \}$:
-
 \begin{enumerate}
     \item{
-        Podamos si su señal impacta otro sensor o viceversa; es decir, si $\textsc{Impacta-Otro-Sensor}(q_{ij}) = \True$.
+        Si $q_{ij} \in \{ \SensorV, \SensorH, \SensorC \}$, podamos si su señal impacta otro sensor o viceversa; es decir, si $\textsc{Impacta-Otro-Sensor}(q_{ij}) = \True$.
 
         \begin{pseudo}
             \Procedure{Impacta-Otro-Sensor}{$q_{ij}$}                       \Ode{m + n}
@@ -737,7 +735,7 @@ Si $q_{ij} \in \{ \SensorV, \SensorH, \SensorC \}$:
         \end{pseudo}
     }
     \item{
-        Si no es sensor cuádruple, podamos si produce que una posición libre en su misma fila o columna sea imposible de sensar.
+        Si $q_{ij} \in \{ \SensorV, \SensorH \}$, podamos si produce que una posición libre en su misma fila o columna sea imposible de sensar.
 
         Esto ocurre cuando existe un sensor vertical y un sensor horizontal en la misma fila y columna de una posición libre, respectivamente, y no hay una pared entre los sensores y esa posición.
 
@@ -787,11 +785,10 @@ Si $q_{ij} \in \{ \SensorV, \SensorH, \SensorC \}$:
         \end{pseudo}
     }
     \item{
-        Podamos si el costo del piso supera o iguala el de la mejor solución $S$ hallada hasta el momento; es decir, si $\textsc{Costo}(Q) \geq \textsc{Costo}(S)$.
+        Si $q_{ij} \in \{ \SensorV, \SensorH, \SensorC \}$, podamos si el costo del piso supera o iguala el de la mejor solución $S$ hallada hasta el momento; es decir, si $\textsc{Costo}(Q) \geq \textsc{Costo}(S)$.
     }
-
     \item{
-        Siendo $q_{ij} = \texttt{Libre}$ , podamos si $q_{ij}$ es imposible de sensar.
+        Si $q_{ij} = \Libre$, podamos si $q_{ij}$ es imposible de sensar.
 
         Esto ocurre cuando no existe otra posición libre en su misma fila o columna sin una pared entre ambas, tal que se pueda poner un sensor apuntando a la misma, sin que su señal impacte otros sensores o viceversa.
 
