@@ -106,7 +106,7 @@ else
 end
 
 if(exist('expr_ajuste'))
-    plot(n, expr_ajuste, 'color', 'red');
+    plot(n, expr_ajuste, 'color', 'red', 'linestyle', ':');
 end
 
 legend(leyenda);
