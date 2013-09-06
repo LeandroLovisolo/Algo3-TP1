@@ -559,21 +559,41 @@ Dado un piso $P$ sin sensores, recorremos el árbol de combinaciones de sensores
 
         \begin{pseudo}
             \If{$q_{ij} \in \{ \SensorV, \SensorC \}$}
-                \For{$rango$ \In $\{ (i, \ldots, 1), (i, \ldots, m)  \}$}
-                    \For{$i'$ \In $rango$}
-                        \State \textbf{break if} $q_{i'j} = \Pared$
-                        \State $q_{i'j} \leftarrow \Sensado$ \textbf{if} $q_{i'j} = \Libre$
-                    \EndFor
+                \For{$i'$ \In $\textsc{Columna-Visible}(q_{ij})$}
+                    \State $q_{i'j} \leftarrow \Sensado$ \textbf{if} $q_{i'j} = \Libre$
                 \EndFor
             \EndIf
             \If{$q_{ij} \in \{ \SensorH, \SensorC \}$}
+                \For{$j'$ \In $\textsc{Fila-Visible}(q_{ij})$}
+                    \State $q_{ij'} \leftarrow \Sensado$ \textbf{if} $q_{ij'} = \Libre$
+                \EndFor
+            \EndIf
+        \end{pseudo}
+
+        \begin{pseudo}
+            \Procedure{Fila-Visible}{$q_{ij}$}
+                \State $C \leftarrow \{ j \}$
                 \For{$rango$ \In $\{ (j, \ldots, 1), (j, \ldots, n)  \}$}
                     \For{$j'$ \In $rango$}
                         \State \textbf{break if} $q_{ij'} = \Pared$
-                        \State $q_{ij'} \leftarrow \Sensado$ \textbf{if} $q_{ij'} = \Libre$
+                        \State $C \leftarrow C \cup \{ j' \}$
                     \EndFor
                 \EndFor
-            \EndIf
+                \State \Return{$C$}
+            \EndProcedure
+        \end{pseudo}
+
+        \begin{pseudo}
+            \Procedure{Columna-Visible}{$q_{ij}$}
+                \State $F \leftarrow \{ i \}$
+                \For{$rango$ \In $\{ (i, \ldots, 1), (i, \ldots, m)  \}$}
+                    \For{$i'$ \In $rango$}
+                        \State \textbf{break if} $q_{i'j} = \Pared$
+                        \State $F \leftarrow F \cup \{ i' \}$
+                    \EndFor
+                \EndFor
+                \State \Return{$F$}
+            \EndProcedure
         \end{pseudo}
     }
     \item{
@@ -607,23 +627,17 @@ Dado un piso $P$ sin sensores, recorremos el árbol de combinaciones de sensores
                 \begin{pseudo}
                     \Procedure{\#-Sensores-Actuando-Sobre}{$q_{ij}$}
                         \State $k \leftarrow 0$
-                        \For{$rango$ \In $\{ (i, \ldots, 1), (i, \ldots, m)  \}$}
-                            \For{$i'$ \In $rango$}
-                                \State \textbf{break if} $q_{i'j} = \Pared$
-                                \If{$q_{i'j} \in \{ \SensorV, \SensorC \}$}
-                                    \State $k \leftarrow s + 1$
-                                    \State \textbf{break}
-                                \EndIf
-                            \EndFor
+                        \For{$i'$ \In $\textsc{Columna-Visible}(q_{ij})$}
+                            \If{$q_{i'j} \in \{ \SensorV, \SensorC \}$}
+                                \State $k \leftarrow k + 1$
+                                \State \textbf{break}
+                            \EndIf
                         \EndFor
-                        \For{$rango$ \In $\{ (j, \ldots, 1), (j, \ldots, n)  \}$}
-                            \For{$j'$ \In $rango$}
-                                \State \textbf{break if} $q_{ij'} = \Pared$
-                                \If{$q_{ij'} \in \{ \SensorH, \SensorC \}$}
-                                    \State $k \leftarrow s + 1$
-                                    \State \textbf{break}
-                                \EndIf
-                            \EndFor
+                        \For{$j'$ \In $\textsc{Fila-Visible}(q_{ij})$}
+                            \If{$q_{ij'} \in \{ \SensorH, \SensorC \}$}
+                                \State $k \leftarrow k + 1$
+                                \State \textbf{break}
+                            \EndIf
                         \EndFor
                         \State \Return{$k$}
                     \EndProcedure
@@ -676,21 +690,15 @@ Si $q_{ij} \in \{ \SensorV, \SensorH, \SensorC \}$:
 
         \begin{pseudo}
             \Procedure{Impacta-Otro-Sensor}{$q_{ij}$}
-                \For{$rango$ \In $\{ (i, \ldots, 1), (i, \ldots, m)  \}$}
-                    \For{$i'$ \In $rango$}
-                        \State \textbf{break if} $q_{i'j} = \Pared$
-                        \If{$\textsc{Sensores-Incompatibles}(q_{ij}, q_{i'j})$}
-                            \State \Return{\True}
-                        \EndIf
-                    \EndFor
+                \For{$i'$ \In $\textsc{Columna-Visible}(q_{ij})$}
+                    \If{$\textsc{Sensores-Incompatibles}(q_{ij}, q_{i'j})$}
+                        \State \Return{\True}
+                    \EndIf
                 \EndFor
-                \For{$rango$ \In $\{ (j, \ldots, 1), (j, \ldots, n)  \}$}
-                    \For{$j'$ \In $rango$}
-                        \State \textbf{break if} $q_{ij'} = \Pared$
-                        \If{$\textsc{Sensores-Incompatibles}(q_{ij}, q_{ij'})$}
-                            \State \Return{\True}
-                        \EndIf
-                    \EndFor
+                \For{$j'$ \In $\textsc{Fila-Visible}(q_{ij})$}
+                    \If{$\textsc{Sensores-Incompatibles}(q_{ij}, q_{ij'})$}
+                        \State \Return{\True}
+                    \EndIf
                 \EndFor
                 \State \Return{\False}
             \EndProcedure
@@ -732,27 +740,19 @@ Si $q_{ij} \in \{ \SensorV, \SensorH, \SensorC \}$:
         \begin{pseudo}
             \State $podar \leftarrow \False$
             \If{$q_{ij} = \SensorV$}
-                \For{$rango$ \In $\{ (j, \ldots, 1), (j, \ldots, n)  \}$}
-                    \For{$j'$ \In $rango$}
-                        \State \textbf{break if} $q_{ij'} = \Pared$
-                        \If{$q_{ij'} = \Libre \land
-                                \textsc{Hay-Un-Sensor-Horizontal-En-Su-Columna}(q_{ij'})$}
-                            \State $podar \leftarrow \True$
-                            \State \textbf{break}
-                        \EndIf
-                    \EndFor
+                \For{$j'$ \In $\textsc{Fila-Visible}(q_{ij})$}
+                    \If{$q_{ij'} = \Libre \land \textsc{Hay-Un-Sensor-Horizontal-En-Su-Columna}(q_{ij'})$}
+                        \State $podar \leftarrow \True$
+                        \State \textbf{break}
+                    \EndIf
                 \EndFor
             \EndIf
             \If{$q_{ij} = \SensorH$}
-                \For{$rango$ \In $\{ (i, \ldots, 1), (i, \ldots, m)  \}$}
-                    \For{$i'$ \In $rango$}
-                        \State \textbf{break if} $q_{i'j} = \Pared$
-                        \If{$q_{i'j} = \Libre \land
-                                \textsc{Hay-Un-Sensor-Vertical-En-Su-Fila}(q_{i'j})$}
-                            \State $podar \leftarrow \True$
-                            \State \textbf{break}
-                        \EndIf
-                    \EndFor
+                \For{$i'$ \In $\textsc{Columna-Visible}(q_{ij})$}
+                    \If{$q_{i'j} = \Libre \land \textsc{Hay-Un-Sensor-Vertical-En-Su-Fila}(q_{i'j})$}
+                        \State $podar \leftarrow \True$
+                        \State \textbf{break}
+                    \EndIf
                 \EndFor
             \EndIf
             \State Podamos $Q$ si $podar = \True$.
@@ -760,13 +760,10 @@ Si $q_{ij} \in \{ \SensorV, \SensorH, \SensorC \}$:
 
         \begin{pseudo}
             \Procedure{Hay-Un-Sensor-Horizontal-En-Su-Columna}{$q_{ij}$}
-                \For{$rango$ \In $\{ (i, \ldots, 1), (i, \ldots, m)  \}$}
-                    \For{$i'$ \In $rango$}
-                        \State \textbf{break if} $q_{i'j} = \Pared$
-                        \If{$q_{i'j} = \SensorH$}
-                            \State \Return{\True}
-                        \EndIf
-                    \EndFor
+                \For{$i'$ \In $\textsc{Columna-Visible}(q_{ij})$}
+                    \If{$q_{i'j} = \SensorH$}
+                        \State \Return{\True}
+                    \EndIf
                 \EndFor
                 \State \Return{\False}  
             \EndProcedure
@@ -774,13 +771,10 @@ Si $q_{ij} \in \{ \SensorV, \SensorH, \SensorC \}$:
 
         \begin{pseudo}
             \Procedure{Hay-Un-Sensor-Vertical-En-Su-Fila}{$q_{ij}$}
-                \For{$rango$ \In $\{ (j, \ldots, 1), (j, \ldots, n)  \}$}
-                    \For{$j'$ \In $rango$}
-                        \State \textbf{break if} $q_{ij'} = \Pared$
-                        \If{$q_{ij'} = \SensorV$}
-                            \State \Return{\True}
-                        \EndIf
-                    \EndFor
+                \For{$j'$ \In $\textsc{Fila-Visible}(q_{ij})$}
+                    \If{$q_{ij'} = \SensorV$}
+                        \State \Return{\True}
+                    \EndIf
                 \EndFor
                 \State \Return{\False}
             \EndProcedure
@@ -801,29 +795,23 @@ Si $q_{ij} = \Libre$:
 
         \begin{pseudo}
             \State $podar \leftarrow \True$
-            \For{$rango$ \In $\{ (i, \ldots, 1), (i, \ldots, m)  \}$}
-                \For{$i'$ \In $rango$}
-                    \State \textbf{break if} $q_{i'j} = \Pared$
-                    \If{$q_{i'j} = \Libre$}
-                        \State $R \leftarrow Q$
-                        \State $r_{i'j} \leftarrow \SensorV$
-                        \If{$\textsc{Impacta-Otro-Sensor}(r_{i'j}) = \False$}
-                            \State $podar \leftarrow \False$
-                        \EndIf
+            \For{$i'$ \In $\textsc{Columna-Visible}(q_{ij})$}
+                \If{$q_{i'j} = \Libre$}
+                    \State $R \leftarrow Q$
+                    \State $r_{i'j} \leftarrow \SensorV$
+                    \If{$\textsc{Impacta-Otro-Sensor}(r_{i'j}) = \False$}
+                        \State $podar \leftarrow \False$
                     \EndIf
-                \EndFor
+                \EndIf
             \EndFor
-            \For{$rango$ \In $\{ (j, \ldots, 1), (j, \ldots, n)  \}$}
-                \For{$j'$ \In $rango$}
-                    \State \textbf{break if} $q_{ij'} = \Pared$
-                    \If{$q_{ij'} = \Libre$}
-                        \State $R \leftarrow Q$
-                        \State $r_{ij'} \leftarrow \SensorV$
-                        \If{$\textsc{Impacta-Otro-Sensor}(r_{ij'}) = \False$}
-                            \State $podar \leftarrow \False$
-                        \EndIf
+            \For{$j'$ \In $\textsc{Fila-Visible}(q_{ij})$}
+                \If{$q_{ij'} = \Libre$}
+                    \State $R \leftarrow Q$
+                    \State $r_{ij'} \leftarrow \SensorV$
+                    \If{$\textsc{Impacta-Otro-Sensor}(r_{ij'}) = \False$}
+                        \State $podar \leftarrow \False$
                     \EndIf
-                \EndFor
+                \EndIf
             \EndFor
             \State Podamos $Q$ si $podar = \True$.            
         \end{pseudo}
