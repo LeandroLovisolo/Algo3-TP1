@@ -524,7 +524,7 @@ Dado un piso $P$ sin sensores, recorremos el árbol de combinaciones de sensores
     }
     \item{
         \label{generar-pisos}
-        Generamos 4 pisos nuevos:
+        Generamos 4 pisos nuevos, copiando el piso $P$ y:
         \begin{enumerate}
             \item{
                 Poniendo un sensor vertical en $(i, j)$.
@@ -537,7 +537,7 @@ Dado un piso $P$ sin sensores, recorremos el árbol de combinaciones de sensores
             }
             \item{
                 \label{posicion-libre}
-                Dejando libre la posición $(i, j)$ (es decir, este nuevo piso es idéntico al piso original.)
+                Dejando libre la posición $(i, j)$ (es decir, este nuevo piso es idéntico al piso $P$.)
             }
         \end{enumerate}
     }
@@ -574,7 +574,7 @@ Dado un piso $P$ sin sensores, recorremos el árbol de combinaciones de sensores
                 Buscamos la siguiente posición libre $(i', j')$ de la misma manera que en el paso \ref{buscar-posicion-libre}, pero partiendo de $(i, j+1)$ en vez de la esquina superior izquierda, ó $(i+1, 1)$ si $j=n$.
             }
             \item{
-                Si encontramos una posición libre, repetimos los pasos $\ref{generar-pisos}, \ldots, \ref{paso-recursivo}$ utilizando $(i', j')$ en lugar de $(i, j)$.
+                Si encontramos una posición libre, repetimos los pasos $\ref{generar-pisos}, \ldots, \ref{paso-recursivo}$ utilizando $Q$ en lugar de $P$, y $(i', j')$ en lugar de $(i, j)$.
             }
             \item{
                 En caso contrario, decidimos si el piso es solución.
@@ -653,28 +653,80 @@ Dado un piso $P$ sin sensores, recorremos el árbol de combinaciones de sensores
 
 \subsubsection{Podas}
 
-Las podas siempre se realizan sobre los pisos generados en el paso \ref{generar-pisos}.
+Las podas a continuación se realizan siempre para cada piso $Q$ generado en el paso \ref{generar-pisos}, donde $q_{ij}$ es la posición que se modificó (o se dejó intacta en el caso \ref{posicion-libre}) luego de copiar el piso $P$ original.
+
+Si $q_{ij} \in \{ \texttt{SensorVertical}, \texttt{SensorHorizontal}, \texttt{SensorCuadruple} \}$:
 
 \begin{itemize}
     \item{
-        Si el piso generado posee un nuevo sensor:
+        Podamos si su señal impacta otro sensor o viceversa.
 
-        \begin{itemize}
-            \item{
-                Podamos si su señal impacta otro sensor o viceversa.
-            }
-            \item{
-                Si no es sensor cuádruple, podamos si produce que una posición libre en su misma fila o columna sea imposible de sensar.
+        \begin{pseudo}
+            \State $podar \leftarrow \textbf{false}$
+            \For{$rango$ \In $\{ (i, \ldots, 1), (i, \ldots, m)  \}$}
+                \For{$i'$ \In $rango$}
+                    \State \textbf{break if} $q_{i'j} = \texttt{Pared}$
+                    \If{$\textsc{Sensores-Incompatibles}(q_{ij}, q_{i'j})$}
+                        \State $podar \leftarrow \textbf{true}$
+                        \State \textbf{break}
+                    \EndIf
+                \EndFor
+            \EndFor
+            \For{$rango$ \In $\{ (j, \ldots, 1), (j, \ldots, n)  \}$}
+                \For{$j'$ \In $rango$}
+                    \State \textbf{break if} $q_{ij'} = \texttt{Pared}$
+                    \If{$\textsc{Sensores-Incompatibles}(q_{ij}, q_{ij'})$}
+                        \State $podar \leftarrow \textbf{true}$
+                        \State \textbf{break}
+                    \EndIf
+                \EndFor
+            \EndFor
+            \State Podamos $Q$ si $podar = \textbf{true}$.
+        \end{pseudo}
 
-                Esto ocurre cuando existe un sensor vertical y un sensor horizontal en la misma fila y columna de una posición libre, respectivamente, y no hay una pared entre los sensores y esa posición.
-            }
-            \item{
-                Podamos si el costo del piso supera el de la mejor solución hallada hasta el momento.
-            }
-        \end{itemize}
+        \begin{pseudo}
+            \Procedure{Sensores-Incompatibles}{$q_{ij}, q_{i'j'}$}
+                \If{$i = i'$}
+                    \If{$\textsc{Sensa-Horizontalmente}(q_{ij}) \lor \textsc{Sensa-Horizontalmente}(q_{i'j'})$}
+                        \State \Return{\textbf{true}}
+                    \EndIf
+                \EndIf
+                \If{$j = j'$}
+                    \If{$\textsc{Sensa-Verticalmente}(q_{ij}) \lor \textsc{Sensa-Verticalmente}(q_{i'j'})$}
+                        \State \Return{\textbf{true}}
+                    \EndIf
+                \EndIf
+                \State \Return{\textbf{false}}
+            \EndProcedure
+        \end{pseudo}
+
+        \begin{pseudo}
+            \Procedure{Sensa-Verticalmente}{$q_{ij}$}
+                \State \Return{$q_{ij} \in \{ \texttt{SensorVertical}, \texttt{SensorCuadruple} \}$}
+            \EndProcedure
+        \end{pseudo}
+
+        \begin{pseudo}
+            \Procedure{Sensa-Horizontalmente}{$q_{ij}$}
+                \State \Return{$q_{ij} \in \{ \texttt{SensorHorizontal}, \texttt{SensorCuadruple} \}$}
+            \EndProcedure
+        \end{pseudo}
     }
     \item{
-        Si el piso generado no posee un nuevo sensor, podamos si la posición que dejamos libre es imposible de sensar.
+        Si no es sensor cuádruple, podamos si produce que una posición libre en su misma fila o columna sea imposible de sensar.
+
+        Esto ocurre cuando existe un sensor vertical y un sensor horizontal en la misma fila y columna de una posición libre, respectivamente, y no hay una pared entre los sensores y esa posición.
+    }
+    \item{
+        Podamos si el costo del piso supera el de la mejor solución hallada hasta el momento.
+    }
+\end{itemize}
+
+Si $q_{ij} = \texttt{Libre}$:
+
+\begin{itemize}
+    \item{
+        Podamos si $q_{ij}$ es imposible de sensar.
 
         Esto ocurre cuando no existe otra posición libre en su misma fila o columna sin una pared entre ambas, tal que se pueda poner un sensor apuntando a la misma, sin que su señal impacte otros sensores o viceversa.
     }
