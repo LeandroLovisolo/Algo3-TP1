@@ -825,7 +825,13 @@ Si $q_{ij} = \Libre$:
 \end{itemize}
 
 
-\section{Correctitud}
+\subsection{Complejidad}
+
+Pendiente.
+
+
+\subsection{Correctitud}
+
 Para demostrar la correctitud del algoritmo, se debe demostrar lo siguiente:
 \begin{enumerate}
   \item Probar que recorremos todo el espacio de pisos posibles.
@@ -834,7 +840,7 @@ Para demostrar la correctitud del algoritmo, se debe demostrar lo siguiente:
     \item Probar que la solución devuelta es la óptima.
 \end{enumerate}
 
-\subsection{Se recorre todo el espacio de pisos posibles}
+\subsubsection{Se recorre todo el espacio de pisos posibles}
 
 El procedimiento mediante el cuál se recorre recursivamente el árbol de decisiones es \textbf{recorrer()}.
 
@@ -853,7 +859,7 @@ Dado un piso, para el primer casillero libre, siguiendo con el orden en que se l
 \end{pseudo}
 
 
-\subsection{Se podan las ramas que conducen a pisos que no son soluciones}
+\subsubsection{Se podan las ramas que conducen a pisos que no son soluciones}
 
 Las podas se realizan mediante la llamada a \textbf{podar()} desde \textbf{recorrer()}. Podar realiza las siguientes operaciones:
 
@@ -863,13 +869,13 @@ Las podas se realizan mediante la llamada a \textbf{podar()} desde \textbf{recor
 \end{itemize}
 
 
-\subsection{Los pisos obtenidos son soluciones}
+\subsubsection{Los pisos obtenidos son soluciones}
 Al haberse recorrido todos los casilleros se chequea que el resultado sea una solucion y esto ocurre si todos los casilleros libres estan estan sensados y si los cosilleros importantes estan doblemente sensados.
 
 Debido a que una solución es una hoja del árbol de soluciones posibles, este debe de haber pasado antes por las podas, verificando también la correctiud de los sensores.
 
 
-\subsection{La solución devuelta es la óptima}
+\subsubsection{La solución devuelta es la óptima}
 Debido a que se utiliza como poda no recorrer las ramas que llevan a soluciones de mayor costo al costo de la solución de menor costo obtenida, la solución a la cuál se llega siempre tendrá solución óptima, es decir, su solución siempre tendrá costo mínimo.
 
 
