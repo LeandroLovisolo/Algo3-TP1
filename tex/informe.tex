@@ -500,12 +500,28 @@ Se pide realizar el algoritmo mediante la técnica de Backtracking.
 
 \subsection{Solución}
 
+Representamos el piso como una matriz de $m$ filas $\times$ $n$ columnas, donde cada coordenada puede tener uno de los siguientes valores: \texttt{Libre}, \texttt{Sensado}, \texttt{Importante}, \texttt{Pared}, \texttt{SensorVertical}, \texttt{SensorHorizontal}, \texttt{SensorCuádruple}.
+
 Recorremos el árbol de pisos posibles de la siguiente manera:
 
 \begin{enumerate}
     \item{
         \label{buscar-posicion-libre}
         Busco la primera posición libre recorriendo el piso de izquierda a derecha y de arriba a abajo, partiendo de la esquina superior izquierda. Si no se encontró una, salto al paso \ref{ultimo-paso}.
+
+        \begin{pseudo}
+            
+            % filaSig = fila;
+            % columnaSig = columna;
+
+            % do {
+            %     filaSig    = columnaSig + 1 == p.columnas() ? filaSig + 1 : filaSig;
+            %     columnaSig = columnaSig + 1 == p.columnas() ? 0           : columnaSig + 1;
+            % } while(filaSig < p.filas() && p.get(filaSig, columnaSig) != Libre);
+
+
+            \State foo
+        \end{pseudo}
     }
     \item{
         \label{generar-pisos}
