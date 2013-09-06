@@ -657,7 +657,7 @@ Las podas a continuación se realizan siempre para cada piso $Q$ generado en el 
 
 Si $q_{ij} \in \{ \texttt{SensorVertical}, \texttt{SensorHorizontal}, \texttt{SensorCuadruple} \}$:
 
-\begin{itemize}
+\begin{enumerate}
     \item{
         Podamos si su señal impacta otro sensor o viceversa.
 
@@ -720,17 +720,13 @@ Si $q_{ij} \in \{ \texttt{SensorVertical}, \texttt{SensorHorizontal}, \texttt{Se
     \item{
         Podamos si el costo del piso supera el de la mejor solución hallada hasta el momento.
     }
-\end{itemize}
 
-Si $q_{ij} = \texttt{Libre}$:
-
-\begin{itemize}
     \item{
-        Podamos si $q_{ij}$ es imposible de sensar.
+        Siendo $q_{ij} = \texttt{Libre}$ , podamos si $q_{ij}$ es imposible de sensar.
 
         Esto ocurre cuando no existe otra posición libre en su misma fila o columna sin una pared entre ambas, tal que se pueda poner un sensor apuntando a la misma, sin que su señal impacte otros sensores o viceversa.
     }
-\end{itemize}
+\end{enumerate}
 
 
 \section{Correctitud}
@@ -746,12 +742,9 @@ Para demostrar la correctitud del algoritmo, se debe demostrar lo siguiente:
 
 El procedimiento mediante el cuál se recorre recursivamente el árbol de decisiones es \textbf{recorrer()}.
 
-En cuánto al recorrido, se procede a realizar una copia del piso para cada sensor. Se ubican los sensores en la copia y se llama a recorrer sobre esta.
-Además de contemplar la opción del Piso con sensores, se continúa recorriendo también teniendo en cuenta la posibilidad de tener el casillero libre.
+Dado un piso, para el primer casillero libre, siguiendo con el orden en que se lo recorre, se generan 4 instacias posibles (sensor horizontal, sensor vertical, sensor cuádruple y casillero libre), luego para cada una de las instancias se realiza el mismo procedimiento hasta cubrir todo el piso, de esta forma se recorre la totalidad de los posibles pisos existentes, que en el peor caso serian $4^{nxm}$.\\
 
-Al ubicar en la posición, cada opción disponible, (sensor horizontal, sensor vertical, sensor cuádruple y casillero libre) se recorre todo el espectro de soluciones. \\
 
-Dado un piso, para el primer casillero libre, siguiendo con el orden en que se lo recorre, se generan 4 instacias posibles (sensor horizontal, sensor vertical, sensor cuádruple y casillero libre), luego para cada una de las instancias se realiza el mismo procedimiento hasta cubrir todo el piso, de esta forma se recorre la totalidad de las posibles soluciones, que en el peor caso serian $4^{nxm}$.\\
 \textbf{Pseudocódigo de las llamadas recurivas para los distintos tipos de casillero}
 
 \begin{pseudo}
@@ -763,13 +756,18 @@ Dado un piso, para el primer casillero libre, siguiendo con el orden en que se l
 
 \subsection{Se podan las ramas que conducen a pisos que no son soluciones}
 
-Las podas se realizan mediante la llamada a \textbf{podar()} desde \textbf{recorrer()}. Podar realiza las siguientes operaciones:
+Las podas se realizan mediante la llamada a \textbf{podar()} desde \textbf{recorrer()}.
+Para probar que estas realizan un trabajo correcto, estas deben seguir las normas del tablero.
+
+\textbf{Utilizando la poda 1)}, eliminamos las ramas de soluciones que tengan sensores incompatibles entre si, es decir, sensores que se esten sensando al mismo tiempo.
+
+\textbf{Utilizando la poda 3)}, eliminamos las soluciones de un costo mayor a la actualmente encontrada. Este procedimiento produce soluciones correctas y mínimas (sin obviar otras soluciones mínimas posibles) ya que, teniendo un costo de una solución, pueden ocurrir los siguientes casos:
 
 \begin{itemize}
-  \item \textbf{esCompatible()} la cuál verifica si el casillero donde estamos es compatible, es decir, si es una casilla libre, importante o si es un sensor y este no está siendo sensado por otro.
-    \item \textbf{esCandidatoASolucion()} la cuál verifica 
+\item La inserción de un nuevo sensor incrementará el costo de la solución, haciendo que esta sea peor.
+\item Si esta fuera igual, podría llegar a una solución, mínima también, pero ya tenemos una de igual costo, por lo que su recorrido es innecesario.
+\item La rama de soluciones por la que se está buscando una solución sigue siendo menor a la solución encontrada anteriormente, llevando a una potencial mejor solución en el caso de que exista.
 \end{itemize}
-
 
 \subsection{Los pisos obtenidos son soluciones}
 Al haberse recorrido todos los casilleros se chequea que el resultado sea una solucion y esto ocurre si todos los casilleros libres estan estan sensados y si los cosilleros importantes estan doblemente sensados.
