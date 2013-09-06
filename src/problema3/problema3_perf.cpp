@@ -43,7 +43,7 @@ TEST(problema3, PerformancePeorCaso) {
                     p.set(i, j, Libre);
               return p;
           },
-          [&] (const Piso& piso) { resolver(piso); },
+          [&] (const Piso& piso) { problema3(piso); },
           indice);
 }
 
@@ -59,7 +59,7 @@ TEST(problema3, PerformanceMejorCaso) {
                       p.set(i, j, Pared);
               return p;
           },
-          [&] (const Piso& piso) { resolver(piso); },
+          [&] (const Piso& piso) { problema3(piso); },
           indice);
 }
 
@@ -89,7 +89,7 @@ TEST(problema3, PerformanceInstanciasAleatorias) {
 
               return p;
           },
-          [&] (const Piso& piso) { resolver(piso); },
+          [&] (const Piso& piso) { problema3(piso); },
           indice);
 }
 
