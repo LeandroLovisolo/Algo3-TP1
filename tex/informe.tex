@@ -430,12 +430,16 @@ El teorema a continuación muestra que la suposición anterior es de hecho ciert
     Como $|S'| = |S|$, concluímos que $S'$ es un subconjunto de $C$ tal que sus cursos no se solapan entre sí y su cardinalidad es máxima, y $(i_1, f_1)$ está incluido en $S'$, como queríamos ver.
 \end{proof}
 
+
 \subsection{Experimentos computacionales}
 
-\subsubsection{Performance}
-Justificación de la elección de peor o mejor caso y hablar de cómo se generaron los casos aleatorios.
-PEOR Y MEJOR CASO DEPENDIENDO DEL ALGORITMO DE ORDENAMIENTO.
-Si se utiliza heap sort, peor y mejor caso iguales.
+Medimos experimentalmente la performance del algoritmo para instancias aleatorias, del mejor y peor caso; de tamaños $1, \ldots, 1000$.
+
+Dado que la operación de ordenamiento de los cursos domina la complejidad del problema, tomamos como mejor y peor caso los respectivos casos del algoritmo de ordenamiento; es decir, cuando el vector ya está ordenado y cuando el vector está en el orden inverso, respectivamente.
+
+En nuestra implementación utilizamos el algoritmo de ordenamiento provisto en la librería estándar de C++, que garantiza una cota de complejidad $O(n \times log(n))$, pero no menciona explícitamente sus casos mejor y peor. Los casos mejor y peor que tomamos fueron decididos a partir de nuestro conocimiento teórico de algoritmos de sorting.
+
+Los cursos de las instancias aleatorias fueron generadas tomando dos enteros aleatorios con distribución uniforme en el intervalo $0, \ldots, 999$ como fechas de inicio y finalización, tales que la fecha de inicio es menor o igual a la de finalización.
 
 \subsubsection{Peor caso}
 
