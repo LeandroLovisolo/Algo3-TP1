@@ -40,11 +40,5 @@ private:
 };
 
 Piso problema3(const Piso &piso);
-bool checkPiso(const Piso &piso);
-
-Piso resolver(const Piso& p);
-unsigned costo(const Piso& p);
-
-bool esSolucion(const Piso& p);
 
 #endif // PROBLEMA3_H
